@@ -39,7 +39,7 @@ jobs:
       - run: npm install
       - run: git config user.name $GITHUB_NAME
       - run: git config user.email $GITHUB_EMAIL
-      - run: npm run all
+      - run: npm run all:github
       # - run: ~/seventh-project/vue.js/site/node_modules/.bin/firebase deploy --token=$FIREBASE_TOKEN
       - save_npm
       # run tests!
