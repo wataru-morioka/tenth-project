@@ -8,7 +8,8 @@
     "minify": "gulp minifyImage",
     "deploy:firebase": "firebase deploy --only hosting",
     "deploy:github": "gh-pages -d docs -m 'chore: update' -t",
-    "all": "npm-run-all -s build minify deploy:github",
+    "all:firebase": "npm-run-all -s build minify deploy:firebase",
+    "all:github": "npm-run-all -s build minify deploy:github",
     "lint": "vue-cli-service lint",
     "test:e2e": "vue-cli-service test:e2e",
     "test:unit": "vue-cli-service test:unit"
