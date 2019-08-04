@@ -35,12 +35,11 @@ jobs:
       - checkout
       - restore_npm
       - run: ls -l ~/tenth-project
-      # - run: npm --prefix ~/seventh-project/vue.js/site install ~/seventh-project/vue.js/site
       - run: npm install
       - run: git config user.name $GITHUB_NAME
       - run: git config user.email $GITHUB_EMAIL
-      - run: npm run all:github
-      # - run: ~/seventh-project/vue.js/site/node_modules/.bin/firebase deploy --token=$FIREBASE_TOKEN
+      # - run: npm run all:github
+      - run: npm run deploy:firebase
       - save_npm
       # run tests!
       - run: echo "hello!!"
