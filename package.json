@@ -7,7 +7,7 @@
     "build": "vue-cli-service build",
     "minify": "gulp minifyImage",
     "deploy": "npx firebase deploy --only hosting",
-    "deploy:firebase": "npx firebase deploy --only hosting--project --token \"$FIREBASE_TOKEN\"",
+    "deploy:firebase": "npx firebase deploy --only hosting --token \"$FIREBASE_TOKEN\"",
     "deploy:github": "gh-pages -d docs -m 'github-pages: update [skip ci]'",
     "all:firebase": "npm-run-all -s build minify deploy",
     "all:github": "npm-run-all -s build minify deploy:github",
