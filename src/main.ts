@@ -5,7 +5,7 @@ import store from './store';
 import './registerServiceWorker';
 // import firebase from 'firebase/app';
 import * as firebase from 'firebase';
-import 'firebase/auth';
+// import 'firebase/auth';
 // import 'firebase/messaging';
 
 const ua = window.navigator.userAgent;
