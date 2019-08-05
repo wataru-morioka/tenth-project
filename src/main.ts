@@ -3,9 +3,12 @@ import App from './App.vue';
 import router from './router';
 import store from './store';
 import './registerServiceWorker';
-import firebase from 'firebase/app';
+// import firebase from 'firebase/app';
+import * as firebase from 'firebase';
 import 'firebase/auth';
-import 'firebase/messaging';
+// import 'firebase/messaging';
+
+const ua = window.navigator.userAgent;
 
 Vue.config.productionTip = false;
 
@@ -20,7 +23,7 @@ const firebaseConfig = {
 
 firebase.initializeApp(firebaseConfig);
 
-if (firebase.messaging.isSupported) {
+if (ua.indexOf('Safari') !== -1) {
   const messaging = firebase.messaging();
   messaging
   .usePublicVapidKey('BH21Cxu2dV1d1gHd0nU-JzziDnfg-gtUIQEoSJKN6zsOcjThn7IVuVdsAtaVvF7ETjtW4SFvlvWZubj6-nHzrVg');
