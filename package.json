@@ -9,7 +9,7 @@
     "deploy": "npx firebase deploy --only hosting",
     "deploy:firebase": "npx firebase deploy --only hosting --token \"$FIREBASE_TOKEN\"",
     "deploy:github": "gh-pages -d docs -m 'github-pages: update [skip ci]'",
-    "all:firebase": "npm-run-all -s build minify deploy",
+    "test": "npm-run-all -s build minify deploy",
     "all": "npm-run-all -s build minify deploy:firebase deploy:github",
     "lint": "vue-cli-service lint",
     "test:e2e": "vue-cli-service test:e2e",

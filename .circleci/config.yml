@@ -40,8 +40,6 @@ jobs:
       - run: git config user.email $GITHUB_EMAIL
       - run: npm run all
       - save_npm
-      # run tests!
-      - run: echo "hello!!"
   test:
     executor: default
     steps:

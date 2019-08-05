@@ -12,6 +12,20 @@ if (process.env.NODE_ENV === 'production') {
     },
     registered() {
       console.log('Service worker has been registered.');
+      navigator.serviceWorker
+        // .register('/tenth-project/service-worker.js')
+        .register('/service-worker.js')
+        .then((registration) => {
+          // 登録成功
+          registration.onupdatefound = () => {
+            console.log('ファイル更新検知');
+            registration.update();
+          }
+        })
+        .catch((err) => {
+          // 登録失敗
+          console.log(err);
+      });
     },
     cached() {
       console.log('Content has been cached for offline use.');
