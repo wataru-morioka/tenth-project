@@ -1,6 +1,5 @@
 <template lang="pug">
   div.hello
-    p testtest
     button(@click='getName') 取得します
     button(@click='login', v-show='!$store.state.isLogin') ログイン
     button(@click='logout', v-show='$store.state.isLogin') ログアウト
