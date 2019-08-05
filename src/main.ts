@@ -4,7 +4,6 @@ import router from './router';
 import store from './store';
 import './registerServiceWorker';
 import firebase from 'firebase/app';
-// import * as firebase from 'firebase';
 import 'firebase/auth';
 import 'firebase/messaging';
 
@@ -24,6 +23,7 @@ const firebaseConfig = {
 firebase.initializeApp(firebaseConfig);
 
 if (ua.indexOf('Safari') !== -1) {
+  console.log(ua);
   // const test = require('https://www.gstatic.com/firebasejs/5.5.6/firebase-messaging.js');
   const messaging = firebase.messaging();
   messaging
