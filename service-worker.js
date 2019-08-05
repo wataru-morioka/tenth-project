@@ -14,10 +14,13 @@
 importScripts("https://storage.googleapis.com/workbox-cdn/releases/3.6.3/workbox-sw.js");
 
 importScripts(
-  "/tenth-project/precache-manifest.e0865974df97adc94f3b2e0859630c82.js"
+  "/tenth-project/precache-manifest.8b2937c9acfb2621f40e71b605419c03.js"
 );
 
-workbox.core.setCacheNameDetails({prefix: "site"});
+workbox.core.setCacheNameDetails({prefix: "v1"});
+
+workbox.skipWaiting();
+workbox.clientsClaim();
 
 /**
  * The workboxSW.precacheAndRoute() method efficiently caches and responds to
@@ -27,3 +30,7 @@ workbox.core.setCacheNameDetails({prefix: "site"});
 self.__precacheManifest = [].concat(self.__precacheManifest || []);
 workbox.precaching.suppressWarnings();
 workbox.precaching.precacheAndRoute(self.__precacheManifest, {});
+
+workbox.routing.registerRoute(/.*firebase.*/, workbox.strategies.networkFirst({ "cacheName":"api", plugins: [new workbox.expiration.Plugin({"maxAgeSeconds":86400,"purgeOnQuotaError":false})] }), 'GET');
+workbox.routing.registerRoute(/\.(png|svg|woff|ttf|eot)/, workbox.strategies.cacheFirst({ "cacheName":"assets", plugins: [new workbox.expiration.Plugin({"maxAgeSeconds":86400,"purgeOnQuotaError":false})] }), 'GET');
+workbox.routing.registerRoute(/\.html/, workbox.strategies.networkFirst({ "cacheName":"html", plugins: [new workbox.expiration.Plugin({"maxAgeSeconds":86400,"purgeOnQuotaError":false})] }), 'GET');
