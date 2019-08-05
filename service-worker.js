@@ -9,4 +9,7 @@ workbox.core.setCacheNameDetails({prefix: "my-project"});
  */
 self.__precacheManifest = [].concat(self.__precacheManifest || []);
 workbox.precaching.suppressWarnings();
-workbox.precaching.precacheAndRoute(self.__precacheManifest, {});
+workbox.precaching.precacheAndRoute([
+    { url: '/js/app.js', revision: '383676' },
+    { url: '/css/app.css', revision: '383676' },
+  ]);
