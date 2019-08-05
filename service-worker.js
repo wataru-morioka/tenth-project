@@ -17,10 +17,9 @@ importScripts(
   "/tenth-project/precache-manifest.8b2937c9acfb2621f40e71b605419c03.js"
 );
 
-workbox.core.setCacheNameDetails({prefix: "v1"});
+workbox.core.setCacheNameDetails({prefix: "v2"});
 
 workbox.skipWaiting();
-workbox.clientsClaim();
 
 /**
  * The workboxSW.precacheAndRoute() method efficiently caches and responds to
