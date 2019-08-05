@@ -20,7 +20,7 @@ const firebaseConfig = {
 
 firebase.initializeApp(firebaseConfig);
 
-if (firebase.messaging.isSupported) {
+if (firebase.messaging.isSupported()) {
   const messaging = firebase.messaging();
   messaging
   .usePublicVapidKey('BH21Cxu2dV1d1gHd0nU-JzziDnfg-gtUIQEoSJKN6zsOcjThn7IVuVdsAtaVvF7ETjtW4SFvlvWZubj6-nHzrVg');
@@ -42,7 +42,6 @@ if (firebase.messaging.isSupported) {
     console.log('Unable to get permission to notify.', err);
   });
 }
-
 
 new Vue({
   router,

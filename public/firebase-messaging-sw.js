@@ -5,7 +5,7 @@ firebase.initializeApp({
   'messagingSenderId': '663686156877' // 4の messagingSenderId をコピペ
 });
 
-if (firebase.messaging.isSupported) {
+if (firebase.messaging.isSupported()) {
     const messaging = firebase.messaging();
 }
 // messaging.setBackgroundMessageHandler(function(payload) {
