@@ -1,6 +1,7 @@
 
 const ua = window.navigator.userAgent;
 if (ua.indexOf('Safari') !== -1) {
+    console.log(ua);
     importScripts('https://www.gstatic.com/firebasejs/5.5.6/firebase-app.js');
     importScripts('https://www.gstatic.com/firebasejs/5.5.6/firebase-messaging.js');
     // Initialize the Firebase app in the service worker by passing in the messagingSenderId.

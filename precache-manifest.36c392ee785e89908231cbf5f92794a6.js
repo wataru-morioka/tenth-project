@@ -4,12 +4,12 @@ self.__precacheManifest = [
     "url": "/tenth-project/js/about.680774ca.js"
   },
   {
-    "revision": "424bc997060d506ceb4c",
+    "revision": "972fb1bc4fdd935b2c07",
     "url": "/tenth-project/css/app.6cf83bc6.css"
   },
   {
-    "revision": "424bc997060d506ceb4c",
-    "url": "/tenth-project/js/app.0bb8d16f.js"
+    "revision": "972fb1bc4fdd935b2c07",
+    "url": "/tenth-project/js/app.fdb28641.js"
   },
   {
     "revision": "84c8a7578c56e301f270",
@@ -20,11 +20,11 @@ self.__precacheManifest = [
     "url": "/tenth-project/img/logo.82b9c7a5.png"
   },
   {
-    "revision": "1dc0be08d16c73879cfa3319a5f8692c",
+    "revision": "6c7377b5aef70d30b536a2c32d9217c3",
     "url": "/tenth-project/index.html"
   },
   {
-    "revision": "740f5d4919e05a1ffe54034c42512719",
+    "revision": "35ddc8c047e0860a361c0efc9e3472d6",
     "url": "/tenth-project/firebase-messaging-sw.js"
   },
   {
