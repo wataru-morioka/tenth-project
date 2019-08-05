@@ -5,9 +5,9 @@ firebase.initializeApp({
   'messagingSenderId': '663686156877' // 4の messagingSenderId をコピペ
 });
 
-// Retrieve an instance of Firebase Messaging so that it can handle background messages.
-const messaging = firebase.messaging();
-
+if (firebase.messaging.isSupported) {
+    const messaging = firebase.messaging();
+}
 // messaging.setBackgroundMessageHandler(function(payload) {
 //     const notificationTitle = payload.notification.title;
 //     const notificationOptions = {
