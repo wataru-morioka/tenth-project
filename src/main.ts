@@ -5,7 +5,7 @@ import store from './store';
 import './registerServiceWorker';
 import firebase from 'firebase/app';
 import 'firebase/auth';
-// import 'firebase/messaging';
+import 'firebase/messaging';
 
 Vue.config.productionTip = false;
 
