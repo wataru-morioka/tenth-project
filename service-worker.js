@@ -1,9 +1,9 @@
-importScripts("/tenth-project/precache-manifest.e78b077dc60dcac217a153e327614ff6.js", "https://storage.googleapis.com/workbox-cdn/releases/3.6.3/workbox-sw.js");
+importScripts("/tenth-project/precache-manifest.cc3694455d750ede3824dc476a492f37.js", "https://storage.googleapis.com/workbox-cdn/releases/3.6.3/workbox-sw.js");
 
 workbox.core.setCacheNameDetails({prefix: "v2"});
 
 // First, import the library into the service worker global scope:
-importScripts('path/to/offline-google-analytics-import.js');
+importScripts('/node_modules/sw-offline-google-analytics/build/importScripts/sw-offline-google-analytics.prod.v0.0.25.js');
 
 // Then, call goog.offlineGoogleAnalytics.initialize():
 // See https://github.com/GoogleChrome/workbox/tree/master/packages/workbox-google-analytics
