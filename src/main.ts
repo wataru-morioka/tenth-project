@@ -5,6 +5,7 @@ import store from './store';
 import './registerServiceWorker';
 import firebase from 'firebase/app';
 import 'firebase/auth';
+// const VueAnalytics = require('vue-analytics');
 // import 'firebase/messaging';
 
 Vue.config.productionTip = false;
@@ -39,6 +40,10 @@ firebase.initializeApp(firebaseConfig);
 //   })
 // }).catch((err) => {
 //   console.log('Unable to get permission to notify.', err);
+// });
+
+// Vue.use(VueAnalytics, {
+//   id: 'UA-145135127-1'
 // });
 
 new Vue({

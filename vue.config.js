@@ -1,7 +1,7 @@
 const path = require('path');
 module.exports = {
-    // publicPath: '/tenth-project/',
-    publicPath: '',
+    publicPath: '/tenth-project/',
+    // publicPath: '',
     outputDir: 'docs',
     pwa: {
         workboxPluginMode: 'GenerateSW',
