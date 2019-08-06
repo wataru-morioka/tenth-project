@@ -20,7 +20,7 @@ self.__precacheManifest = [
     "url": "/tenth-project/img/logo.82b9c7a5.png"
   },
   {
-    "revision": "bfcaba1386d9b707acecb481089b4887",
+    "revision": "913dceca8b8f5cb3dda9589c04392371",
     "url": "/tenth-project/index.html"
   },
   {
