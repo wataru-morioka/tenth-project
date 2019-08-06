@@ -5,7 +5,7 @@
     button(@click='login', v-show='!$store.state.isLogin') ログイン
     button(@click='logout', v-show='$store.state.isLogin') ログアウト
     br
-    a(href='http://vuejs-templates.github.io/webpack/', target='_blank', v-if='$store.state.isLogin') management
+    a(href='/temp', target='_blank', v-if='$store.state.isLogin', @click.stop.prevent='toManagement') management
     br
     a(href='http://vuejs-templates.github.io/webpack/', target='_blank', v-if='$store.state.isLogin') service
     br
@@ -66,6 +66,10 @@ export default class HelloWorld extends Vue {
 
   private beforeCreate() {
     this.$store.dispatch('checkLoginStatus');
+  }
+
+  private toManagement(): void {
+    this.$router.push({ name: 'management', params: { user: 'admin' } });
   }
 }
 </script>
