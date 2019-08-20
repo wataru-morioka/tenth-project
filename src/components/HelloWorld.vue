@@ -1,6 +1,10 @@
 <template lang="pug">
   div.hello
-    p testtest
+    input(type='file', @change='onDrop($event)')
+    button(@click='getImage') 画像ダウンロード
+    input(type='file', @change='minify($event)')
+    img#asakura
+    br
     button(@click='getName') 取得します
     button(@click='login', v-show='!$store.state.isLogin') ログイン
     button(@click='logout', v-show='$store.state.isLogin') ログアウト
@@ -44,6 +48,10 @@
 
 <script lang="ts">
 import { Component, Prop, Vue } from 'vue-property-decorator';
+// import { url } from 'inspector';
+import axios from 'axios';
+// tslint:disable-next-line:no-var-requires
+const fs = require('fs');
 
 @Component
 export default class HelloWorld extends Vue {
@@ -70,6 +78,68 @@ export default class HelloWorld extends Vue {
 
   private toManagement(): void {
     this.$router.push({ name: 'management', params: { user: 'admin' } });
+  }
+
+  private onDrop(event: any): void {
+    const params = new FormData();
+    params.append('file', event.target.files[0]);
+    axios.post('https://express.management/image', params)
+    .then((res) => {
+      alert('success');
+    })
+    .catch((err) => {
+      alert(err);
+    });
+  }
+
+  private getImage(): void {
+    const params = {id: 'test'};
+    axios.post('https://express.management/download', params)
+    .then((res) => {
+      const buffer = Buffer.from(res.data.data);
+      const blob = new Blob([buffer], {type: res.data.mimetype});
+      const blobURL = window.URL.createObjectURL(blob);
+
+      const img = document.getElementById('asakura');
+      (img as HTMLImageElement).src = blobURL;
+
+      const a = document.createElement('a');
+      a.download = res.data.file_name;
+      a.href = blobURL;
+      a.click();
+      alert('success');
+    })
+    .catch((err) => {
+      alert(err);
+    });
+  }
+
+  private minify(event: any): void {
+    const params = new FormData();
+    params.append('file', event.target.files[0]);
+
+    axios({
+      url: 'https://express.management/minify',
+      method: 'POST',
+      responseType: 'blob',
+      data: params,
+    }).then((res) => {
+      // const buffer = Buffer.from(res.data);
+      const blob = new Blob([res.data], {type: res.headers['content-type']});
+      const blobURL = window.URL.createObjectURL(blob);
+
+      const img = document.getElementById('asakura');
+      (img as HTMLImageElement).src = blobURL;
+
+      const a = document.createElement('a');
+      a.download = '圧縮後';
+      a.href = blobURL;
+      a.click();
+      alert('success');
+    })
+    .catch((err) => {
+      alert(err);
+    });
   }
 }
 </script>

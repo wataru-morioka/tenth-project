@@ -1,6 +1,6 @@
 <template lang='pug'>
   div.management
-    h1 管理画面
+    h1 Management
     HelloWorld
 </template>
 
