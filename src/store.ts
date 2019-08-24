@@ -95,8 +95,8 @@ export default new Vuex.Store({
       });
     },
 
-    async checkLoginStatus({ commit, state, rootState }) {
-      await firebase.auth().onAuthStateChanged(async (user) => {
+    checkLoginStatus({ commit, state, rootState }) {
+      firebase.auth().onAuthStateChanged((user) => {
         commit('changeStatus', {
           status: !!user,
         });
@@ -126,6 +126,9 @@ export default new Vuex.Store({
   getters: {
     getName: (state, getters) => () => {
       return state.userName;
+    },
+    isLogin: (state, getters) => {
+      return state.isLogin;
     },
   },
 });

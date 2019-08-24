@@ -7,8 +7,10 @@ import firebase from 'firebase/app';
 import 'firebase/auth';
 // const VueAnalytics = require('vue-analytics');
 // import 'firebase/messaging';
+const SuiVue = require('semantic-ui-vue');
 
 Vue.config.productionTip = false;
+Vue.use(SuiVue);
 
 const firebaseConfig = {
   apiKey: 'AIzaSyBb1EQB5F7Q7O9n8BH1Fy929XhH7tRy6OM',

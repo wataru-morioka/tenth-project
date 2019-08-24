@@ -1,7 +1,6 @@
 <template lang='pug'>
-  div.management
-    h1 Management
-    HelloWorld
+  div.jagermeister
+    h1 This is an about page
 </template>
 
 <script lang='ts'>
@@ -10,8 +9,8 @@ import HelloWorld from '@/components/HelloWorld.vue'; // @ is an alias to /src
 
 @Component({
   components: {
-    HelloWorld,
+    // HelloWorld,
   },
 })
-export default class Management extends Vue {}
+export default class Jagermeister extends Vue {}
 </script>
