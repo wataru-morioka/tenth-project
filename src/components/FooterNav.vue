@@ -7,7 +7,7 @@
     a(href='#', @click.stop.prevent='logout', v-show='isLogin') Logout
     br
     p#user-account(v-if='isLogin') {{ email }}
-    a.extension(href='#', target='_blank', v-if='isLogin', @click.stop.prevent='toManagement')
+    a.extension(href='#', v-if='isLogin', @click.stop.prevent='toManagement')
       p(style='transition-delay: 0s')
         span M
       p(style='transition-delay: 0.02s')
@@ -28,7 +28,7 @@
         span N
       p(style='transition-delay: 0.18s')
         span T
-    a.extension(href='#', target='_blank', v-if='isLogin', @click.stop.prevent='toService')
+    a.extension(href='#', v-if='isLogin', @click.stop.prevent='toService')
       p(style='transition-delay: 0s')
         span S
       p(style='transition-delay: 0.02s')
@@ -43,7 +43,7 @@
         span C
       p(style='transition-delay: 0.12s')
         span E
-    a.extension(href='#', target='_blank', v-if='isLogin', @click.stop.prevent='toWebrtc')
+    a.extension(href='#', v-if='isLogin', @click.stop.prevent='toWebrtc')
       p(style='transition-delay: 0s')
         span W
       p(style='transition-delay: 0.02s')
@@ -59,21 +59,16 @@
     br
     div(v-show='isLogin', style='height: 10px;')
     div.horizontal-array
-      div.rotate-item
-        button(class="ui circular facebook icon button" data-content="facebook" data-variation="tiny")
-          i(class="facebook icon")
-      div.rotate-item
-        button(class="ui circular twitter icon button"  data-content="twitter" data-variation="tiny")
-          i(class="twitter icon")
-      div.rotate-item
-        button(class="ui circular instagram icon button"  data-content="instagram" data-variation="tiny")
-          i(class="instagram icon")
-      div.rotate-item
-        button(class="ui circular google plus icon button"  data-content="google plus" data-variation="tiny")
-          i(class="google plus icon")
-      div.rotate-item
-        button(class="ui circular youtube plus icon button"  data-content="youtube" data-variation="tiny")
-          i(class="youtube icon")
+      button(class="ui circular facebook icon button" data-content="facebook" data-variation="tiny")
+        i(class="facebook icon")
+      button(class="ui circular twitter icon button"  data-content="twitter" data-variation="tiny")
+        i(class="twitter icon")
+      button(class="ui circular instagram icon button"  data-content="instagram" data-variation="tiny")
+        i(class="instagram icon")
+      button(class="ui circular google plus icon button"  data-content="google plus" data-variation="tiny")
+        i(class="google plus icon")
+      button(class="ui circular youtube plus icon button"  data-content="youtube" data-variation="tiny")
+        i(class="youtube icon")
     br
     img#footer-icon(src='../assets/jager-logo.png', @click='toHome')
 </template>
@@ -130,6 +125,7 @@ export default class FooterNav extends Vue {
 $mes-color: #42b983;
 
 a {
+  font-weight: bold;
   font-size: 12px;
   color: $mes-color;
 }
@@ -146,7 +142,6 @@ a {
 }
 
 .extension {
-  font-weight: bold;
   font-size: 11px;
   margin: 20px;
   color: $mes-color;
@@ -157,17 +152,17 @@ a {
   justify-content: center;
 }
 
-.rotate-item {
+.icon.button {
   transition: 0.5s;
 }
 
-.rotate-item:hover {
+.icon.button:hover {
   transform: rotateX( 360deg );
 }
 
 .extension p {
   display: inline-block;
-  transition: 0.7s;
+  transition: 0.5s;
 }
 
 .extension:hover p {

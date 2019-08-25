@@ -1,9 +1,9 @@
 <template lang='pug'>
   div#center
-    div.icon-wrap
-      img.slide-icon(src='../assets/prev.png', @click='toAbout')
-    div.icon-wrap
-      img.slide-icon(src='../assets/next.png', @click='toAbout')
+    div.icon-wrap(@click='toPrev')
+      img.slide-icon(src='../assets/prev.png')
+    div.icon-wrap(@click='toNext')
+      img.slide-icon(src='../assets/next.png')
 </template>
 
 <script lang='ts'>
@@ -14,23 +14,29 @@ const fs = require('fs');
 
 @Component
 export default class CenterNav extends Vue {
-  // @Prop() private msg!: string;
+  private viewMap: { [key: number]: string; } = {
+    0: 'home',
+    1: 'sauza',
+    2: 'jagermeister',
+  };
 
-  private toAbout(): void {
-    this.$router.push({ name: 'about', params: { user: 'admin' } });
+  private toNext(): void {
+    const targetIndex = this.getTargetIndex(1);
+    this.$router.push({ name: this.viewMap[targetIndex], params: { user: 'admin' } });
   }
 
-  private toProject(): void {
-    this.$router.push({ name: 'project', params: { user: 'admin' } });
+  private toPrev(): void {
+    const targetIndex = this.getTargetIndex(2);
+    this.$router.push({ name: this.viewMap[targetIndex], params: { user: 'admin' } });
   }
 
-  private toMember(): void {
-    this.$router.push({ name: 'member', params: { user: 'admin' } });
+  private getTargetIndex(additional: number): number {
+    this.$store.commit('setViewIndex', {
+      addition: additional,
+    });
+    return this.$store.state.currentViewIndex % 3;
   }
 
-  private toContact(): void {
-    this.$router.push({ name: 'contact', params: { user: 'admin' } });
-  }
 }
 </script>
 

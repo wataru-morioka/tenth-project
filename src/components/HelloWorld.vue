@@ -6,15 +6,15 @@
     img#asakura
     br
     button(@click='getName') 取得します
-    //- button(@click='login', v-show='!$store.state.isLogin') ログイン
-    //- button(@click='logout', v-show='$store.state.isLogin') ログアウト
-    //- br
-    //- a(href='/temp', target='_blank', v-if='$store.state.isLogin', @click.stop.prevent='toManagement') management
-    //- br
-    //- a(href='http://vuejs-templates.github.io/webpack/', target='_blank', v-if='$store.state.isLogin') service
-    //- br
-    //- a(href='http://vuejs-templates.github.io/webpack/', target='_blank', v-if='$store.state.isLogin') rtc
-    //- p(v-if='$store.state.isLogin') {{ $store.state.email }}
+    button(@click='login', v-show='!$store.state.isLogin') ログイン
+    button(@click='logout', v-show='$store.state.isLogin') ログアウト
+    br
+    a(href='/temp', target='_blank', v-if='$store.state.isLogin', @click.stop.prevent='toManagement') management
+    br
+    a(href='http://vuejs-templates.github.io/webpack/', target='_blank', v-if='$store.state.isLogin') service
+    br
+    a(href='http://vuejs-templates.github.io/webpack/', target='_blank', v-if='$store.state.isLogin') rtc
+    p(v-if='$store.state.isLogin') {{ $store.state.email }}
 </template>
 
 <script lang="ts">

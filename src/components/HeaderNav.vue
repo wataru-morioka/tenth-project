@@ -5,6 +5,16 @@
     div#header-menu
       div
         div.rotate-menu
+          a(href='#', @click.stop.prevent='toHome')
+            p(style='transition-delay: 0s')
+              span H
+            p(style='transition-delay: 0.02s')
+              span O
+            p(style='transition-delay: 0.04s')
+              span M
+            p(style='transition-delay: 0.06s')
+              span E
+        div.rotate-menu
           a(href='#', @click.stop.prevent='toAbout')
             p(style='transition-delay: 0s')
               span A
@@ -57,7 +67,7 @@
             p(style='transition-delay: 0.06s')
               span T
             p(style='transition-delay: 0.08s') 
-              spanA
+              span A
             p(style='transition-delay: 0.10s')
               span C
             p(style='transition-delay: 0.12s')
@@ -68,10 +78,11 @@
         div.menu
           div.header MENU
           div.divider
-          div.item ABOUT
-          div.item PROJECT
-          div.item MEMBER
-          div.item CONTACT
+          div.item(@click='toHome') HOME
+          div.item(@click='toAbout') ABOUT
+          div.item(@click='toProject') PROJECT
+          div.item(@click='toMember') MEMBER
+          div.item(@click='toContact') CONTACT
     </div>
 </template>
 
@@ -81,7 +92,6 @@ import axios from 'axios';
 import jQuery from 'jquery';
 // tslint:disable-next-line:no-var-requires
 const fs = require('fs');
-// declare let $.fn.dropdown;
 
 @Component
 export default class HeaderNav extends Vue {
@@ -94,7 +104,6 @@ export default class HeaderNav extends Vue {
   }
 
   private toHome(): void {
-    // $('#menu-dropdown').dropdown();
     this.$router.push({ name: 'home', params: { user: 'admin' } });
   }
 
@@ -131,12 +140,6 @@ $menu-color: #ffffff;
   margin-left: 50px;
   height: 40px;
   cursor: pointer;
-  transition: 0.8s;
-}
-
-#header-logo:hover {
-  -webkit-transform: rotateX(360deg);
-  transform: rotateX(360deg);
 }
 
 #header-menu {
@@ -152,9 +155,17 @@ a {
   color: $menu-color;
 }
 
-.rotate-menu {
-  margin-right: 80px;
-  display: inline-block;
+@media screen and (max-width: 768px){
+  .rotate-menu {
+    display:none;
+  }
+}
+
+@media screen and (min-width: 768px){
+  .rotate-menu {
+    margin-right: 80px;
+    display: inline-block;
+  }
 }
 
 a p {

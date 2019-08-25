@@ -17,6 +17,7 @@ export default new Vuex.Store({
     idToken: '',
     email: '',
     displayName: '',
+    currentViewIndex: 0,
   },
   mutations: {
     setUser(state, payload) {
@@ -36,6 +37,10 @@ export default new Vuex.Store({
 
     changeStatus(state, payload) {
       state.isLogin = payload.status;
+    },
+
+    setViewIndex(state, payload) {
+      state.currentViewIndex = (state.currentViewIndex + payload.addition) % 3;
     },
   },
   actions: {

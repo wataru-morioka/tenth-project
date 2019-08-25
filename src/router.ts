@@ -1,5 +1,6 @@
 import Vue from 'vue';
 import Router from 'vue-router';
+import Start from './views/Start.vue';
 import Home from './views/Home.vue';
 import About from './views/About.vue';
 import Project from './views/Project.vue';
@@ -10,6 +11,7 @@ import Sauza from './views/Sauza.vue';
 import Management from './views/Management.vue';
 import Service from './views/Service.vue';
 import Webrtc from './views/Webrtc.vue';
+import store from './store';
 declare let gtag: Function;
 
 Vue.use(Router);
@@ -20,6 +22,11 @@ const router = new Router({
   routes: [
     {
       path: '/',
+      name: 'start',
+      component: Start,
+    },
+    {
+      path: '/home',
       name: 'home',
       component: Home,
     },
@@ -77,27 +84,21 @@ router.afterEach((to, from) => {
   }
 });
 
-export default router;
+router.beforeEach((to, from, next) => {
+  if (to.path.match(/home/) || to.path.match(/jagermeister/) || to.path.match(/sauza/)) {
+    next({
+      path: '/',
+    });
+  }
 
-// export default new Router({
-//   mode: 'history',
-//   base: process.env.BASE_URL,
-//   routes: [
-//     {
-//       path: '/',
-//       name: 'home',
-//       component: Home,
-//     },
-//     {
-//       path: '/about',
-//       name: 'about',
-//       // route level code-splitting
-//       // this generates a separate chunk (about.[hash].js) for this route
-//       // which is lazy-loaded when the route is visited.
-//       component: () => import(/* webpackChunkName: "about" */ './views/About.vue'),
-//     },
-//   ],
-//   // router.afterEach((to, from) => {
-//   //   // to and from are both route objects.
-//   // })
-// });
+  if (to.path.match(/management/) || to.path.match(/service/) || to.path.match(/webrtc/)) {
+    if (!store.state.isLogin) {
+      next({
+        path: '/',
+      });
+    }
+  }
+  next();
+});
+
+export default router;
