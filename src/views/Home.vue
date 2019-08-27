@@ -1,8 +1,9 @@
 <template lang='pug'>
-  div#home
-    video(id='home-video' autoplay muted playsinline)
-      source(src='../assets/jagermeister.mp4' type='video/mp4')
-    MainNav
+div#home
+  video(id='home-video' autoplay muted playsinline)
+    source(src='../assets/jagermeister.mp4' type='video/mp4')
+  MainNav
+  CenterNav
 </template>
 
 <script lang='ts'>
@@ -44,7 +45,7 @@ export default class Home extends Vue {}
       opacity: 0;
   }
   to {
-      opacity: 1;
+      opacity: .8;
   }
 }
 </style>

@@ -25,7 +25,7 @@ export default class Sauza extends Vue {}
   overflow: hidden;
   background: rgba(0, 0, 0, .8);
   animation-name: body-fadein;
-  animation-duration: 0.5s;
+  animation-duration: 4s;
 }
  
 #sauza-video {
@@ -42,11 +42,11 @@ export default class Sauza extends Vue {}
 @keyframes body-fadein {
   from {
       opacity: 0;
-      transform: translateX(200px);
+      // transform: translateX(300px);
   }
   to {
-      opacity: 1;
-      transform: translateX(0);
+      opacity: 0.8;
+      // transform: translateX(0);
   }
 }
 </style>

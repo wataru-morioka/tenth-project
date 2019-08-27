@@ -1,89 +1,89 @@
 <template lang='pug'>
-  div#header
-    div
-      img#header-logo(src='../assets/jagermeister.png', @click='toHome')
-    div#header-menu
+  div#header-nav
+    div#header
       div
-        div.rotate-menu
-          a(href='#', @click.stop.prevent='toHome')
-            p(style='transition-delay: 0s')
-              span H
-            p(style='transition-delay: 0.02s')
-              span O
-            p(style='transition-delay: 0.04s')
-              span M
-            p(style='transition-delay: 0.06s')
-              span E
-        div.rotate-menu
-          a(href='#', @click.stop.prevent='toAbout')
-            p(style='transition-delay: 0s')
-              span A
-            p(style='transition-delay: 0.02s')
-              span B
-            p(style='transition-delay: 0.04s')
-              span O
-            p(style='transition-delay: 0.06s')
-              span U
-            p(style='transition-delay: 0.08s')
-              span T
-        div.rotate-menu
-          a(href='#', @click.stop.prevent='toProject')
-            p(style='transition-delay: 0s')
-              span P
-            p(style='transition-delay: 0.02s')
-              span R
-            p(style='transition-delay: 0.04s')
-              span O
-            p(style='transition-delay: 0.06s')
-              span J
-            p(style='transition-delay: 0.08s')
-              span E
-            p(style='transition-delay: 0.10s')
-              span C
-            p(style='transition-delay: 0.12s')
-              span T
-        div.rotate-menu
-          a(href='#', @click.stop.prevent='toMember')
-            p(style='transition-delay: 0s')
-              span M
-            p(style='transition-delay: 0.02s')
-              span E
-            p(style='transition-delay: 0.04s')
-              span M
-            p(style='transition-delay: 0.06s')
-              span B
-            p(style='transition-delay: 0.08s')
-              span E
-            p(style='transition-delay: 0.10s')
-              span R
-        div.rotate-menu
-          a(href='#', @click.stop.prevent='toContact')
-            p(style='transition-delay: 0s')
-              span C
-            p(style='transition-delay: 0.02s')
-              span O
-            p(style='transition-delay: 0.04s')
-              span N
-            p(style='transition-delay: 0.06s')
-              span T
-            p(style='transition-delay: 0.08s') 
-              span A
-            p(style='transition-delay: 0.10s')
-              span C
-            p(style='transition-delay: 0.12s')
-              span T
-      div#menu-dropdown(class="ui pointing link icon dropdown")
-        div.text MENU
-        i(class="large bars icon")
-        div.menu
-          div.header MENU
-          div.divider
-          div.item(@click='toHome') HOME
-          div.item(@click='toAbout') ABOUT
-          div.item(@click='toProject') PROJECT
-          div.item(@click='toMember') MEMBER
-          div.item(@click='toContact') CONTACT
-    </div>
+        img#header-logo(src='../assets/jagermeister.png', @click='toHome')
+      div#header-menu
+        div
+          div.rotate-menu
+            a(href='#', @click.stop.prevent='toHome')
+              p(style='transition-delay: 0s')
+                span H
+              p(style='transition-delay: 0.02s')
+                span O
+              p(style='transition-delay: 0.04s')
+                span M
+              p(style='transition-delay: 0.06s')
+                span E
+          div.rotate-menu
+            a(href='#', @click.stop.prevent='toAbout')
+              p(style='transition-delay: 0s')
+                span A
+              p(style='transition-delay: 0.02s')
+                span B
+              p(style='transition-delay: 0.04s')
+                span O
+              p(style='transition-delay: 0.06s')
+                span U
+              p(style='transition-delay: 0.08s')
+                span T
+          div.rotate-menu
+            a(href='#', @click.stop.prevent='toProject')
+              p(style='transition-delay: 0s')
+                span P
+              p(style='transition-delay: 0.02s')
+                span R
+              p(style='transition-delay: 0.04s')
+                span O
+              p(style='transition-delay: 0.06s')
+                span J
+              p(style='transition-delay: 0.08s')
+                span E
+              p(style='transition-delay: 0.10s')
+                span C
+              p(style='transition-delay: 0.12s')
+                span T
+          div.rotate-menu
+            a(href='#', @click.stop.prevent='toMember')
+              p(style='transition-delay: 0s')
+                span M
+              p(style='transition-delay: 0.02s')
+                span E
+              p(style='transition-delay: 0.04s')
+                span M
+              p(style='transition-delay: 0.06s')
+                span B
+              p(style='transition-delay: 0.08s')
+                span E
+              p(style='transition-delay: 0.10s')
+                span R
+          div.rotate-menu
+            a(href='#', @click.stop.prevent='toContact')
+              p(style='transition-delay: 0s')
+                span C
+              p(style='transition-delay: 0.02s')
+                span O
+              p(style='transition-delay: 0.04s')
+                span N
+              p(style='transition-delay: 0.06s')
+                span T
+              p(style='transition-delay: 0.08s') 
+                span A
+              p(style='transition-delay: 0.10s')
+                span C
+              p(style='transition-delay: 0.12s')
+                span T
+        div#menu-dropdown(class="ui pointing link icon dropdown", @mouseover= 'drop', @click='drop', @mouseleave= 'leave')
+          div.text MENU
+          i(class="large bars icon")
+          div.menu
+            div.header MENU
+            div.divider
+            div.item(@click='toHome') HOME
+            div.item(@click='toAbout') ABOUT
+            div.item(@click='toProject') PROJECT
+            div.item(@click='toMember') MEMBER
+            div.item(@click='toContact') CONTACT
 </template>
 
 <script lang='ts'>
@@ -96,6 +96,7 @@ const fs = require('fs');
 @Component
 export default class HeaderNav extends Vue {
   // @Prop() private msg!: string;
+  // private isDropdownShow: boolean = false;
 
   private mounted() {
     $('#menu-dropdown').dropdown({
@@ -103,7 +104,18 @@ export default class HeaderNav extends Vue {
     });
   }
 
+  private drop(): void {
+    $('.content').css('top', '300px');
+  }
+
+  private leave(): void {
+    $('.content').css('top', '80px');
+  }
+
   private toHome(): void {
+    this.$store.commit('setViewIndex', {
+      index: 0,
+    });
     this.$router.push({ name: 'home', params: { user: 'admin' } });
   }
 
@@ -129,6 +141,16 @@ export default class HeaderNav extends Vue {
 <style scoped lang='scss'>
 $menu-color: #ffffff;
 
+// #header-nav {
+//   // position: fixed;
+//   // top: 0;
+//   // left: 0;
+//   // right: 0;
+//   // z-index: 10;
+//   // flex-grow: 1;
+//   // margin-bottom: 300px;
+// }
+
 #header {
   display: flex;
   justify-content:space-between;
@@ -136,14 +158,15 @@ $menu-color: #ffffff;
 }
 
 #header-logo {
-  margin-top: 40px;
+  margin-top: 20px;
   margin-left: 50px;
   height: 40px;
   cursor: pointer;
+  opacity: .8;
 }
 
 #header-menu {
-  margin-top: 50px;
+  margin-top: 30px;
   // width: 20%;
   display: flex;
   justify-content:space-between;
@@ -155,9 +178,24 @@ a {
   color: $menu-color;
 }
 
+.menu {
+  background: (0, 0, 0, 0) !important;
+  div {
+    color: #ffffff !important;
+  }
+}
+
 @media screen and (max-width: 768px){
   .rotate-menu {
     display:none;
+  }
+
+  #header-logo {
+    margin-top: 10px;
+  }
+
+  #header-menu {
+    margin-top: 20px;
   }
 }
 
@@ -168,23 +206,23 @@ a {
   }
 }
 
-a p {
-  display: inline-block;
-  transition: 0.7s;
-}
+a {
+  p {
+    display: inline-block;
+    transition: 0.7s;
+  }
+} 
 
-a:hover p {
-  -webkit-transform: rotateX(360deg);
-  transform: rotateX(360deg);
-}
+a:hover {
+  p {
+    -webkit-transform: rotateX(360deg);
+    transform: rotateX(360deg);
+  }
+} 
 
 .bars {
   margin-right: 50px;
   cursor: pointer;
-}
-
-.menu {
-  background: rgba(0, 0, 0, .3);
 }
 
 @keyframes rotate_anime {

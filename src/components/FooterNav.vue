@@ -1,76 +1,76 @@
 <template lang='pug'>
-  div
-    //- img#footer-icon(src='../assets/jager-logo.png', @click='toHome')
-    //- br
-    a(href='#', @click.stop.prevent='login', v-show='!isLogin') Login
-    div(v-show='!isLogin', style='height: 20px;')
-    a(href='#', @click.stop.prevent='logout', v-show='isLogin') Logout
-    br
-    p#user-account(v-if='isLogin') {{ email }}
-    a.extension(href='#', v-if='isLogin', @click.stop.prevent='toManagement')
-      p(style='transition-delay: 0s')
-        span M
-      p(style='transition-delay: 0.02s')
-        span A
-      p(style='transition-delay: 0.04s')
-        span N
-      p(style='transition-delay: 0.06s')
-        span A
-      p(style='transition-delay: 0.08s')
-        span G
-      p(style='transition-delay: 0.10s')
-        span E
-      p(style='transition-delay: 0.12s')
-        span M
-      p(style='transition-delay: 0.14s')
-        span E
-      p(style='transition-delay: 0.16s')
-        span N
-      p(style='transition-delay: 0.18s')
-        span T
-    a.extension(href='#', v-if='isLogin', @click.stop.prevent='toService')
-      p(style='transition-delay: 0s')
-        span S
-      p(style='transition-delay: 0.02s')
-        span E
-      p(style='transition-delay: 0.04s')
-        span R
-      p(style='transition-delay: 0.06s')
-        span V
-      p(style='transition-delay: 0.08s')
-        span I
-      p(style='transition-delay: 0.10s')
-        span C
-      p(style='transition-delay: 0.12s')
-        span E
-    a.extension(href='#', v-if='isLogin', @click.stop.prevent='toWebrtc')
-      p(style='transition-delay: 0s')
-        span W
-      p(style='transition-delay: 0.02s')
-        span E
-      p(style='transition-delay: 0.04s')
-        span B
-      p(style='transition-delay: 0.06s')
-        span R
-      p(style='transition-delay: 0.08s')
-        span T
-      p(style='transition-delay: 0.10s')
-        span C
-    br
-    div(v-show='isLogin', style='height: 10px;')
-    div.horizontal-array
-      button(class="ui circular facebook icon button" data-content="facebook" data-variation="tiny")
-        i(class="facebook icon")
-      button(class="ui circular twitter icon button"  data-content="twitter" data-variation="tiny")
-        i(class="twitter icon")
-      button(class="ui circular instagram icon button"  data-content="instagram" data-variation="tiny")
-        i(class="instagram icon")
-      button(class="ui circular google plus icon button"  data-content="google plus" data-variation="tiny")
-        i(class="google plus icon")
-      button(class="ui circular youtube plus icon button"  data-content="youtube" data-variation="tiny")
-        i(class="youtube icon")
-    br
-    img#footer-icon(src='../assets/jager-logo.png', @click='toHome')
+  div#footer-nav
+    div
+      //- img#footer-icon(src='../assets/jager-logo.png', @click='toHome')
+      //- br
+      a(href='#', @click.stop.prevent='login', v-show='!isLogin') Login
+      div(v-show='!isLogin', style='height: 20px;')
+      a(href='#', @click.stop.prevent='logout', v-show='isLogin') Logout
+      br
+      p#user-account(v-if='isLogin') {{ email }}
+      a.extension(href='#', v-if='isLogin', @click.stop.prevent='toManagement')
+        p(style='transition-delay: 0s')
+          span M
+        p(style='transition-delay: 0.02s')
+          span A
+        p(style='transition-delay: 0.04s')
+          span N
+        p(style='transition-delay: 0.06s')
+          span A
+        p(style='transition-delay: 0.08s')
+          span G
+        p(style='transition-delay: 0.10s')
+          span E
+        p(style='transition-delay: 0.12s')
+          span M
+        p(style='transition-delay: 0.14s')
+          span E
+        p(style='transition-delay: 0.16s')
+          span N
+        p(style='transition-delay: 0.18s')
+          span T
+      a.extension(href='#', v-if='isLogin', @click.stop.prevent='toService')
+        p(style='transition-delay: 0s')
+          span S
+        p(style='transition-delay: 0.02s')
+          span E
+        p(style='transition-delay: 0.04s')
+          span R
+        p(style='transition-delay: 0.06s')
+          span V
+        p(style='transition-delay: 0.08s')
+          span I
+        p(style='transition-delay: 0.10s')
+          span C
+        p(style='transition-delay: 0.12s')
+          span E
+      a.extension(href='#', v-if='isLogin', @click.stop.prevent='toWebrtc')
+        p(style='transition-delay: 0s')
+          span W
+        p(style='transition-delay: 0.02s')
+          span E
+        p(style='transition-delay: 0.04s')
+          span B
+        p(style='transition-delay: 0.06s')
+          span R
+        p(style='transition-delay: 0.08s')
+          span T
+        p(style='transition-delay: 0.10s')
+          span C
+      br
+      div(v-show='isLogin', style='height: 10px;')
+      div.horizontal-array
+        button(class="ui circular facebook icon button" data-content="facebook" data-variation="tiny")
+          i(class="facebook icon")
+        button(class="ui circular twitter icon button"  data-content="twitter" data-variation="tiny")
+          i(class="twitter icon")
+        button(class="ui circular instagram icon button"  data-content="instagram" data-variation="tiny")
+          i(class="instagram icon")
+        button(class="ui circular google plus icon button"  data-content="google plus" data-variation="tiny")
+          i(class="google plus icon")
+        button(class="ui circular youtube plus icon button"  data-content="youtube" data-variation="tiny")
+          i(class="youtube icon")
+      img#footer-icon(src='../assets/jager-logo.png', @click='toHome')
 </template>
 
 <script lang='ts'>
@@ -104,6 +104,9 @@ export default class FooterNav extends Vue {
   }
 
   private toHome(): void {
+    this.$store.commit('setViewIndex', {
+      index: 0,
+    });
     this.$router.push({ name: 'home', params: { user: 'admin' } });
   }
 
@@ -124,8 +127,11 @@ export default class FooterNav extends Vue {
 <style scoped lang='scss'>
 $mes-color: #42b983;
 
+#footer-nav {
+  margin-top: auto;
+}
+
 a {
-  font-weight: bold;
   font-size: 12px;
   color: $mes-color;
 }
@@ -135,16 +141,23 @@ a {
 }
 
 #footer-icon {
-  height: 100px;
+  height: 80px;
   cursor: pointer;
   animation: rotate_anime;
   animation-duration: 2s;
+  opacity: .7;
 }
 
 .extension {
+  font-weight: bold;
   font-size: 11px;
   margin: 20px;
   color: $mes-color;
+
+  p {
+    display: inline-block;
+    transition: 0.5s;
+  }
 }
 
 .horizontal-array {
@@ -154,21 +167,19 @@ a {
 
 .icon.button {
   transition: 0.5s;
+  opacity: .8;
 }
 
 .icon.button:hover {
   transform: rotateX( 360deg );
 }
 
-.extension p {
-  display: inline-block;
-  transition: 0.5s;
-}
-
-.extension:hover p {
-  -webkit-transform: rotateX(360deg);
-  transform: rotateX(360deg);
-}
+.extension:hover {
+  p {
+    -webkit-transform: rotateX(360deg);
+    transform: rotateX(360deg);
+  }
+} 
 
 @keyframes rotate_anime {
     0% {

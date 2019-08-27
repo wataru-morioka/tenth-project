@@ -85,7 +85,10 @@ router.afterEach((to, from) => {
 });
 
 router.beforeEach((to, from, next) => {
-  if (to.path.match(/home/) || to.path.match(/jagermeister/) || to.path.match(/sauza/)) {
+  if (!(from.path.match(/home/) || from.path.match(/jagermeister/) || from.path.match(/sauza/)
+   || from.path.match(/about/) || from.path.match(/project/) || from.path.match(/member/) || from.path.match(/contact/)
+   || from.path.match(/management/) || from.path.match(/service/) || from.path.match(/webrtc/))
+   && (to.path.match(/home/) || to.path.match(/jagermeister/) || to.path.match(/sauza/))) {
     next({
       path: '/',
     });

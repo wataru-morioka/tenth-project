@@ -1,9 +1,10 @@
 <template lang='pug'>
-  div#center
-    div.icon-wrap(@click='toPrev')
-      img.slide-icon(src='../assets/prev.png')
-    div.icon-wrap(@click='toNext')
-      img.slide-icon(src='../assets/next.png')
+  div#center-nav
+    div#center
+      div.icon-wrap(@click='toPrev')
+        img.slide-icon(src='../assets/prev.png')
+      div.icon-wrap(@click='toNext')
+        img.slide-icon(src='../assets/next.png')
 </template>
 
 <script lang='ts'>
@@ -31,18 +32,29 @@ export default class CenterNav extends Vue {
   }
 
   private getTargetIndex(additional: number): number {
+    const currentIndex = (this.$store.state.currentViewIndex + additional) % 3;
     this.$store.commit('setViewIndex', {
-      addition: additional,
+      index: currentIndex,
     });
-    return this.$store.state.currentViewIndex % 3;
+    return currentIndex;
   }
-
 }
 </script>
 
 <!-- Add 'scoped' attribute to limit CSS to this component only -->
 <style scoped lang='scss'>
 $menu-color: #ffffff;
+
+#center-nav {
+  position: absolute;
+  width: 100%;
+  top: 0px;
+  right: 0px;
+  bottom: 0px;
+  left: 0px;
+  margin: auto;
+  height: 50px;
+}
 
 #center {
   display: flex;

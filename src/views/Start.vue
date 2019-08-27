@@ -11,26 +11,26 @@
 import { Component, Vue } from 'vue-property-decorator';
 import jQuery from 'jquery';
 
-history.pushState(null, null);
-window.addEventListener('popstate', (e) => {
-  window.location.reload();
-});
+// history.pushState(null, 'null');
+// window.addEventListener('popstate', (e) => {
+//   window.location.reload();
+// });
 
 window.onload = () => {
   const $progress = $('.ui.progress');
-  // restart to zero
-  // clearInterval(window.fakeProgress);
-  // $progress.progress('reset');
-    // updates every 10ms until complete
   window.fakeProgress = setInterval(() => {
     $progress.progress('increment');
     if($progress.progress('is complete')) {
-      clearInterval(window.fakeProgress);
       setTimeout(() => {
-        document.getElementById('to-home-bt').click();
+        const bt = document.getElementById('to-home-bt');
+        if (bt == null) {
+          return;
+        }
+        bt.click();
       }, 400);
     }
-  }, 50);
+  // }, 50);
+  }, 5);
 };
 
 @Component
@@ -78,7 +78,7 @@ export default class Start extends Vue {
 }
 
 .ui.indicating .label {
-  color: #ffffffa1 !important; 
+  color: #ffffff70 !important; 
 }
 
 #to-home-bt {

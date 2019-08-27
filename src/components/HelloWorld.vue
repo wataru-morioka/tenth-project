@@ -99,7 +99,7 @@ export default class HelloWorld extends Vue {
       const blob = new Blob([res.data], {type: res.headers['content-type']});
       const blobURL = window.URL.createObjectURL(blob);
 
-      const img = document.getElementById('asakura');
+      const img = document.querySelector('#asakura');
       (img as HTMLImageElement).src = blobURL;
 
       const a = document.createElement('a');

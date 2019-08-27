@@ -1,21 +1,18 @@
 <template lang='pug'>
   div#nav
     HeaderNav
-    CenterNav
-    FooterNav
+    //- FooterNav
 </template>
 
 <script lang='ts'>
 import { Component, Vue } from 'vue-property-decorator';
 import HeaderNav from '@/components/HeaderNav.vue';
-import CenterNav from '@/components/CenterNav.vue';
-import FooterNav from '@/components/FooterNav.vue';
+// import FooterNav from '@/components/FooterNav.vue';
 
 @Component({
   components: {
     HeaderNav,
-    CenterNav,
-    FooterNav,
+    // FooterNav,
   },
 })
 export default class MainNav extends Vue {}
@@ -27,10 +24,12 @@ export default class MainNav extends Vue {}
   display: flex;
   flex-direction: column;
   width: 100%;
-  height: 100vh;
+  // height: 100vh;
+  overflow: hidden;
   min-height: 100%;
   animation-name: fadein;
   animation-duration: 5s;
+  // z-index: 10;
 }
 
 @keyframes fadein {

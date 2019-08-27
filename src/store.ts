@@ -40,7 +40,7 @@ export default new Vuex.Store({
     },
 
     setViewIndex(state, payload) {
-      state.currentViewIndex = (state.currentViewIndex + payload.addition) % 3;
+      state.currentViewIndex = payload.index;
     },
   },
   actions: {
