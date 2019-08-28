@@ -192,10 +192,15 @@ a {
 
   #header-logo {
     margin-top: 10px;
+    margin-left: 20px;
   }
 
   #header-menu {
     margin-top: 20px;
+  }
+
+  .bars {
+    margin-right: 20px !important;
   }
 }
 

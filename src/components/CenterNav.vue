@@ -74,6 +74,6 @@ $menu-color: #ffffff;
 }
 
 .slide-icon {
-  width: 20px;
+  width: 15px;
 }
 </style>

@@ -24,7 +24,7 @@ export default class Home extends Vue {}
   height: 100vh;
   position: relative;
   overflow: hidden;
-  background: rgba(0, 0, 0, .8);
+  background: rgba(0, 0, 0, .6);
   animation-name: body-fadein;
   animation-duration: 4s;
 }

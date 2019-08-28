@@ -1,10 +1,10 @@
 <template lang='pug'>
   div.content(class="ui two column divided grid")
     div.row
-      div.column(style='transition-delay: 2s;')
+      div.column.sp(style='transition-delay: 2s;')
         div
           img.content-img.img-left(src='../assets/about8.jpg')
-      div.column.msg(style='transition-delay: 3s;')
+      div.column.msg.sp(style='transition-delay: 3s;')
         div.message
           div
             span Our Concept
@@ -24,10 +24,10 @@
             div CEO
             div Wataru Morioka
     div.row
-      div.column.sp(style='transition-delay: 2s;')
+      div.column(style='transition-delay: 2s;')
         div
           img.content-img.img-right(src='../assets/about9.jpg')
-      div.column.msg.sp(style='transition-delay: 3s;')
+      div.column.msg(style='transition-delay: 3s;')
         div.message.message-right
             div
               span Request
@@ -143,15 +143,16 @@ import { Component, Vue } from 'vue-property-decorator';
 import jQuery from 'jQuery';
 
 const fadein = () => {
+  const offset = 100;
   const scrollTop = $(window).scrollTop();
   const scrollBtm = scrollTop + $(window).height();
-  const effectPos = scrollBtm - 60;
+  const effectPos = scrollBtm - offset;
   $('.column').each( function() {
     const thisPos = $(this).offset().top;
     if ( effectPos > thisPos ) {
       $(this).css({
           opacity: 1,
-          transform: 'translateY(0)',
+          transform: 'translate(0px, 0px)',
       });
     }
   });
@@ -175,8 +176,6 @@ export default class AboutContent extends Vue {
   overflow-y: scroll;
   height: auto;
   width: 100vw;
-  // margin-top: 100px;
-  // z-index: 10;
 }
 
 .row {
@@ -186,9 +185,10 @@ export default class AboutContent extends Vue {
 .column {
   min-width: 50%;
   width: 100%;
+  padding-right: 0 !important;
   opacity: 0;
-  transform: translateY(60px);
-  transition: 3s;
+  transform: translate(0px, 50px);
+  transition: 2s;
 
   .message {
       width: 70%;
@@ -215,13 +215,10 @@ export default class AboutContent extends Vue {
 .content-img {
   text-align: center;
   width: 98%;
-  // position: fixed;
-  // z-index: -30 !important;
-  // margin-left: 51%;
 }
 
 .img-right {
-  margin-left: 103%;
+  margin-left: 104%;
 }
 
 .message-right {
@@ -238,20 +235,26 @@ export default class AboutContent extends Vue {
   .message-right {
     margin: auto;
   }
+
   .column {
     min-width: 100%;
-    padding-right: 0 !important;
-  }
-  .column.sp {
     transition-delay: 0s !important;
   }
+
+  .content-img {
+    width: 98%;
+  }
+  .column.sp {
+    transition-delay: 2s !important;
+  }
   .column.msg.sp {
-    transition-delay: 1s !important;
+    transition-delay: 3s !important;
   }
 
   .column .message {
     width: 90%;
     margin: auto;
+    padding-left: 4%;
   }
 }
 </style>

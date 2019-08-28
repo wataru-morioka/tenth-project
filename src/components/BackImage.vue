@@ -36,7 +36,7 @@ export default class Back extends Vue {}
   right: 0;
   bottom: 0;
   margin: auto;
-  width: 500px;
+  width: 430px;
   z-index: -4;
 }
 

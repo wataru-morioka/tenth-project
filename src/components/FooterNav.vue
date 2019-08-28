@@ -1,8 +1,6 @@
 <template lang='pug'>
   div#footer-nav
     div
-      //- img#footer-icon(src='../assets/jager-logo.png', @click='toHome')
-      //- br
       a(href='#', @click.stop.prevent='login', v-show='!isLogin') Login
       div(v-show='!isLogin', style='height: 20px;')
       a(href='#', @click.stop.prevent='logout', v-show='isLogin') Logout
@@ -58,7 +56,8 @@
         p(style='transition-delay: 0.10s')
           span C
       br
-      div(v-show='isLogin', style='height: 10px;')
+      img#footer-icon2(src='../assets/footer-logo.png')
+      //- div(v-show='isLogin', style='height: 10px;')
       div.horizontal-array
         button(class="ui circular facebook icon button" data-content="facebook" data-variation="tiny")
           i(class="facebook icon")
@@ -70,6 +69,8 @@
           i(class="google plus icon")
         button(class="ui circular youtube plus icon button"  data-content="youtube" data-variation="tiny")
           i(class="youtube icon")
+      //- img#footer-icon2(src='../assets/footer-logo.png')
+      //- br
       img#footer-icon(src='../assets/jager-logo.png', @click='toHome')
 </template>
 
@@ -145,7 +146,11 @@ a {
   cursor: pointer;
   animation: rotate_anime;
   animation-duration: 2s;
-  opacity: .7;
+  opacity: .8;
+}
+
+#footer-icon2 {
+  width: 160px;
 }
 
 .extension {

@@ -17,17 +17,23 @@
         span C
       p(style='animation-delay: 1.6s')
         span T
+    SubMenu
+    ProjectContent
 </template>
 
 <script lang='ts'>
 import { Component, Vue } from 'vue-property-decorator';
 import BackImage from '@/components/BackImage.vue';
 import SubNav from '@/components/SubNav.vue';
+import SubMenu from '@/components/SubMenu.vue';
+import ProjectContent from '@/components/ProjectContent.vue';
 
 @Component({
   components: {
     BackImage,
     SubNav,
+    SubMenu,
+    ProjectContent,
   },
 })
 export default class Project extends Vue {}
@@ -48,6 +54,8 @@ export default class Project extends Vue {}
   bottom: 0;
   width: auto;
   height: 500px;
+  // padding-right: 0px;
+  // padding-left: 0px;
   display: flex;
   flex-direction: row;
   justify-content: center;
