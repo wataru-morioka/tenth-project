@@ -15,17 +15,21 @@
         span E
       p(style='animation-delay: 1.5s')
         span R
+    div.content
+      MemberContent
 </template>
 
 <script lang='ts'>
 import { Component, Vue } from 'vue-property-decorator';
 import BackImage from '@/components/BackImage.vue';
 import SubNav from '@/components/SubNav.vue';
+import MemberContent from '@/components/MemberContent.vue';
 
 @Component({
   components: {
     BackImage,
     SubNav,
+    MemberContent,
   },
 })
 export default class Member extends Vue {}

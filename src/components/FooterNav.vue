@@ -59,19 +59,27 @@
       img#footer-icon2(src='../assets/footer-logo.png')
       //- div(v-show='isLogin', style='height: 10px;')
       div.horizontal-array
-        button(class="ui circular facebook icon button" data-content="facebook" data-variation="tiny")
-          i(class="facebook icon")
-        button(class="ui circular twitter icon button"  data-content="twitter" data-variation="tiny")
-          i(class="twitter icon")
-        button(class="ui circular instagram icon button"  data-content="instagram" data-variation="tiny")
-          i(class="instagram icon")
-        button(class="ui circular google plus icon button"  data-content="google plus" data-variation="tiny")
-          i(class="google plus icon")
-        button(class="ui circular youtube plus icon button"  data-content="youtube" data-variation="tiny")
-          i(class="youtube icon")
+        div
+          img.icon(src='../assets/icn_fb.png')
+        div
+          img.icon(src='../assets/icn_insta.png')
+        div
+          img.icon(src='../assets/icn_tw.png')
+
+        //- button(class="ui circular facebook icon button" data-content="facebook" data-variation="tiny")
+        //-   i(class="facebook icon")
+        //- button(class="ui circular twitter icon button"  data-content="twitter" data-variation="tiny")
+        //-   i(class="twitter icon")
+        //- button(class="ui circular instagram icon button"  data-content="instagram" data-variation="tiny")
+        //-   i(class="instagram icon")
+        //- button(class="ui circular google plus icon button"  data-content="google plus" data-variation="tiny")
+        //-   i(class="google plus icon")
+        //- button(class="ui circular youtube plus icon button"  data-content="youtube" data-variation="tiny")
+        //-   i(class="youtube icon")
       //- img#footer-icon2(src='../assets/footer-logo.png')
       //- br
-      img#footer-icon(src='../assets/jager-logo.png', @click='toHome')
+      a(href='https://www.jagermeister.com/en')
+        img#footer-icon(src='../assets/jager-logo.png')
 </template>
 
 <script lang='ts'>
@@ -147,6 +155,7 @@ a {
   animation: rotate_anime;
   animation-duration: 2s;
   opacity: .8;
+  margin-right: 3px;
 }
 
 #footer-icon2 {
@@ -168,6 +177,17 @@ a {
 .horizontal-array {
   display: flex;
   justify-content: center;
+
+  img {
+    height: 15px;
+  }
+  
+  div {
+    width: 15px;
+    margin-left: 5px;
+    margin-right: 5px;
+    cursor: pointer;
+  }
 }
 
 .icon.button {

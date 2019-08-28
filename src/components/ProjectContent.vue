@@ -253,52 +253,146 @@
             img(src='../assets/11.jpg')
           div.subject
             p Club
-            h3 CAMPARI
+            h3
+              p(style='transition-delay: 0s')
+                span C
+              p(style='transition-delay: 0.02s')
+                span A
+              p(style='transition-delay: 0.04s')
+                span M
+              p(style='transition-delay: 0.06s')
+                span P
+              p(style='transition-delay: 0.08s')
+                span R
+              p(style='transition-delay: 0.10s')
+                span I
     div.row(style='margin-top: 70px;')
-      div.column.left
+      div.column.left(style='transition-delay: 2s;')
         div.content-box.box-left
-          div
+          div.video-div
             img(src='../assets/12.jpg')
           div.subject
             p 海浜幕張公園
-            h3 JAGERMEISTER
-      div.column
+            h3 
+              p(style='transition-delay: 0s')
+                span J
+              p(style='transition-delay: 0.02s')
+                span A
+              p(style='transition-delay: 0.04s')
+                span G
+              p(style='transition-delay: 0.06s')
+                span E
+              p(style='transition-delay: 0.08s')
+                span R
+              p(style='transition-delay: 0.10s')
+                span M
+              p(style='transition-delay: 0.12s')
+                span I
+              p(style='transition-delay: 0.14s')
+                span S
+              p(style='transition-delay: 0.16s')
+                span T
+              p(style='transition-delay: 0.18s')
+                span E
+              p(style='transition-delay: 0.20s')
+                span R
+      div.column(style='transition-delay: 2.2s;')
         div.content-box.box-right
           div
             img(src='../assets/13.jpg')
           div.subject
             p お台場臨時特設会場
-            h3 SAUZA
+            h3 
+              p(style='transition-delay: 0s')
+                span S
+              p(style='transition-delay: 0.02s')
+                span A
+              p(style='transition-delay: 0.04s')
+                span U
+              p(style='transition-delay: 0.06s')
+                span Z
+              p(style='transition-delay: 0.08s')
+                span A
     div.row
-      div.column.left
+      div.column.left(style='transition-delay: 2.4s;')
         div.content-box.box-left
           div.subject
             img(src='../assets/14.jpg')
           div.subject
             p レインボーブリッジ
-            h3 MALIBU
-      div.column
+            h3
+              p(style='transition-delay: 0s')
+                span M
+              p(style='transition-delay: 0.02s')
+                span A
+              p(style='transition-delay: 0.04s')
+                span L
+              p(style='transition-delay: 0.06s')
+                span I
+              p(style='transition-delay: 0.08s')
+                span B
+              p(style='transition-delay: 0.10s')
+                span U
+      div.column(style='transition-delay: 2.6s;')
         div.content-box.box-right
           div
             img(src='../assets/15.jpg')
           div.subject
             p Club
-            h3 CAMPARI
+            h3
+              p(style='transition-delay: 0s')
+                span C
+              p(style='transition-delay: 0.02s')
+                span A
+              p(style='transition-delay: 0.04s')
+                span M
+              p(style='transition-delay: 0.06s')
+                span P
+              p(style='transition-delay: 0.08s')
+                span R
+              p(style='transition-delay: 0.10s')
+                span I
     div.row
-      div.column.left
+      div.column.left(style='transition-delay: 2.8s;')
         div.content-box.box-left
           div.subject
             img(src='../assets/16.jpg')
           div.subject
             p Club
-            h3 SKY
-      div.column
+            h3
+              p(style='transition-delay: 0s')
+                span S
+              p(style='transition-delay: 0.02s')
+                span K
+              p(style='transition-delay: 0.04s')
+                span Y
+              p(style='transition-delay: 0.06s')
+                span Y
+      div.column(style='transition-delay: 3s;')
         div.content-box.box-right
           div
             img(src='../assets/17.jpg')
           div.subject
             p Club
-            h3 BEEFEATER
+            h3
+              p(style='transition-delay: 0s')
+                span B
+              p(style='transition-delay: 0.02s')
+                span E
+              p(style='transition-delay: 0.04s')
+                span E
+              p(style='transition-delay: 0.06s')
+                span F
+              p(style='transition-delay: 0.08s')
+                span E
+              p(style='transition-delay: 0.10s')
+                span A
+              p(style='transition-delay: 0.12s')
+                span T
+              p(style='transition-delay: 0.14s')
+                span E
+              p(style='transition-delay: 0.16s')
+                span R
 </template>
 
 <script lang='ts'>
@@ -332,10 +426,6 @@ export default class ProjectContent extends Vue {
     fadein();
     $('.content').scroll(() => {
       fadein();
-    });
-
-    $('.content-box').click(() => {
-      // $('#test').get(0).play();
     });
   }
 }
@@ -396,7 +486,7 @@ video, img {
         p {
           font-size: 16px;
           display: inline-block;
-          transition: 0.6s
+          transition: 0.7s
         }
       }
     }
