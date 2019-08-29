@@ -10,17 +10,22 @@
 <script lang='ts'>
 import { Component, Vue } from 'vue-property-decorator';
 import jQuery from 'jquery';
+// declare var jQuery: any;
 
 // history.pushState(null, 'null');
 // window.addEventListener('popstate', (e) => {
 //   window.location.reload();
 // });
 
+interface JQuery {
+  progress(n: string): JQuery;
+}
+
 window.onload = () => {
-  const $progress = $('.ui.progress');
-  window.fakeProgress = setInterval(() => {
+  const $progress = $('.ui.progress') as any;
+  setInterval(() => {
     $progress.progress('increment');
-    if($progress.progress('is complete')) {
+    if ($progress.progress('is complete')) {
       setTimeout(() => {
         const bt = document.getElementById('to-home-bt');
         if (bt == null) {
@@ -36,7 +41,7 @@ window.onload = () => {
 @Component
 export default class Start extends Vue {
   private mounted() {
-    $('.ui.progress').progress({
+    ($('.ui.progress') as any).progress({
       duration : 400,
       total    : 100,
       text     : {

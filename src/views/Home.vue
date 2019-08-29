@@ -3,7 +3,6 @@ div#home
   video(id='home-video' autoplay muted playsinline)
     source(src='../assets/jagermeister.mp4' type='video/mp4')
   MainNav
-  CenterNav
 </template>
 
 <script lang='ts'>

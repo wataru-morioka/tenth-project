@@ -99,7 +99,7 @@ export default class HeaderNav extends Vue {
   // private isDropdownShow: boolean = false;
 
   private mounted() {
-    $('#menu-dropdown').dropdown({
+    ($('#menu-dropdown') as any).dropdown({
       on: 'hover',
     });
   }

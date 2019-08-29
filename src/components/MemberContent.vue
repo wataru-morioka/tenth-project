@@ -114,11 +114,14 @@ import jQuery from 'jQuery';
 
 const fadein = () => {
   const offset = 100;
-  const scrollTop = $(window).scrollTop();
-  const scrollBtm = scrollTop + $(window).height();
+  const scrollTop = $(window).scrollTop()!;
+  const scrollBtm = scrollTop + $(window).height()!;
   const effectPos = scrollBtm - offset;
   $('.column').each( function() {
-    const thisPos = $(this).offset().top;
+    if ($(this) === undefined) {
+      return;
+    }
+    const thisPos = $(this).offset()!.top;
     if ( effectPos > thisPos ) {
       $(this).css({
           opacity: 1,

@@ -9,6 +9,10 @@ import 'firebase/auth';
 // import 'firebase/messaging';
 const SuiVue = require('semantic-ui-vue');
 
+// interface JQuery<HTMLElement> {
+//   progress(): any;
+// }
+
 Vue.config.productionTip = false;
 Vue.use(SuiVue);
 

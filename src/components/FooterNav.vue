@@ -87,9 +87,9 @@ const fs = require('fs');
 export default class FooterNav extends Vue {
   @Prop() private msg!: string;
 
-  private mounted() {
-    $('.icon.button').popup();
-  }
+  // private mounted() {
+  //   $('.icon.button').popup();
+  // }
 
   private login(): void {
     this.$store.dispatch('login');
@@ -192,6 +192,12 @@ a {
     transform: rotateX(360deg);
   }
 } 
+
+@media screen and (max-width: 768px){
+  #footer-icon {
+    display: none;
+  }
+}
 
 @keyframes rotate_anime {
     0% {
