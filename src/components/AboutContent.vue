@@ -176,6 +176,7 @@ export default class AboutContent extends Vue {
   overflow-y: scroll;
   height: auto;
   width: 100vw;
+  transition: 1s;
 }
 
 .row {

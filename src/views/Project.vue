@@ -44,6 +44,7 @@ export default class Project extends Vue {}
   position: relative;
   animation-name: body-fadein;
   animation-duration: 4s;
+  height: 100vw;
 }
 
 .subject {

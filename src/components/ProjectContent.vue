@@ -440,6 +440,7 @@ export default class ProjectContent extends Vue {
   width: 100%;
   margin-right: 0px;
   margin-left: 0px;
+  transition: 1s;
 }
 
 video, img {
@@ -477,7 +478,7 @@ video, img {
       text-align: left;
       margin-top: 10px;
       p {
-        font-size: 13px;
+        font-size: 12px;
         margin-bottom: 0px;
       }
       h3 {

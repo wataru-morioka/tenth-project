@@ -105,10 +105,12 @@ export default class HeaderNav extends Vue {
   }
 
   private drop(): void {
-    $('.content').css('top', '300px');
+    // $('.content').css('transform', 'translateY(300px)');
+    $('.content').css('top', '320px');
   }
 
   private leave(): void {
+    // $('.content').css('transform', 'translateY(0px)');
     $('.content').css('top', '80px');
   }
 

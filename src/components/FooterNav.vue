@@ -65,19 +65,6 @@
           img.icon(src='../assets/icn_insta.png')
         div
           img.icon(src='../assets/icn_tw.png')
-
-        //- button(class="ui circular facebook icon button" data-content="facebook" data-variation="tiny")
-        //-   i(class="facebook icon")
-        //- button(class="ui circular twitter icon button"  data-content="twitter" data-variation="tiny")
-        //-   i(class="twitter icon")
-        //- button(class="ui circular instagram icon button"  data-content="instagram" data-variation="tiny")
-        //-   i(class="instagram icon")
-        //- button(class="ui circular google plus icon button"  data-content="google plus" data-variation="tiny")
-        //-   i(class="google plus icon")
-        //- button(class="ui circular youtube plus icon button"  data-content="youtube" data-variation="tiny")
-        //-   i(class="youtube icon")
-      //- img#footer-icon2(src='../assets/footer-logo.png')
-      //- br
       a(href='https://www.jagermeister.com/en')
         img#footer-icon(src='../assets/jager-logo.png')
 </template>

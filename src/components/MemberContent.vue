@@ -155,6 +155,7 @@ export default class MemberContent extends Vue {
   width: auto;;
   height: auto;
   top: 80px; right: 0; bottom: 0; left: 0;
+  transition: 1s;
 }
 
 .grid {
