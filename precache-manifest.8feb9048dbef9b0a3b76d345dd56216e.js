@@ -1,11 +1,11 @@
 self.__precacheManifest = [
   {
-    "revision": "76c7376fe25180706247",
-    "url": "/tenth-project/css/app.07dcd576.css"
+    "revision": "8c129fe27a29dd82d271",
+    "url": "/tenth-project/css/app.8051e64a.css"
   },
   {
-    "revision": "76c7376fe25180706247",
-    "url": "/tenth-project/js/app.e136fd61.js"
+    "revision": "8c129fe27a29dd82d271",
+    "url": "/tenth-project/js/app.c13ab9cc.js"
   },
   {
     "revision": "b0e5309300489f088ecc",
@@ -148,7 +148,7 @@ self.__precacheManifest = [
     "url": "/tenth-project/img/bg-sp.27fa81b3.jpg"
   },
   {
-    "revision": "25c65e5acb71b89db67376ef18f0b558",
+    "revision": "e9bea651fc6af3556621483ecd085351",
     "url": "/tenth-project/index.html"
   },
   {
