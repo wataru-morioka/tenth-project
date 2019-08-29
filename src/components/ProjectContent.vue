@@ -398,6 +398,7 @@
 <script lang='ts'>
 import { Component, Vue } from 'vue-property-decorator';
 import jQuery from 'jQuery';
+// import SubMenu from '@/components/SubMenu.vue';
 
 const fadein = () => {
   const offset = 100;
@@ -420,13 +421,23 @@ const fadein = () => {
   });
 };
 
-@Component
+@Component({
+  components: {
+    // SubMenu,
+  },
+})
 export default class ProjectContent extends Vue {
   private mounted() {
     fadein();
     $('.content').scroll(() => {
       fadein();
     });
+  }
+
+  private created() {
+    setTimeout(() => {
+      $('.content').css('top', '80px');
+    }, 1);
   }
 }
 </script>

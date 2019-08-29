@@ -141,6 +141,7 @@
 <script lang='ts'>
 import { Component, Vue } from 'vue-property-decorator';
 import jQuery from 'jQuery';
+import { setTimeout } from 'timers';
 
 const fadein = () => {
   const offset = 100;
@@ -165,6 +166,12 @@ export default class AboutContent extends Vue {
     $('.content').scroll(() => {
       fadein();
     });
+  }
+
+  private created() {
+    setTimeout(() => {
+      $('.content').css('top', '80px');
+    }, 1);
   }
 }
 </script>

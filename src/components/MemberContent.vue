@@ -141,6 +141,12 @@ export default class MemberContent extends Vue {
       fadein();
     });
   }
+
+  private created() {
+    setTimeout(() => {
+      $('.content').css('top', '80px');
+    }, 1);
+  }
 }
 </script>
 
@@ -209,7 +215,6 @@ export default class MemberContent extends Vue {
   }
 
   .value {
-    // font-size: 13px;
     padding-left: 50px;
     color: #ffffff;
   }

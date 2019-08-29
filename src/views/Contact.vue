@@ -17,17 +17,20 @@
         span C
       p(style='animation-delay: 1.5s')
         span T
+    ContactContent
 </template>
 
 <script lang='ts'>
 import { Component, Vue } from 'vue-property-decorator';
 import BackImage from '@/components/BackImage.vue';
 import SubNav from '@/components/SubNav.vue';
+import ContactContent from '@/components/ContactContent.vue';
 
 @Component({
   components: {
     BackImage,
     SubNav,
+    ContactContent,
   },
 })
 export default class Contact extends Vue {}
