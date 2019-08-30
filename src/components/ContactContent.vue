@@ -16,7 +16,6 @@
               div.field
                 label Type
                 select(class="ui fluid dropdown")
-                  option(value="") 個人 or 会社
                   option(value="private") private
                   option(value="companies") companies
             div.thin(class="four fields")
@@ -35,7 +34,7 @@
               label Message
               textarea(rows="17")
             button(class="ui inverted orange basic button") Submit
-        div.column(style='transition-delay: 3s;')
+        div.column(style='transition-delay: 2.5s;')
           div#office-info
             h5 Our Office
             table
@@ -115,7 +114,7 @@ export default class ContactContent extends Vue {
 
   private created() {
     setTimeout(() => {
-      $('.content').css('top', '80px');
+      $('.content').css('top', '60px');
     }, 1);
   }
 }
@@ -125,14 +124,21 @@ export default class ContactContent extends Vue {
 .content {
   position: fixed;
   overflow-y: scroll;
+  -webkit-overflow-scrolling: touch;
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  width: auto;
+  margin: auto;
   height: auto;
-  top: 80px; right: 0; bottom: 0; left: 0;
+  top: 60px; right: 0; bottom: 0; left: 0;
   transition: 1s;
+  will-change: transform;
+}
+
+::-webkit-scrollbar {
+  display: none;
+  -webkit-appearance: none;
 }
 
 .grid {
@@ -142,13 +148,25 @@ export default class ContactContent extends Vue {
 .column {
   min-width: 50%;
   opacity: 0;
-  transform: translate(0px, 50px);
-  transition: 2s;
+  transform: translate(0px, 40px);
+  transition: 1s;
+  will-change: transform;
 }
 
-h5, label {
+h5 {
   text-align: left;
   color: #ffffff !important;
+  font-size: 12px !important;
+}
+
+label {
+  text-align: left;
+  color: #ffffff77 !important;
+  font-size: 11px !important;
+}
+  
+input, select {
+  height: 30px !important; 
 }
 
 .button {
@@ -163,6 +181,7 @@ h5, label {
     height: 30px;
     td {
       text-align: left;
+      font-size: 12px;
     }
   }
 
@@ -176,8 +195,8 @@ h5, label {
     .icon {
       cursor: pointer;
       height: 15px;
-      margin-left: 5px;
-      margin-right: 5px;
+      margin-left: 10px;
+      margin-right: 10px;
     }
   }
 }
@@ -201,15 +220,26 @@ h5, label {
   #ask-form {
     width: 100%;
     margin-left: 0px;
-    margin-bottom: 100px;
+    margin-bottom: 50px;
 
     .thin {
       width: 50%;
     }
+
+    h5 {
+      font-size: 10px !important;
+    }
+
+    label {
+      font-size: 8px !important;
+    }
   }
 
   #office-info {
-    margin-bottom: 100px;
+    margin-bottom: 50px;
+    tr td {
+      font-size: 9px;
+    }
   }
 }
 </style>

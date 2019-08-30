@@ -67,6 +67,7 @@ $menu-color: #ffffff;
   margin-left: 15px;
   margin-right: 15px;
   transition: 0.7s ;
+  will-change: transform;
 }
 
 .icon-wrap:hover {

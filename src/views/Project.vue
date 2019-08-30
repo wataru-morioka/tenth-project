@@ -43,7 +43,8 @@ export default class Project extends Vue {}
 #project {
   position: relative;
   animation-name: body-fadein;
-  animation-duration: 4s;
+  animation-duration: 2s;
+  // will-change: transform;
   height: 100vw;
 }
 
@@ -98,7 +99,7 @@ export default class Project extends Vue {}
 @keyframes content-fadein {
   from {
       opacity: 0;
-      transform: translateY(60px);
+      transform: translateY(40px);
   }
   to {
       // opacity: .2;

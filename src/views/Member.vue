@@ -39,7 +39,8 @@ export default class Member extends Vue {}
 #member {
   position: relative;
   animation-name: body-fadein;
-  animation-duration: 4s;
+  animation-duration: 2s;
+  // will-change: transform;
 }
 
 .subject {
@@ -91,7 +92,7 @@ export default class Member extends Vue {}
 @keyframes content-fadein {
   from {
       opacity: 0;
-      transform: translateY(60px);
+      transform: translateY(40px);
   }
   to {
       // opacity: .2;

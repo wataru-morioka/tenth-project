@@ -30,7 +30,8 @@ export default class MainNav extends Vue {}
   height: 100vh;
   min-height: 100%;
   animation-name: fadein;
-  animation-duration: 5s;
+  animation-duration: 2s;
+  will-change: transform;
 }
 
 @keyframes fadein {

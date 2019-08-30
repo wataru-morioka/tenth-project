@@ -29,7 +29,7 @@
                 p 090-0000-0000
             tr
               td.title
-                p mail
+                p email
               td.value
                 p example@gmail.com
           br
@@ -64,7 +64,7 @@
                 p 090-0000-0000
             tr
               td.title
-                p mail
+                p email
               td.value
                 p example@gmail.com
           br
@@ -99,7 +99,7 @@
                 p 090-0000-0000
             tr
               td.title
-                p mail
+                p email
               td.value
                 p example@gmail.com
           br
@@ -147,7 +147,7 @@ export default class MemberContent extends Vue {
 
   private created() {
     setTimeout(() => {
-      $('.content').css('top', '80px');
+      $('.content').css('top', '60px');
     }, 1);
   }
 }
@@ -157,18 +157,26 @@ export default class MemberContent extends Vue {
 .content {
   position: fixed;
   overflow-y: scroll;
+  -webkit-overflow-scrolling: touch;
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  width: auto;;
+  margin: auto;;
   height: auto;
-  top: 80px; right: 0; bottom: 0; left: 0;
+  width: 100%;
+  top: 60px; right: 0; bottom: 0; left: 0;
   transition: 1s;
+  will-change: transform;
+}
+
+::-webkit-scrollbar {
+  display: none;
+  -webkit-appearance: none;
 }
 
 .grid {
-  width: auto;
+  width: 100%;
 }
 
 .row {
@@ -178,15 +186,17 @@ export default class MemberContent extends Vue {
   .left {
     text-align: right;
     opacity: 0;
-    transform: translate(5px, 50px);
-    transition: 2s;
+    transform: translate(5px, 40px);
+    transition: 1s;
+    will-change: transform;
   }
 
   .right {
     text-align: left;
     opacity: 0;
-    transform: translate(5px, 50px);
-    transition: 2s;
+    transform: translate(5px, 40px);
+    transition: 1s;
+    will-change: transform;
   }
 }
 
@@ -201,8 +211,8 @@ export default class MemberContent extends Vue {
 .icon {
   cursor: pointer;
   height: 15px;
-  margin-left: 5px;
-  margin-right: 5px;
+  margin-left: 10px;
+  margin-right: 10px;
 }
 
 .column {
@@ -215,11 +225,13 @@ export default class MemberContent extends Vue {
 
   .title {
     width: 50px;
+    font-size: 12px;
   }
 
   .value {
     padding-left: 50px;
     color: #ffffff;
+    font-size: 12px;
   }
 }
 
@@ -243,9 +255,25 @@ export default class MemberContent extends Vue {
     }
     .left {
       text-align: center;
+      img {
+        width: 70%;
+      }
     }
     .right {
       text-align: center;
+      h5 {
+        font-size: 11px;
+      }
+    }
+  }
+
+  .profile tr {
+    .title {
+      font-size: 9px;
+    }
+
+    .value {
+      font-size: 9px;
     }
   }
 }

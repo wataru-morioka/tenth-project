@@ -52,7 +52,7 @@
     div.row
       div.column.left(style='transition-delay: 2.4s;')
         div.content-box.box-left
-          div.subject
+          div
             img(src='../assets/1.jpg')
           div.subject
             p レインボーブリッジ
@@ -91,7 +91,7 @@
     div.row
       div.column.left(style='transition-delay: 2.8s;')
         div.content-box.box-left
-          div.subject
+          div
             img(src='../assets/3.jpg')
           div.subject
             p Club
@@ -132,7 +132,7 @@
     div.row
       div.column.left(style='transition-delay: 3.2s;')
         div.content-box.box-left
-          div.subject
+          div
             img(src='../assets/5.jpg')
           div.subject
             p Club
@@ -177,7 +177,7 @@
     div.row
       div.column.left
         div.content-box.box-left
-          div.subject
+          div
             img(src='../assets/7.jpg')
           div.subject
             p Club
@@ -224,7 +224,7 @@
     div.row
       div.column.left
         div.content-box.box-left
-          div.subject
+          div
             img(src='../assets/10.jpg')
           div.subject
             p Club
@@ -269,7 +269,7 @@
     div.row(style='margin-top: 70px;')
       div.column.left(style='transition-delay: 2s;')
         div.content-box.box-left
-          div.video-div
+          div
             img(src='../assets/12.jpg')
           div.subject
             p 海浜幕張公園
@@ -316,7 +316,7 @@
     div.row
       div.column.left(style='transition-delay: 2.4s;')
         div.content-box.box-left
-          div.subject
+          div
             img(src='../assets/14.jpg')
           div.subject
             p レインボーブリッジ
@@ -355,7 +355,7 @@
     div.row
       div.column.left(style='transition-delay: 2.8s;')
         div.content-box.box-left
-          div.subject
+          div
             img(src='../assets/16.jpg')
           div.subject
             p Club
@@ -439,7 +439,7 @@ export default class ProjectContent extends Vue {
 
   private created() {
     setTimeout(() => {
-      $('.content').css('top', '80px');
+      $('.content').css('top', '60px');
     }, 1);
   }
 }
@@ -448,18 +448,22 @@ export default class ProjectContent extends Vue {
 <style scoped lang='scss'>
 .content {
   position: fixed;
-  top: 80px; right: 0; bottom: 0; left: 0;
+  top: 60px; right: 0; bottom: 0; left: 0;
   overflow-y: scroll;
+  -webkit-overflow-scrolling: touch;
   height: auto;
-  width: 100%;
-  margin-right: 0px;
-  margin-left: 0px;
+  margin: auto;
   transition: 1s;
+  will-change: transform;
+}
+
+::-webkit-scrollbar {
+  display: none;
+  -webkit-appearance: none;
 }
 
 video, img {
   width: 100%;
-  height: 100%;
 }
 
 .box-left {
@@ -481,11 +485,12 @@ video, img {
   min-width: 50%;
   width: 100%;
   opacity: 0;
-  transform: translate(5px, 50px);
-  transition: 2s;
+  transform: translate(0px, 40px);
+  transition: 1s;
+  will-change: transform;
   
   .content-box {
-    width: 360px;
+    width: 340px;
     cursor: default;
 
     .subject {
@@ -501,7 +506,7 @@ video, img {
         p {
           font-size: 16px;
           display: inline-block;
-          transition: 0.7s
+          transition: 0.6s
         }
       }
     }
@@ -517,7 +522,10 @@ video, img {
 
 @media screen and (max-width: 768px){
   .content {
-    top: 60px;
+    .row {
+      margin: auto !important;
+      padding-top: 0px;
+    }
   }
 
   .box-left {
@@ -528,13 +536,19 @@ video, img {
     margin: auto;
   }
 
-  .row {
-    margin: auto !important;
-  }
-
   .column {
     min-width: 100%;
     margin-bottom: 30px !important;
+    .content-box {
+      width: 80%;
+      p {
+        font-size: 8px;
+      }
+
+      h3 p {
+        font-size: 14px;
+      }
+    }
   }
 
   .column.left {

@@ -106,12 +106,12 @@ export default class HeaderNav extends Vue {
 
   private drop(): void {
     // $('.content').css('transform', 'translateY(300px)');
-    $('.content').css('top', '320px');
+    $('.content').css('top', '300px');
   }
 
   private leave(): void {
     // $('.content').css('transform', 'translateY(0px)');
-    $('.content').css('top', '80px');
+    $('.content').css('top', '60px');
   }
 
   private toHome(): void {
@@ -141,17 +141,7 @@ export default class HeaderNav extends Vue {
 
 <!-- Add 'scoped' attribute to limit CSS to this component only -->
 <style scoped lang='scss'>
-$menu-color: #ffffff;
-
-// #header-nav {
-//   // position: fixed;
-//   // top: 0;
-//   // left: 0;
-//   // right: 0;
-//   // z-index: 10;
-//   // flex-grow: 1;
-//   // margin-bottom: 300px;
-// }
+$menu-color: #ffffff77;
 
 #header {
   display: flex;
@@ -169,7 +159,6 @@ $menu-color: #ffffff;
 
 #header-menu {
   margin-top: 30px;
-  // width: 20%;
   display: flex;
   justify-content:space-between;
   -webkit-box-pack:justify;
@@ -178,12 +167,15 @@ $menu-color: #ffffff;
 a {
   font-size: 11px;
   color: $menu-color;
+  p {
+    color: $menu-color;
+  }
 }
 
 .menu {
   background: (0, 0, 0, 0) !important;
   div {
-    color: #ffffff !important;
+    color: $menu-color !important;
   }
 }
 
@@ -193,12 +185,23 @@ a {
   }
 
   #header-logo {
-    margin-top: 10px;
+    margin-top: 20px;
     margin-left: 20px;
+    height: 20px;
   }
 
   #header-menu {
     margin-top: 20px;
+  }
+
+  #menu-dropdown {
+    .text {
+      display: none;
+    }
+
+    .item {
+      font-size: 10px;
+    }
   }
 
   .bars {
@@ -217,6 +220,7 @@ a {
   p {
     display: inline-block;
     transition: 0.7s;
+    will-change: transform;
   }
 } 
 

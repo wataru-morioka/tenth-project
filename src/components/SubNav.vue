@@ -28,7 +28,8 @@ export default class MainNav extends Vue {}
   overflow: hidden;
   min-height: 100%;
   animation-name: fadein;
-  animation-duration: 5s;
+  animation-duration: 2s;
+  will-change: transform;
   // z-index: 10;
 }
 

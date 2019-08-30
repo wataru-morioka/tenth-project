@@ -4,12 +4,12 @@
       div.column.sp(style='transition-delay: 2s;')
         div
           img.content-img.img-left(src='../assets/about8.jpg')
-      div.column.msg.sp(style='transition-delay: 3s;')
+      div.column.msg.sp(style='transition-delay: 2.5s;')
         div.message
-          div
+          div.header
             span Our Concept
           h3
-            span Movieを通して、エピソードを設計する
+            span エピソードを設計する
           p
             span 空間には、人の心を動かすパワーがあると思っています。とある店舗のデザインや内装を見るだけで、そこではどんな人たちが、どんな服を着て、どんな話し方で、どんなお客様に対してどんなものを売っているのだろうか……と、想像を巡らせてしまうのです。
           p
@@ -27,9 +27,9 @@
       div.column(style='transition-delay: 2s;')
         div
           img.content-img.img-right(src='../assets/about9.jpg')
-      div.column.msg(style='transition-delay: 3s;')
+      div.column.msg(style='transition-delay: 2.5s;')
         div.message.message-right
-            div
+            div.header
               span Request
             h3
               span 01. ご依頼
@@ -44,7 +44,7 @@
         img.content-img(src='../assets/about3.jpg')
       div.column.msg
         div.message
-          div
+          div.header
             span Video Photograph
           h3
             span 02. 現場撮影
@@ -59,7 +59,7 @@
         img.content-img.img-right(src='../assets/about2.jpg')
       div.column.msg
         div.message.message-right
-          div
+          div.header
             span Pre Edit
           h3
             span 03. 仮編集
@@ -74,7 +74,7 @@
         img.content-img(src='../assets/about.jpg')
       div.column.msg
         div.message
-          div
+          div.header
             span Adjustment
           h3
             span 04. お客様とご調整
@@ -89,7 +89,7 @@
         img.content-img.img-right(src='../assets/about7.jpg')
       div.column.msg
        div.message.message-right
-            div
+            div.header
               span Production Edit
             h3
               span 05. 本編集
@@ -103,7 +103,7 @@
       div.column
         img.content-img(src='../assets/about14.jpg')
       div.column.msg
-        div.message
+        div.message.header
           div
             span Final Configuration
           h3
@@ -121,7 +121,7 @@
         img.content-img.img-right(src='../assets/about13.jpg')
       div.column.msg
         div.message.message-right
-          div
+          div.header
             span Delivery
           h3
             span 07. お客様へ納品
@@ -170,20 +170,29 @@ export default class AboutContent extends Vue {
 
   private created() {
     setTimeout(() => {
-      $('.content').css('top', '80px');
+      $('.content').css('top', '60px');
     }, 1);
   }
 }
 </script>
 
 <style scoped lang='scss'>
+$menu-color: #ffffff77;
+
 .content {
   position: fixed;
-  top: 80px; right: 0; bottom: 0; left: 0;
+  top: 60px; right: 0; bottom: 0; left: 0;
   overflow-y: scroll;
+  -webkit-overflow-scrolling: touch;
   height: auto;
-  width: 100vw;
+  margin: auto;
   transition: 1s;
+  will-change: transform;
+}
+
+::-webkit-scrollbar {
+  display: none;
+  -webkit-appearance: none;
 }
 
 .row {
@@ -193,10 +202,10 @@ export default class AboutContent extends Vue {
 .column {
   min-width: 50%;
   width: 100%;
-  padding-right: 0 !important;
   opacity: 0;
-  transform: translate(0px, 50px);
-  transition: 2s;
+  transform: translate(0px, 40px);
+  transition: 1s;
+  will-change: transform;
 
   .message {
       width: 70%;
@@ -209,6 +218,10 @@ export default class AboutContent extends Vue {
       .suffix {
         text-align: right;
       }
+
+      .header {
+        color: $menu-color;
+      }
   }
 }
 
@@ -217,16 +230,16 @@ export default class AboutContent extends Vue {
   flex-direction: column;
   justify-content: center;
   align-items: center; 
-  transition-delay: 1s;
+  transition-delay: 0.5s;
 }
 
 .content-img {
   text-align: center;
-  width: 98%;
+  width: 100%;
 }
 
 .img-right {
-  margin-left: 104%;
+  margin-left: 102%;
 }
 
 .message-right {
@@ -235,7 +248,9 @@ export default class AboutContent extends Vue {
 
 @media screen and (max-width: 768px){
   .content {
-    top: 60px;
+    .row {
+      padding-top: 0px;
+    }
   }
   .img-right {
     margin: auto;
@@ -249,20 +264,22 @@ export default class AboutContent extends Vue {
     transition-delay: 0s !important;
   }
 
-  .content-img {
-    width: 98%;
-  }
   .column.sp {
     transition-delay: 2s !important;
   }
   .column.msg.sp {
-    transition-delay: 3s !important;
+    transition-delay: 2.5s !important;
   }
 
   .column .message {
     width: 90%;
     margin: auto;
-    padding-left: 4%;
+    .header {
+      font-size: 10px;
+    }
+    p {
+      font-size: 9px;
+    }
   }
 }
 </style>

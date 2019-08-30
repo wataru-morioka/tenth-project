@@ -128,21 +128,22 @@ $mes-color: #42b983;
 }
 
 a {
-  font-size: 12px;
+  font-size: 10px;
   color: $mes-color;
 }
 
 #user-account {
-  font-size: 14px;
+  font-size: 12px;
 }
 
 #footer-icon {
   height: 80px;
   cursor: pointer;
   animation: rotate_anime;
-  animation-duration: 2s;
+  animation-duration: 1s;
   opacity: .8;
   margin-right: 3px;
+  display: none;
 }
 
 #footer-icon2 {
@@ -150,20 +151,21 @@ a {
 }
 
 .extension {
-  font-weight: bold;
-  font-size: 10px;
-  margin: 20px;
+  margin: 30px;
   color: $mes-color;
+  font-weight: bold;
 
   p {
     display: inline-block;
     transition: 0.5s;
+    will-change: transform;
   }
 }
 
 .horizontal-array {
   display: flex;
   justify-content: center;
+  margin-bottom: 40px;
 
   img {
     height: 15px;
@@ -171,8 +173,8 @@ a {
   
   div {
     width: 15px;
-    margin-left: 5px;
-    margin-right: 5px;
+    margin-left: 10px;
+    margin-right: 10px;
     cursor: pointer;
   }
 }
@@ -194,8 +196,24 @@ a {
 } 
 
 @media screen and (max-width: 768px){
-  #footer-icon {
-    display: none;
+  // #footer-icon {
+  //   display: none;
+  // }
+
+  a {
+    font-size: 10px;
+  }
+
+  // .horizontal-array {
+  //   margin-bottom: 50px;
+  // }
+
+  #user-account {
+    font-size: 7px;
+  }
+
+  .extension {
+    font-size: 8px;
   }
 }
 

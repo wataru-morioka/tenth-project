@@ -184,6 +184,114 @@
           span I
         p(style='transition-delay: 0.16s')
           span G
+    div.menu-item(style='transition-delay: 2.22s;')
+      a(href='#', @click.stop.prevent='play')
+        p(style='transition-delay: 0s')
+          span J
+        p(style='transition-delay: 0.02s')
+          span A
+        p(style='transition-delay: 0.04s')
+          span G
+        p(style='transition-delay: 0.06s')
+          span E
+        p(style='transition-delay: 0.08s')
+          span R
+        p(style='transition-delay: 0.10s')
+          span M
+        p(style='transition-delay: 0.12s')
+          span I
+        p(style='transition-delay: 0.14s')
+          span S
+        p(style='transition-delay: 0.16s')
+          span T
+        p(style='transition-delay: 0.18s')
+          span E
+        p(style='transition-delay: 0.20s')
+          span R
+    div.menu-item(style='transition-delay: 2.24s;')
+      a(href='#', @click.stop.prevent='play')
+        p(style='transition-delay: 0s')
+          span S
+        p(style='transition-delay: 0.02s')
+          span A
+        p(style='transition-delay: 0.04s')
+          span U
+        p(style='transition-delay: 0.06s')
+          span Z
+        p(style='transition-delay: 0.08s')
+          span A
+    div.menu-item(style='transition-delay: 2.26s;')
+      a(href='#', @click.stop.prevent='play')
+        p(style='transition-delay: 0s')
+          span M
+        p(style='transition-delay: 0.02s')
+          span A
+        p(style='transition-delay: 0.04s')
+          span L
+        p(style='transition-delay: 0.06s')
+          span I
+        p(style='transition-delay: 0.08s')
+          span B
+        p(style='transition-delay: 0.10s')
+          span U
+    div.menu-item(style='transition-delay: 2.28s;')
+      a(href='#', @click.stop.prevent='play')
+        p(style='transition-delay: 0s')
+          span C
+        p(style='transition-delay: 0.02s')
+          span A
+        p(style='transition-delay: 0.04s')
+          span M
+        p(style='transition-delay: 0.06s')
+          span P
+        p(style='transition-delay: 0.08s')
+          span R
+        p(style='transition-delay: 0.10s')
+          span I
+    div.menu-item(style='transition-delay: 2.30s;')
+      a(href='#', @click.stop.prevent='play')
+        p(style='transition-delay: 0s')
+          span S
+        p(style='transition-delay: 0.02s')
+          span K
+        p(style='transition-delay: 0.04s')
+          span Y
+        p(style='transition-delay: 0.06s')
+          span Y
+    div.menu-item(style='transition-delay: 2.32s;')
+      a(href='#', @click.stop.prevent='play')
+        p(style='transition-delay: 0s')
+          span B
+        p(style='transition-delay: 0.02s')
+          span E
+        p(style='transition-delay: 0.04s')
+          span E
+        p(style='transition-delay: 0.06s')
+          span F
+        p(style='transition-delay: 0.08s')
+          span E
+        p(style='transition-delay: 0.10s')
+          span A
+        p(style='transition-delay: 0.12s')
+          span T
+        p(style='transition-delay: 0.14s')
+          span E
+        p(style='transition-delay: 0.16s')
+          span R
+    div.menu-item(style='transition-delay: 2.34s;')
+      a(href='#', @click.stop.prevent='play')
+        p(style='transition-delay: 0s')
+          span M
+        p(style='transition-delay: 0.02s')
+          span I
+        p(style='transition-delay: 0.04s')
+          span D
+        p(style='transition-delay: 0.06s')
+          span O
+        p(style='transition-delay: 0.08s')
+          span R
+        p(style='transition-delay: 0.10s')
+          span I
 </template>
 
 <script lang='ts'>
@@ -210,19 +318,22 @@ export default class SubMenu extends Vue {
   position: relative;
   width: auto;
   display: inline-block;
-  height: 230px;
+  height: 270px;
   top: 50vh;
   transform: translateY(-50%);
   margin: 0 auto;
+  padding: auto;
   overflow-y: scroll;
   z-index: 2;
+  margin-left: 13px !important;
 
   .menu-item {
     opacity: 0;
     transform: translate(0px, 50px);
-    transition: 2s;
+    transition: 1s;
     a p {
-      transition: 0.5s;
+      transition: 0.6s;
+      will-change: transform;
     }
   }
 
@@ -240,7 +351,7 @@ export default class SubMenu extends Vue {
   p {
     cursor: pointer;
     display: inline-block;
-    font-size: 12px;
+    font-size: 11px;
     color: #ffffff8a;
   }
 }
