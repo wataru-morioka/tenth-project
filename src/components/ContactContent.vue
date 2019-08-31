@@ -117,7 +117,7 @@ export default class ContactContent extends Vue {
   private created() {
     setTimeout(() => {
       $('.content').css('top', '60px');
-    }, 1);
+    }, 1000);
   }
 }
 </script>

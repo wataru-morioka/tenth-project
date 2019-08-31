@@ -150,7 +150,7 @@ export default class MemberContent extends Vue {
   private created() {
     setTimeout(() => {
       $('.content').css('top', '60px');
-    }, 1);
+    }, 1000);
   }
 }
 </script>

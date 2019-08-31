@@ -73,17 +73,17 @@
                 span C
               p(style='transition-delay: 0.12s')
                 span T
-        div#menu-dropdown(class="ui pointing link icon dropdown", @click='controleMenu')
+        div#menu-dropdown(class="ui pointing link icon dropdown")
           //- div.text MENU
           i(class="large bars icon")
-          //- div.menu
-          //-   div.header MENU
-          //-   div.divider
-          //-   div.item(@click='toHome') HOME
-          //-   div.item(@click='toAbout') ABOUT
-          //-   div.item(@click='toProject') PROJECT
-          //-   div.item(@click='toMember') MEMBER
-          //-   div.item(@click='toContact') CONTACT
+          div.menu
+            div.header MENU
+            div.divider
+            div.item(@click='toHome') HOME
+            div.item(@click='toAbout') ABOUT
+            div.item(@click='toProject') PROJECT
+            div.item(@click='toMember') MEMBER
+            div.item(@click='toContact') CONTACT
 </template>
 
 <script lang='ts'>
@@ -95,103 +95,96 @@ const fs = require('fs');
 
 @Component
 export default class HeaderNav extends Vue {
-  // @Prop() private msg!: string;
-  // private isDropdownShow: boolean = false;
+  private isDroped: boolean = false;
 
   private mounted() {
     ($('#menu-dropdown') as any).dropdown({
       on: 'hover',
+      onShow: () => {
+        $('.content').css('top', '300px');
+      },
+      onHide: () => {
+        $('.content').css('top', '60px');
+      },
+      // onLabelSelect: ($selectedLabels) => {
+      //   alert('test');
+      // },
     });
   }
 
-  private controleMenu(): void {
-    const isDisplay = this.isMenuDisplay();
-    this.$store.commit('setIsMenuDisplay', {
-      condition: !isDisplay,
-    });
+  // private controleMenu(): void {
+  //   const isDisplay = this.isMenuDisplay();
+  //   this.$store.commit('setIsMenuDisplay', {
+  //     condition: !isDisplay,
+  //   });
 
-    if (isDisplay) {
-      $('#center-menu').css({
-        'z-index': '-1',
-      });
-      $('.column').each( function() {
-        $(this).css({
-          opacity: 1,
-        });
-      });
-      $('#sub-menu').css('opacity', 1);
-      $('#center-menu').find('.menu-item').css({
-        'opacity': 0,
-        'z-index': '-1',
-      });
-      $('#center-menu').find('.menu-item').css({
-        '-ms-filter': 'blur(60px)',
-        'filter': 'blur(60px)',
-      });
-    } else {
-      $('#center-menu').css({
-        'z-index': '3',
-      });
-      $('.column').each( function() {
-        $(this).css({
-          'opacity': 0,
-          'transition-delay': '0s',
-        });
-      });
-      $('#sub-menu').css('opacity', 0);
-      $('#center-menu').find('.menu-item').css({
-        'opacity': 1,
-        '-ms-filter': 'blur(0px)',
-        'filter': 'blur(0px)',
-      });
-    }
-  }
+  //   if (isDisplay) {
+  //     $('#center-menu').css({
+  //       'z-index': '-1',
+  //     });
+  //     $('.column').each( function() {
+  //       $(this).css({
+  //         opacity: 1,
+  //       });
+  //     });
+  //     $('#sub-menu').css('opacity', 1);
+  //     $('#center-menu').find('.menu-item').css({
+  //       'opacity': 0,
+  //       'z-index': '-1',
+  //     });
+  //     $('#center-menu').find('.menu-item').css({
+  //       '-ms-filter': 'blur(60px)',
+  //       'filter': 'blur(60px)',
+  //     });
+  //   } else {
+  //     $('#center-menu').css({
+  //       'z-index': '3',
+  //     });
+  //     $('.column').each( function() {
+  //       $(this).css({
+  //         'opacity': 0,
+  //         'transition-delay': '0s',
+  //       });
+  //     });
+  //     $('#sub-menu').css('opacity', 0);
+  //     $('#center-menu').find('.menu-item').css({
+  //       'opacity': 1,
+  //       '-ms-filter': 'blur(0px)',
+  //       'filter': 'blur(0px)',
+  //     });
+  //   }
+  // }
 
-  private isMenuDisplay(): boolean {
-    return this.$store.state.isMenuDisplay;
-  }
+  // private isMenuDisplay(): boolean {
+  //   return this.$store.state.isMenuDisplay;
+  // }
 
-  private setIsMenuDisplay(): void {
-    this.$store.commit('setIsMenuDisplay', {
-      condition: false,
-    });
-  }
-
-  private leave(): void {
-    // $('.content').css('transform', 'translateY(0px)');
-    // $('.content').css('top', '60px');
-    $('.column').each( function() {
-      $(this).css({
-        opacity: 1,
-      });
-    });
-  }
+  // private setIsMenuDisplay(): void {
+  //   this.$store.commit('setIsMenuDisplay', {
+  //     condition: false,
+  //   });
+  // }
 
   private toHome(): void {
     this.$store.commit('setViewIndex', {
       index: 0,
     });
-    this.setIsMenuDisplay();
     this.$router.push({ name: 'home', params: { user: 'admin' } });
   }
 
   private toAbout(): void {
-    this.setIsMenuDisplay();
     this.$router.push({ name: 'about', params: { user: 'admin' } });
   }
 
   private toProject(): void {
-    this.setIsMenuDisplay();
     this.$router.push({ name: 'project', params: { user: 'admin' } });
   }
 
   private toMember(): void {
-    this.setIsMenuDisplay();
     this.$router.push({ name: 'member', params: { user: 'admin' } });
   }
 
   private toContact(): void {
-    this.setIsMenuDisplay();
     this.$router.push({ name: 'contact', params: { user: 'admin' } });
   }
 }
@@ -232,16 +225,14 @@ a {
   }
 }
 
+#temp {
+  width: 100px;
+}
+
 .menu {
   background: (0, 0, 0, 0) !important;
   div {
     color: $menu-color !important;
-  }
-}
-
-#menu-dropdown {
-  .header {
-    font-family: 'Avenir', Helvetica, Arial, sans-serif !important;
   }
 }
 
@@ -261,14 +252,6 @@ a {
   }
 
   #menu-dropdown {
-    .text {
-      display: none;
-    }
-
-    .menu {
-      display: none !important;
-    }
-
     .item {
       font-size: 10px;
     }
