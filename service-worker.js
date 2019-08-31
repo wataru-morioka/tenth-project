@@ -1,4 +1,4 @@
-importScripts("/tenth-project/precache-manifest.de497dd5ae67a0ed94eebe2e72805332.js", "https://storage.googleapis.com/workbox-cdn/releases/3.6.3/workbox-sw.js");
+importScripts("/tenth-project/precache-manifest.89e315eb128c4bcbcd824cb140a95085.js", "https://storage.googleapis.com/workbox-cdn/releases/3.6.3/workbox-sw.js");
 
 workbox.core.setCacheNameDetails({prefix: "v2"});
 
