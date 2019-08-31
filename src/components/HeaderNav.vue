@@ -179,6 +179,12 @@ a {
   }
 }
 
+#menu-dropdown {
+  .header {
+    font-family: 'Avenir', Helvetica, Arial, sans-serif !important;
+  }
+}
+
 @media screen and (max-width: 768px){
   .rotate-menu {
     display:none;

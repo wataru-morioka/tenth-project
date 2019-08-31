@@ -401,10 +401,10 @@ import jQuery from 'jQuery';
 // import SubMenu from '@/components/SubMenu.vue';
 
 const fadein = () => {
-  const offset = 100;
-  const scrollTop = $(window).scrollTop()!;
-  const scrollBtm = scrollTop + $(window).height()!;
-  const effectPos = scrollBtm - offset;
+  const offset = 60;
+  // const scrollTop = $(window).scrollTop()!;
+  // const scrollBtm = scrollTop + $(window).height()!;
+  const effectPos = $(window).height()! - offset;
   $('.column').each( function() {
     if ($(this) === undefined) {
       return;
@@ -414,6 +414,8 @@ const fadein = () => {
       $(this).css({
           opacity: 1,
           transform: 'translate(0px, 0px)',
+          '-ms-filter': 'blur(0px)',
+          filter: 'blur(0px)',
       });
     } else {
       $(this).css({
@@ -485,9 +487,11 @@ video, img {
   min-width: 50%;
   width: 100%;
   opacity: 0;
-  transform: translate(0px, 40px);
-  transition: 1s;
+  transform: translate(0px, 80px);
+  transition: 1.5s;
   will-change: transform;
+  -ms-filter: blur(30px);
+  filter: blur(30px);
   
   .content-box {
     width: 340px;

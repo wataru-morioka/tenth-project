@@ -64,8 +64,8 @@ export default class Member extends Vue {}
   p {
     animation-name: content-fadein;
     animation-duration: 2s;
-    margin-left: 5px;
-    margin-right: 5px;
+    margin-left: 2px;
+    margin-right: 2px;
     margin-bottom: 0;
   }
 }
@@ -73,10 +73,6 @@ export default class Member extends Vue {}
 @media screen and (max-width: 768px){
   .subject {
     font-size: 30px;
-  }
-  .subject p {
-    margin-left: 2px;
-    margin-right: 2px;
   }
 }
 

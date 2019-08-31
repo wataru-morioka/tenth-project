@@ -4,7 +4,7 @@
       div.row#mimber-1
         div.column.left(style='transition-delay: 2s;')
           img(src='../assets/member.jpg')
-        div.column.right(style='transition-delay: 3s;')
+        div.column.right(style='transition-delay: 2.5s;')
           h5 Director
           table.profile
             tr
@@ -39,7 +39,7 @@
       div.row#mimber-2
         div.column.left(style='transition-delay: 2.2s;')
           img(src='../assets/member.jpg')
-        div.column.right(style='transition-delay: 3s;')
+        div.column.right(style='transition-delay: 2.7s;')
           h5 Video Photographer
           table.profile
             tr
@@ -74,7 +74,7 @@
       div.row#mimber-3
         div.column.left(style='transition-delay: 2.4s;')
           img(src='../assets/member.jpg')
-        div.column.right(style='transition-delay: 3s;')
+        div.column.right(style='transition-delay: 2.9s;')
           h5 Editor
           table.profile
             tr
@@ -113,10 +113,10 @@ import { Component, Vue } from 'vue-property-decorator';
 import jQuery from 'jQuery';
 
 const fadein = () => {
-  const offset = 100;
-  const scrollTop = $(window).scrollTop()!;
-  const scrollBtm = scrollTop + $(window).height()!;
-  const effectPos = scrollBtm - offset;
+  const offset = 60;
+  // const scrollTop = $(window).scrollTop()!;
+  // const scrollBtm = scrollTop + $(window).height()!;
+  const effectPos = $(window).height()! - offset;
   $('.column').each( function() {
     if ($(this) === undefined) {
       return;
@@ -126,6 +126,8 @@ const fadein = () => {
       $(this).css({
           opacity: 1,
           transform: 'translate(0px, 0px)',
+          '-ms-filter': 'blur(0px)',
+          filter: 'blur(0px)',
       });
     } else {
       $(this).css({
@@ -167,7 +169,6 @@ export default class MemberContent extends Vue {
   width: 100%;
   top: 60px; right: 0; bottom: 0; left: 0;
   transition: 1s;
-  will-change: transform;
 }
 
 ::-webkit-scrollbar {
@@ -188,7 +189,8 @@ export default class MemberContent extends Vue {
     opacity: 0;
     transform: translate(5px, 40px);
     transition: 1s;
-    will-change: transform;
+    -ms-filter: blur(30px);
+    filter: blur(30px);
   }
 
   .right {
@@ -196,7 +198,8 @@ export default class MemberContent extends Vue {
     opacity: 0;
     transform: translate(5px, 40px);
     transition: 1s;
-    will-change: transform;
+    -ms-filter: blur(30px);
+     filter: blur(30px);
   }
 }
 

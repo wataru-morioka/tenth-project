@@ -165,7 +165,7 @@ a {
 .horizontal-array {
   display: flex;
   justify-content: center;
-  margin-bottom: 40px;
+  margin-bottom: 10px;
 
   img {
     height: 15px;
@@ -196,17 +196,13 @@ a {
 } 
 
 @media screen and (max-width: 768px){
-  // #footer-icon {
-  //   display: none;
-  // }
-
   a {
     font-size: 10px;
   }
 
-  // .horizontal-array {
-  //   margin-bottom: 50px;
-  // }
+  .horizontal-array {
+    margin-bottom: 40px;
+  }
 
   #user-account {
     font-size: 7px;

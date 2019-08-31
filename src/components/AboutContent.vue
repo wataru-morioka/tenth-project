@@ -4,7 +4,7 @@
       div.column.sp(style='transition-delay: 2s;')
         div
           img.content-img.img-left(src='../assets/about8.jpg')
-      div.column.msg.sp(style='transition-delay: 2.5s;')
+      div.column.msg.sp(style='transition-delay: 2.3s;')
         div.message
           div.header
             span Our Concept
@@ -27,7 +27,7 @@
       div.column(style='transition-delay: 2s;')
         div
           img.content-img.img-right(src='../assets/about9.jpg')
-      div.column.msg(style='transition-delay: 2.5s;')
+      div.column.msg(style='transition-delay: 2.3s;')
         div.message.message-right
             div.header
               span Request
@@ -144,16 +144,23 @@ import jQuery from 'jQuery';
 import { setTimeout } from 'timers';
 
 const fadein = () => {
-  const offset = 100;
-  const scrollTop = $(window).scrollTop()!;
-  const scrollBtm = scrollTop! + $(window).height()!;
-  const effectPos = scrollBtm - offset;
+  const offset = 0;
+  // const scrollTop = $(window).scrollTop()!;
+  // const scrollBtm = scrollTop! + $(window).height()!;
+  const effectPos = $(window).height()! - offset;
   $('.column').each( function() {
     const thisPos = $(this).offset()!.top;
     if ( effectPos > thisPos ) {
       $(this).css({
           opacity: 1,
           transform: 'translate(0px, 0px)',
+          '-ms-filter': 'blur(0px)',
+          filter: 'blur(0px)',
+      });
+    } else {
+      $(this).css({
+          opacity: 0,
+          'transition-delay': '0s',
       });
     }
   });
@@ -186,8 +193,6 @@ $menu-color: #ffffff77;
   -webkit-overflow-scrolling: touch;
   height: auto;
   margin: auto;
-  transition: 1s;
-  will-change: transform;
 }
 
 ::-webkit-scrollbar {
@@ -203,8 +208,11 @@ $menu-color: #ffffff77;
   min-width: 50%;
   width: 100%;
   opacity: 0;
-  transform: translate(0px, 40px);
+  transform: translate(0px, 80px) translate3d(0, 0, 0);
   transition: 1s;
+  will-change: transform;
+  -ms-filter: blur(30px);
+  filter: blur(30px);
   will-change: transform;
 
   .message {
@@ -230,7 +238,7 @@ $menu-color: #ffffff77;
   flex-direction: column;
   justify-content: center;
   align-items: center; 
-  transition-delay: 0.5s;
+  transition-delay: 0.3s;
 }
 
 .content-img {
@@ -268,7 +276,7 @@ $menu-color: #ffffff77;
     transition-delay: 2s !important;
   }
   .column.msg.sp {
-    transition-delay: 2.5s !important;
+    transition-delay: 2.2s !important;
   }
 
   .column .message {
@@ -277,7 +285,7 @@ $menu-color: #ffffff77;
     .header {
       font-size: 10px;
     }
-    p {
+    p, .suffix {
       font-size: 9px;
     }
   }

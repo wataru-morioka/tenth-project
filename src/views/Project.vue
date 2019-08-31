@@ -44,7 +44,6 @@ export default class Project extends Vue {}
   position: relative;
   animation-name: body-fadein;
   animation-duration: 2s;
-  // will-change: transform;
   height: 100vw;
 }
 
@@ -56,8 +55,6 @@ export default class Project extends Vue {}
   bottom: 0;
   width: auto;
   height: 500px;
-  // padding-right: 0px;
-  // padding-left: 0px;
   display: flex;
   flex-direction: row;
   justify-content: center;
@@ -71,8 +68,8 @@ export default class Project extends Vue {}
   p {
     animation-name: content-fadein;
     animation-duration: 2s;
-    margin-left: 5px;
-    margin-right: 5px;
+    margin-left: 2px;
+    margin-right: 2px;
     margin-bottom: 0;
   }
 }
@@ -80,10 +77,6 @@ export default class Project extends Vue {}
 @media screen and (max-width: 768px){
   .subject {
     font-size: 30px;
-  }
-  .subject p {
-    margin-left: 2px;
-    margin-right: 2px;
   }
 }
 
@@ -102,7 +95,6 @@ export default class Project extends Vue {}
       transform: translateY(40px);
   }
   to {
-      // opacity: .2;
       transform: translateY(0);
   }
 }

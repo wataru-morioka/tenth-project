@@ -83,7 +83,9 @@ export default class Start extends Vue {
 }
 
 .ui.indicating .label {
-  color: #ffffff70 !important; 
+  color: #ffffff77 !important;
+  font-size: 8px;
+  font-family: 'Avenir', Helvetica, Arial, sans-serif !important;
 }
 
 #to-home-bt {

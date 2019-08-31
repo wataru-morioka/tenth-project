@@ -34,7 +34,7 @@
               label Message
               textarea(rows="17")
             button(class="ui inverted orange basic button") Submit
-        div.column(style='transition-delay: 2.5s;')
+        div.column(style='transition-delay: 2.2s;')
           div#office-info
             h5 Our Office
             table
@@ -83,16 +83,18 @@ import { Component, Vue } from 'vue-property-decorator';
 import jQuery from 'jQuery';
 
 const fadein = () => {
-  const offset = 100;
-  const scrollTop = $(window).scrollTop()!;
-  const scrollBtm = scrollTop + $(window).height()!;
-  const effectPos = scrollBtm - offset;
+  const offset = 60;
+  // const scrollTop = $(window).scrollTop()!;
+  // const scrollBtm = scrollTop + $(window).height()!;
+  const effectPos = $(window).height()! - offset;
   $('.column').each( function() {
     const thisPos = $(this).offset()!.top;
     if ( effectPos > thisPos ) {
       $(this).css({
           opacity: 1,
           transform: 'translate(0px, 0px)',
+          '-ms-filter': 'blur(0px)',
+          filter: 'blur(0px)',
       });
     } else {
       $(this).css({
@@ -131,9 +133,8 @@ export default class ContactContent extends Vue {
   align-items: center;
   margin: auto;
   height: auto;
+  // width: 100%;
   top: 60px; right: 0; bottom: 0; left: 0;
-  transition: 1s;
-  will-change: transform;
 }
 
 ::-webkit-scrollbar {
@@ -148,9 +149,10 @@ export default class ContactContent extends Vue {
 .column {
   min-width: 50%;
   opacity: 0;
-  transform: translate(0px, 40px);
+  transform: translate(0px, 60px);
   transition: 1s;
-  will-change: transform;
+  -ms-filter: blur(30px);
+  filter: blur(30px);
 }
 
 h5 {
@@ -224,6 +226,15 @@ input, select {
 
     .thin {
       width: 50%;
+    }
+
+    input, select {
+      font-size: 12px;
+      height: 25px !important;
+    }
+
+    .button, textarea {
+      font-size: 12px;
     }
 
     h5 {
