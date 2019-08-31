@@ -13,6 +13,7 @@
         span U
       p(style='animation-delay: 1.4s')
         span T
+    CenterMenu
     AboutContent
 </template>
 
@@ -21,12 +22,14 @@ import { Component, Vue } from 'vue-property-decorator';
 import BackImage from '@/components/BackImage.vue';
 import SubNav from '@/components/SubNav.vue';
 import AboutContent from '@/components/AboutContent.vue';
+import CenterMenu from '@/components/CenterMenu.vue';
 
 @Component({
   components: {
     BackImage,
     SubNav,
     AboutContent,
+    CenterMenu,
   },
 })
 export default class About extends Vue {}

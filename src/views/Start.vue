@@ -75,7 +75,7 @@ export default class Start extends Vue {
   bottom: 0;
   margin: auto;
   width: 200px;
-  height:2px;
+  height:1px;
 }
 
 .ui.progress .bar {

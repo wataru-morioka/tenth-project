@@ -18,6 +18,7 @@
       p(style='animation-delay: 1.6s')
         span T
     SubMenu
+    CenterMenu
     ProjectContent
 </template>
 
@@ -27,6 +28,7 @@ import BackImage from '@/components/BackImage.vue';
 import SubNav from '@/components/SubNav.vue';
 import SubMenu from '@/components/SubMenu.vue';
 import ProjectContent from '@/components/ProjectContent.vue';
+import CenterMenu from '@/components/CenterMenu.vue';
 
 @Component({
   components: {
@@ -34,6 +36,7 @@ import ProjectContent from '@/components/ProjectContent.vue';
     SubNav,
     SubMenu,
     ProjectContent,
+    CenterMenu,
   },
 })
 export default class Project extends Vue {}

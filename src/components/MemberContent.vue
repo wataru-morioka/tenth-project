@@ -113,7 +113,7 @@ import { Component, Vue } from 'vue-property-decorator';
 import jQuery from 'jQuery';
 
 const fadein = () => {
-  const offset = 60;
+  const offset = - 60;
   // const scrollTop = $(window).scrollTop()!;
   // const scrollBtm = scrollTop + $(window).height()!;
   const effectPos = $(window).height()! - offset;
@@ -124,14 +124,14 @@ const fadein = () => {
     const thisPos = $(this).offset()!.top;
     if ( effectPos > thisPos ) {
       $(this).css({
-          opacity: 1,
-          transform: 'translate(0px, 0px)',
+          'opacity': 1,
+          'transform': 'translate(0px, 0px)',
           '-ms-filter': 'blur(0px)',
-          filter: 'blur(0px)',
+          'filter': 'blur(0px)',
       });
     } else {
       $(this).css({
-          opacity: 0,
+          'opacity': 0,
           'transition-delay': '0s',
       });
     }
@@ -164,7 +164,7 @@ export default class MemberContent extends Vue {
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  margin: auto;;
+  margin: auto;
   height: auto;
   width: 100%;
   top: 60px; right: 0; bottom: 0; left: 0;
@@ -176,10 +176,6 @@ export default class MemberContent extends Vue {
   -webkit-appearance: none;
 }
 
-.grid {
-  width: 100%;
-}
-
 .row {
   margin-top: 30px;
   margin-bottom: 30px;
@@ -187,7 +183,7 @@ export default class MemberContent extends Vue {
   .left {
     text-align: right;
     opacity: 0;
-    transform: translate(5px, 40px);
+    transform: translate(5px, 40px) translate3d(0, 0, 0);
     transition: 1s;
     -ms-filter: blur(30px);
     filter: blur(30px);
@@ -196,10 +192,10 @@ export default class MemberContent extends Vue {
   .right {
     text-align: left;
     opacity: 0;
-    transform: translate(5px, 40px);
+    transform: translate(5px, 40px) translate3d(0, 0, 0);
     transition: 1s;
     -ms-filter: blur(30px);
-     filter: blur(30px);
+    filter: blur(30px);
   }
 }
 
@@ -240,6 +236,10 @@ export default class MemberContent extends Vue {
 
 
 @media screen and (max-width: 768px){
+  .content {
+    justify-content: flex-start;
+  }
+
   #mimber-1 {
     margin-right: auto;
   }

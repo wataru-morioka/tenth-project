@@ -68,9 +68,9 @@
                   p address
                 td.value
                   p 
-                    sapn 〒111-1111
+                    span 〒111-1111
                     br
-                    spam 東京都渋谷区恵比寿新天地 暫定ビルディング 15F
+                    span 東京都渋谷区恵比寿新天地 暫定ビルディング 15F
             br
             div.icon-wrap
               img.icon(src='../assets/icn_fb.png')
@@ -83,7 +83,7 @@ import { Component, Vue } from 'vue-property-decorator';
 import jQuery from 'jQuery';
 
 const fadein = () => {
-  const offset = 60;
+  const offset = - 60;
   // const scrollTop = $(window).scrollTop()!;
   // const scrollBtm = scrollTop + $(window).height()!;
   const effectPos = $(window).height()! - offset;
@@ -91,14 +91,14 @@ const fadein = () => {
     const thisPos = $(this).offset()!.top;
     if ( effectPos > thisPos ) {
       $(this).css({
-          opacity: 1,
-          transform: 'translate(0px, 0px)',
+          'opacity': 1,
+          'transform': 'translate(0px, 0px)',
           '-ms-filter': 'blur(0px)',
-          filter: 'blur(0px)',
+          'filter': 'blur(0px)',
       });
     } else {
       $(this).css({
-          opacity: 0,
+          'opacity': 0,
           'transition-delay': '0s',
       });
     }
@@ -149,7 +149,7 @@ export default class ContactContent extends Vue {
 .column {
   min-width: 50%;
   opacity: 0;
-  transform: translate(0px, 60px);
+  transform: translate(0px, 60px) translate3d(0, 0, 0);
   transition: 1s;
   -ms-filter: blur(30px);
   filter: blur(30px);
@@ -209,6 +209,10 @@ input, select {
 }
 
 @media screen and (max-width: 768px){
+  .content {
+    justify-content: flex-start;
+  }
+
   .column {
     text-align: center;
     min-width: 100%;

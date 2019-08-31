@@ -8,7 +8,7 @@
               source(src='../assets/jager.mp4' type='video/mp4')
           div.subject
             p 海浜幕張公園
-            h3 
+            h4 
               p(style='transition-delay: 0s')
                 span J
               p(style='transition-delay: 0.02s')
@@ -38,7 +38,7 @@
                source(src='../assets/sauza.mp4' type='video/mp4')
           div.subject
             p お台場臨時特設会場
-            h3 
+            h4 
               p(style='transition-delay: 0s')
                 span S
               p(style='transition-delay: 0.02s')
@@ -56,7 +56,7 @@
             img(src='../assets/1.jpg')
           div.subject
             p レインボーブリッジ
-            h3
+            h4
               p(style='transition-delay: 0s')
                 span M
               p(style='transition-delay: 0.02s')
@@ -75,7 +75,7 @@
             img(src='../assets/2.jpg')
           div.subject
             p Club
-            h3
+            h4
               p(style='transition-delay: 0s')
                 span C
               p(style='transition-delay: 0.02s')
@@ -95,7 +95,7 @@
             img(src='../assets/3.jpg')
           div.subject
             p Club
-            h3
+            h4
               p(style='transition-delay: 0s')
                 span S
               p(style='transition-delay: 0.02s')
@@ -110,7 +110,7 @@
             img(src='../assets/4.jpg')
           div.subject
             p Club
-            h3
+            h4
               p(style='transition-delay: 0s')
                 span B
               p(style='transition-delay: 0.02s')
@@ -136,7 +136,7 @@
             img(src='../assets/5.jpg')
           div.subject
             p Club
-            h3
+            h4
               p(style='transition-delay: 0s')
                 span M
               p(style='transition-delay: 0.02s')
@@ -155,7 +155,7 @@
             img(src='../assets/6.jpg')
           div.subject
             p Club
-            h3
+            h4
               p(style='transition-delay: 0s')
                 span S
               p(style='transition-delay: 0.02s')
@@ -181,7 +181,7 @@
             img(src='../assets/7.jpg')
           div.subject
             p Club
-            h3 
+            h4 
               p(style='transition-delay: 0s')
                 span M
               p(style='transition-delay: 0.02s')
@@ -204,7 +204,7 @@
             img(src='../assets/9.jpg')
           div.subject
             p Club
-            h3
+            h4
               p(style='transition-delay: 0s')
                 span J
               p(style='transition-delay: 0.02s')
@@ -228,7 +228,7 @@
             img(src='../assets/10.jpg')
           div.subject
             p Club
-            h3
+            h4
               p(style='transition-delay: 0s')
                 span L
               p(style='transition-delay: 0.02s')
@@ -253,7 +253,7 @@
             img(src='../assets/11.jpg')
           div.subject
             p Club
-            h3
+            h4
               p(style='transition-delay: 0s')
                 span C
               p(style='transition-delay: 0.02s')
@@ -273,7 +273,7 @@
             img(src='../assets/12.jpg')
           div.subject
             p 海浜幕張公園
-            h3 
+            h4 
               p(style='transition-delay: 0s')
                 span J
               p(style='transition-delay: 0.02s')
@@ -302,7 +302,7 @@
             img(src='../assets/13.jpg')
           div.subject
             p お台場臨時特設会場
-            h3 
+            h4 
               p(style='transition-delay: 0s')
                 span S
               p(style='transition-delay: 0.02s')
@@ -320,7 +320,7 @@
             img(src='../assets/14.jpg')
           div.subject
             p レインボーブリッジ
-            h3
+            h4
               p(style='transition-delay: 0s')
                 span M
               p(style='transition-delay: 0.02s')
@@ -339,7 +339,7 @@
             img(src='../assets/15.jpg')
           div.subject
             p Club
-            h3
+            h4
               p(style='transition-delay: 0s')
                 span C
               p(style='transition-delay: 0.02s')
@@ -359,7 +359,7 @@
             img(src='../assets/16.jpg')
           div.subject
             p Club
-            h3
+            h4
               p(style='transition-delay: 0s')
                 span S
               p(style='transition-delay: 0.02s')
@@ -374,7 +374,7 @@
             img(src='../assets/17.jpg')
           div.subject
             p Club
-            h3
+            h4
               p(style='transition-delay: 0s')
                 span B
               p(style='transition-delay: 0.02s')
@@ -401,7 +401,7 @@ import jQuery from 'jQuery';
 // import SubMenu from '@/components/SubMenu.vue';
 
 const fadein = () => {
-  const offset = 60;
+  const offset = - 60;
   // const scrollTop = $(window).scrollTop()!;
   // const scrollBtm = scrollTop + $(window).height()!;
   const effectPos = $(window).height()! - offset;
@@ -412,14 +412,14 @@ const fadein = () => {
     const thisPos = $(this).offset()!.top;
     if ( effectPos > thisPos ) {
       $(this).css({
-          opacity: 1,
-          transform: 'translate(0px, 0px)',
+          'opacity': 1,
+          'transform': 'translate(0px, 0px)',
           '-ms-filter': 'blur(0px)',
-          filter: 'blur(0px)',
+          'filter': 'blur(0px)',
       });
     } else {
       $(this).css({
-          opacity: 0,
+          'opacity': 0,
           'transition-delay': '0s',
       });
     }
@@ -486,8 +486,9 @@ video, img {
 .column {
   min-width: 50%;
   width: 100%;
+  // height: 100%;
   opacity: 0;
-  transform: translate(0px, 80px);
+  transform: translate(0px, 80px) translate3d(0, 0, 0);
   transition: 1.5s;
   will-change: transform;
   -ms-filter: blur(30px);
@@ -504,7 +505,7 @@ video, img {
         font-size: 12px;
         margin-bottom: 0px;
       }
-      h3 {
+      h4 {
         margin-top: 0px;
         color: #ffffff;
         p {
@@ -518,7 +519,7 @@ video, img {
 }
 
 .content-box:hover {
-  h3 p {
+  h4 p {
     -webkit-transform: rotateX(360deg);
     transform: rotateX(360deg);
   }
@@ -545,12 +546,18 @@ video, img {
     margin-bottom: 30px !important;
     .content-box {
       width: 80%;
-      p {
-        font-size: 8px;
-      }
 
-      h3 p {
-        font-size: 14px;
+      .subject {
+        margin-top: 0px;
+
+        p {
+          font-size: 6px;
+        }
+
+        h4 p {
+          padding-top: 0px;
+          font-size: 13px;
+        }
       }
     }
   }

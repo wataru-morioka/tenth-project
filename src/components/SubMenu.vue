@@ -326,6 +326,7 @@ export default class SubMenu extends Vue {
   overflow-y: scroll;
   z-index: 2;
   margin-left: 13px !important;
+  transition: 2s;
 
   .menu-item {
     opacity: 0;

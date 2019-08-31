@@ -144,7 +144,7 @@ import jQuery from 'jQuery';
 import { setTimeout } from 'timers';
 
 const fadein = () => {
-  const offset = 0;
+  const offset = - 60;
   // const scrollTop = $(window).scrollTop()!;
   // const scrollBtm = scrollTop! + $(window).height()!;
   const effectPos = $(window).height()! - offset;
@@ -152,14 +152,14 @@ const fadein = () => {
     const thisPos = $(this).offset()!.top;
     if ( effectPos > thisPos ) {
       $(this).css({
-          opacity: 1,
-          transform: 'translate(0px, 0px)',
+          'opacity': 1,
+          'transform': 'translate(0px, 0px)',
           '-ms-filter': 'blur(0px)',
-          filter: 'blur(0px)',
+          'filter': 'blur(0px)',
       });
     } else {
       $(this).css({
-          opacity: 0,
+          'opacity': 0,
           'transition-delay': '0s',
       });
     }

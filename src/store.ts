@@ -18,6 +18,7 @@ export default new Vuex.Store({
     email: '',
     displayName: '',
     currentViewIndex: 0,
+    isMenuDisplay: false,
   },
   mutations: {
     setUser(state, payload) {
@@ -42,6 +43,10 @@ export default new Vuex.Store({
     setViewIndex(state, payload) {
       state.currentViewIndex = payload.index;
     },
+
+    setIsMenuDisplay(state, payload) {
+      state.isMenuDisplay = payload.condition;
+    }
   },
   actions: {
     async test({ commit, state, rootState }) {
