@@ -2,10 +2,21 @@
   div#footer-nav
     div
       a(href='#', @click.stop.prevent='login', v-show='!isLogin') Login
-      div(v-show='!isLogin', style='height: 20px;')
+      div(v-show='!isLogin', style='height: 10px;')
       a(href='#', @click.stop.prevent='logout', v-show='isLogin') Logout
       br
       p#user-account(v-if='isLogin') {{ email }}
+      div.horizontal-array
+        div
+          img.icon(src='../assets/icn_fb.png')
+        div
+          img.icon(src='../assets/icn_insta.png')
+        div
+          img.icon(src='../assets/icn_tw.png')
+      a(href='https://www.jagermeister.com/en')
+        img#footer-icon(src='../assets/jager-logo.png')
+      img#footer-icon2(src='../assets/footer-logo.png')
+      br
       a.extension(href='#', v-if='isLogin', @click.stop.prevent='toManagement')
         p(style='transition-delay: 0s')
           span M
@@ -55,18 +66,6 @@
           span T
         p(style='transition-delay: 0.10s')
           span C
-      br
-      img#footer-icon2(src='../assets/footer-logo.png')
-      //- div(v-show='isLogin', style='height: 10px;')
-      div.horizontal-array
-        div
-          img.icon(src='../assets/icn_fb.png')
-        div
-          img.icon(src='../assets/icn_insta.png')
-        div
-          img.icon(src='../assets/icn_tw.png')
-      a(href='https://www.jagermeister.com/en')
-        img#footer-icon(src='../assets/jager-logo.png')
 </template>
 
 <script lang='ts'>
@@ -124,7 +123,10 @@ export default class FooterNav extends Vue {
 $mes-color: #42b983;
 
 #footer-nav {
-  margin-top: auto;
+  position: absolute;
+  right: 0; bottom: 15px; left: 0;
+  width: auto;
+  height: auto;
 }
 
 a {
@@ -153,7 +155,8 @@ a {
 .extension {
   margin: 30px;
   color: $mes-color;
-  font-weight: bold;
+  // font-weight: bold;
+  // font-size: 9px;
 
   p {
     display: inline-block;
@@ -165,10 +168,9 @@ a {
 .horizontal-array {
   display: flex;
   justify-content: center;
-  margin-bottom: 10px;
 
   img {
-    height: 15px;
+    height: 12px;
   }
   
   div {
@@ -198,10 +200,6 @@ a {
 @media screen and (max-width: 768px){
   a {
     font-size: 10px;
-  }
-
-  .horizontal-array {
-    margin-bottom: 40px;
   }
 
   #user-account {

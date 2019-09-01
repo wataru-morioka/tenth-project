@@ -64,8 +64,8 @@ export default class Contact extends Vue {}
   p {
     animation-name: content-fadein;
     animation-duration: 2s;
-    margin-left: 2px;
-    margin-right: 2px;
+    margin-left: 1px;
+    margin-right: 1px;
     margin-bottom: 0;
   }
 }

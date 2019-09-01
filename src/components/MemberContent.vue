@@ -187,7 +187,7 @@ export default class MemberContent extends Vue {
 
 .icon {
   cursor: pointer;
-  height: 15px;
+  height: 12px;
   margin-left: 10px;
   margin-right: 10px;
 }

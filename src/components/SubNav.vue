@@ -30,7 +30,6 @@ export default class MainNav extends Vue {}
   animation-name: fadein;
   animation-duration: 2s;
   will-change: transform;
-  // z-index: 10;
 }
 
 @keyframes fadein {

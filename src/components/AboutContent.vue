@@ -104,7 +104,7 @@
         img.content-img(src='../assets/about14.jpg')
       div.column.msg
         div.message.header
-          div
+          div.header
             span Final Configuration
           h3
             span 06. お客様と最終確認

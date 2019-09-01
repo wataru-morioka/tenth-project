@@ -1,7 +1,7 @@
 <template lang='pug'>
   div
     div#bg-img 
-      img.pc(src='../assets/bg-pc.jpg')
+      img.pc(src='../assets/bg-load.jpg')
       img.sp(src='../assets/bg-sp.jpg')
     div#bg-circle
       img#circle-img(src='../assets/bg-circle.png')

@@ -23,7 +23,7 @@ export default class MainNav extends Vue {}
 
 <style scoped lang='scss'>
 #nav {
-  position: fixed;
+  position: relative;
   display: flex;
   flex-direction: column;
   width: 100%;
@@ -31,7 +31,6 @@ export default class MainNav extends Vue {}
   min-height: 100%;
   animation-name: fadein;
   animation-duration: 2s;
-  
   will-change: transform;
 }
 
