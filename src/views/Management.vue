@@ -1,5 +1,6 @@
 <template lang='pug'>
   div#management
+    //- HelloWorld
     BackImage
     div.subject
       p(style='animation-delay: 1s')
@@ -32,6 +33,7 @@ import { Component, Vue } from 'vue-property-decorator';
 import BackImage from '@/components/BackImage.vue';
 import FooterNav from '@/components/FooterNav.vue';
 import ManagementHeaderNav from '@/components/ManagementHeaderNav.vue';
+// import HelloWorld from '@/components/HelloWorld.vue';
 import jQuery from 'jQuery';
 
 @Component({
@@ -39,6 +41,7 @@ import jQuery from 'jQuery';
     BackImage,
     FooterNav,
     ManagementHeaderNav,
+    // HelloWorld,
   },
 })
 export default class Management extends Vue {

@@ -57,7 +57,7 @@ video {
   right: 0;
   bottom: 0;
   margin: auto;
-  width: 100%;
+  width: 40%;
   transition: 1s;
   z-index: -10;
 }
@@ -92,6 +92,10 @@ video {
 @media screen and (max-width: 768px){
   .subject {
     font-size: 30px;
+  }
+
+  video {
+    width: 100%;
   }
 }
 

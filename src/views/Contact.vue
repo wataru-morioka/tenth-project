@@ -1,5 +1,6 @@
 <template lang='pug'>
   div#contact
+    //- HelloWorld
     BackImage
     SubNav
     div.subject
@@ -25,12 +26,14 @@ import { Component, Vue } from 'vue-property-decorator';
 import BackImage from '@/components/BackImage.vue';
 import SubNav from '@/components/SubNav.vue';
 import ContactContent from '@/components/ContactContent.vue';
+// import HelloWorld from '@/components/HelloWorld.vue';
 
 @Component({
   components: {
     BackImage,
     SubNav,
     ContactContent,
+    // HelloWorld,
   },
 })
 export default class Contact extends Vue {}

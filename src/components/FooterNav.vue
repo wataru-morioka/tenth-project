@@ -71,7 +71,6 @@
 <script lang='ts'>
 import { Component, Prop, Vue } from 'vue-property-decorator';
 import { mapState } from 'vuex';
-// import { url } from 'inspector';
 import axios from 'axios';
 import jQuery from 'jquery';
 // tslint:disable-next-line:no-var-requires

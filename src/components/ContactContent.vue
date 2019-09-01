@@ -1,39 +1,44 @@
 <template lang='pug'>
   div.content
-    div(class="ui two column divided grid")
+    div(class='ui two column divided grid')
       div.row
         div.column(style='transition-delay: 2s;')
-          form#ask-form(class="ui form")
-            h5(class="ui dividing header") お問い合わせ
+          form#ask-form(class='ui form' @submit.prevent="onSubmit" action="/" method="POST")
+            h5(class='ui dividing header') お問い合わせ
             div.field.thin
               label Name
-              div(class="four fields")
+              div(class='four fields')
                 div.field
-                  input(type="text" name="shipping[name]" placeholder="Last Name")
+                  input(type='text' name='shipping[name]' placeholder='Last Name' v-model.lazy='lastName')
+                  p(v-show='!validateLastName') ※必須です
                 div.field
-                  input(type="text" name="shipping[name]" placeholder="First Name")
-            div.thin(class="four fields")
+                  input(type='text' name='shipping[name]' placeholder='First Name' v-model.lazy='firstName')
+                  p(v-show='!validateFirstName') ※必須です
+            div.thin(class='four fields')
               div.field
                 label Type
-                select(class="ui fluid dropdown")
-                  option(value="private") private
-                  option(value="companies") companies
-            div.thin(class="four fields")
+                select(class='ui fluid dropdown')
+                  option(value='private') private
+                  option(value='companies') companies
+            div.thin(class='four fields')
               div.field
                 label State
-                input(type="text" placeholder="State")
-            div(class="two fields")
+                select(class='ui fluid dropdown')
+                  option(v-for='state in states', :key='state', :value='state') {{ state }}
+            div(class='two fields')
               div.field
                 label Email
-                input(type="text" placeholder="Email") 
-            div.thin(class="three fields")
+                input(type='text' placeholder='Email' v-model.lazy='email') 
+                p(v-show='!validateEmail') ※正しいメールアドレス表記の必要があります
+            div.thin(class='three fields')
               div.field
                 label Phone
-                input(type="text" placeholder="Phone")
+                input(type='text' placeholder='Phone' v-model.lazy='phone')
             div.field
               label Message
-              textarea(rows="17")
-            button(class="ui inverted orange basic button") Submit
+              textarea(rows='17' v-model.lazy='message')
+              p(v-show='!validateMessage') ※必須です
+            button(class='ui inverted orange basic button' type='submit') Submit
         div.column(style='transition-delay: 2.2s;')
           div#office-info
             h5 Our Office
@@ -81,34 +86,113 @@
 <script lang='ts'>
 import { Component, Vue } from 'vue-property-decorator';
 import jQuery from 'jQuery';
-
-const fadein = () => {
-  const offset = - 60;
-  const effectPos = $(window).height()! - offset;
-  $('.column').each( function() {
-    const thisPos = $(this).offset()!.top;
-    if ( effectPos > thisPos ) {
-      $(this).css({
-          'opacity': 1,
-          'transform': 'translate(0px, 0px)',
-          '-ms-filter': 'blur(0px)',
-          'filter': 'blur(0px)',
-      });
-    } else {
-      $(this).css({
-          'opacity': 0,
-          'transition-delay': '0s',
-      });
-    }
-  });
-};
+import axios from 'axios';
+// tslint:disable-next-line:no-var-requires
+const https = require('https');
 
 @Component
 export default class ContactContent extends Vue {
+  private lastName: string = '';
+  private lastNameValid: boolean = false;
+  private firstName: string = '';
+  private firstNameValid: boolean = false;
+  private email: string = '';
+  private emailValid: boolean = false;
+  private phone: string = '';
+  private message: string = '';
+  private messageValid: boolean = false;
+  private states: string[] = new Array<string>(
+    '北海道',
+    '青森県',
+    '岩手県',
+    '宮城県',
+    '秋田県',
+    '山形県',
+    '福島県',
+    '茨城県',
+    '栃木県',
+    '群馬県',
+    '埼玉県',
+    '千葉県',
+    '東京都',
+    '神奈川県',
+    '新潟県',
+    '富山県',
+    '石川県',
+    '福井県',
+    '山梨県',
+    '長野県',
+    '岐阜県',
+    '静岡県',
+    '愛知県',
+    '三重県',
+    '滋賀県',
+    '京都府',
+    '大阪府',
+    '兵庫県',
+    '奈良県',
+    '和歌山県',
+    '鳥取県',
+    '島根県',
+    '岡山県',
+    '広島県',
+    '山口県',
+    '徳島県',
+    '香川県',
+    '愛媛県',
+    '高知県',
+    '福岡県',
+    '佐賀県',
+    '長崎県',
+    '熊本県',
+    '大分県',
+    '宮崎県',
+    '鹿児島県',
+    '沖縄県',
+  );
+
+  get validateLastName(): boolean {
+    if (this.lastName.length > 0) {
+      this.lastNameValid = true;
+      return true;
+    }
+    this.lastNameValid = false;
+    return false;
+  }
+
+  get validateFirstName(): boolean {
+    if (this.firstName.length > 0) {
+      this.firstNameValid = true;
+      return true;
+    }
+    this.firstNameValid = false;
+    return false;
+  }
+
+  get validateEmail(): boolean {
+    const regexp = /^[A-Za-z0-9]{1}[A-Za-z0-9_.-]*@{1}[A-Za-z0-9_.-]{1,}\.[A-Za-z0-9]{1,}$/;
+
+    if (regexp.test(this.email)) {
+      this.emailValid = true;
+      return true;
+    }
+    this.emailValid = false;
+    return false;
+  }
+
+  get validateMessage(): boolean {
+    if (this.message.length > 0) {
+      this.messageValid = true;
+      return true;
+    }
+    this.messageValid = false;
+    return false;
+  }
+
   private mounted() {
-    fadein();
+    this.fadein();
     $('.content').scroll(() => {
-      fadein();
+      this.fadein();
     });
   }
 
@@ -116,6 +200,53 @@ export default class ContactContent extends Vue {
     setTimeout(() => {
       $('.content').css('top', '60px');
     }, 1000);
+  }
+
+  private fadein(): void {
+    const offset = - 60;
+    const effectPos = $(window).height()! - offset;
+    $('.column').each( function() {
+      const thisPos = $(this).offset()!.top;
+      if ( effectPos > thisPos ) {
+        $(this).css({
+            'opacity': 1,
+            'transform': 'translate(0px, 0px)',
+            '-ms-filter': 'blur(0px)',
+            'filter': 'blur(0px)',
+        });
+      } else {
+        $(this).css({
+            'opacity': 0,
+            'transition-delay': '0s',
+        });
+      }
+    });
+  }
+
+  private onSubmit(): void {
+    if (!this.lastNameValid || !this.firstNameValid || !this.emailValid || !this.messageValid) {
+      alert('無効な項目があります');
+      return;
+    }
+
+    const data = {
+        idToken: this.$store.state.idToken,
+    };
+
+    const header = {
+      // 'Content-Type': 'application/json',
+      Authorization: `Bearer ${this.$store.state.idToken}`,
+    };
+
+    axios.post('https://flask.site:443/contact', data, {
+      headers: header,
+    })
+    .then((res) => {
+      alert(res.data.idToken);
+    })
+    .catch((err) => {
+      console.log(err);
+    });
   }
 }
 </script>
@@ -153,18 +284,6 @@ export default class ContactContent extends Vue {
   filter: blur(50px);
 }
 
-h5 {
-  text-align: left;
-  color: #ffffff !important;
-  font-size: 12px !important;
-}
-
-label {
-  text-align: left;
-  color: #ffffff77 !important;
-  font-size: 11px !important;
-}
-  
 input, select {
   height: 30px !important; 
 }
@@ -204,6 +323,23 @@ input, select {
 #ask-form {
   width: 80%;
   margin: auto;
+
+  label {
+    text-align: left;
+    color: #ffffff77 !important;
+    font-size: 11px !important;
+  }
+
+  h5 {
+    text-align: left;
+    color: #ffffff !important;
+    font-size: 12px !important;
+  }
+
+  p {
+    text-align: left;
+    color: #b14c2d;
+  }
 }
 
 @media screen and (max-width: 768px){

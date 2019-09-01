@@ -424,6 +424,12 @@ export default class ProjectContent extends Vue {
   private isDisplay: boolean = false;
   private isPlaying: boolean = false;
 
+  private created() {
+    setTimeout(() => {
+      $('.content').css('top', '60px');
+    }, 1000);
+  }
+
   private mounted() {
     this.fadein();
     $('.content').scroll(() => {
@@ -433,7 +439,7 @@ export default class ProjectContent extends Vue {
   }
 
   private fadein(): void {
-    const offset = - 60;
+    const offset = 30;
     const effectPos = $(window).height()! - offset;
     $('.column').each( function() {
       const thisPos = $(this).offset()!.top;
@@ -453,31 +459,6 @@ export default class ProjectContent extends Vue {
     });
   }
 
-  private stop(): void {
-    if (this.isPlaying) {
-      this.isPlaying = false;
-      return;
-    }
-
-    document.querySelector('video')!.pause();
-    this.isDisplay = false;
-
-    $('.content, #sub-menu').css({
-      opacity: 1,
-    });
-
-    $('video').css({
-      'opacity': 0,
-      'z-index': -10,
-    });
-  }
-
-  private created() {
-    setTimeout(() => {
-      $('.content').css('top', '60px');
-    }, 1000);
-  }
-
   private play(event: any): void {
     if ( this.isDisplay) {
       this.stop();
@@ -494,6 +475,25 @@ export default class ProjectContent extends Vue {
     $('video').css({
       'opacity': 1,
       'z-index': 10,
+    });
+  }
+
+  private stop(): void {
+    if (this.isPlaying) {
+      this.isPlaying = false;
+      return;
+    }
+
+    document.querySelector('video')!.pause();
+    this.isDisplay = false;
+
+    $('.content, #sub-menu').css({
+      opacity: 1,
+    });
+
+    $('video').css({
+      'opacity': 0,
+      'z-index': -10,
     });
   }
 }
@@ -550,7 +550,7 @@ img {
   width: 100%;
   // height: 100%;
   opacity: 0;
-  transform: translate(0px, 80px) translate3d(0, 0, 0);
+  transform: translate(0px, 0px) translate3d(0, 0, 0);
   transition: 1s;
   will-change: transform;
   -ms-filter: blur(30px);

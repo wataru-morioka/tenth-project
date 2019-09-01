@@ -13,6 +13,7 @@ export default new Vuex.Store({
   state: {
     userName: 'wataru',
     isLogin: false,
+    isAnonymous: false,
     uid: '',
     idToken: '',
     email: '',
@@ -29,7 +30,8 @@ export default new Vuex.Store({
     },
 
     setUserInfo(state, payload) {
-      state.isLogin = true;
+      state.isLogin = payload.isLogin;
+      state.isAnonymous = payload.isAnonymous;
       state.uid = payload.uid;
       state.idToken = payload.idToken;
       state.email = payload.email;
@@ -82,7 +84,7 @@ export default new Vuex.Store({
       const provider = new firebase.auth.GoogleAuthProvider();
       await firebase.auth().signInWithPopup(provider)
       .then(async (result) => {
-        this.dispatch('setUserInfo');
+        console.log('google認証');
       }).catch((error) => {
         alert('ログインに失敗しました');
       });
@@ -91,9 +93,7 @@ export default new Vuex.Store({
     async logout({ commit, state, rootState }) {
       await firebase.auth().signOut()
       .then((result) => {
-        commit('changeStatus', {
-          status: false,
-        });
+        console.log('ログアウト');
       })
       .catch((err) => {
         alert('ログアウトに失敗しました');
@@ -102,18 +102,32 @@ export default new Vuex.Store({
 
     checkLoginStatus({ commit, state, rootState }) {
       firebase.auth().onAuthStateChanged((user) => {
-        commit('changeStatus', {
-          status: !!user,
-        });
-
-        if (!user) {
-          return;
+        if (user) {
+          if (user.email != null && user.email.length > 0) {
+            console.log('google認証済み');
+            this.dispatch('setUserInfo', {
+              isLoginAuth: true,
+              isAnonymousAuth: false,
+            });
+            return;
+          }
+        } else {
+          console.log('匿名認証済み');
+          firebase.auth().signInAnonymously().catch((error) => {
+            const errorCode = error.code;
+            const errorMessage = error.message;
+            console.log(errorCode);
+            console.log(error.message);
+          });
         }
-        this.dispatch('setUserInfo');
+        this.dispatch('setUserInfo', {
+          isLoginAuth: false,
+          isAnonymousAuth: true,
+        });
       });
     },
 
-    async setUserInfo({ commit, state, rootState }) {
+    async setUserInfo({ commit, state, rootState }, { isLoginAuth, isAnonymousAuth } ) {
       const currentUser = firebase.auth().currentUser;
       if (currentUser == null) {
         return;
@@ -121,6 +135,8 @@ export default new Vuex.Store({
 
       const token = await currentUser.getIdToken(true);
       this.commit('setUserInfo', {
+        isLogin: isLoginAuth,
+        isAnonymous: isAnonymousAuth,
         uid: currentUser.uid,
         idToken: token,
         email: currentUser.email,
@@ -129,7 +145,7 @@ export default new Vuex.Store({
     },
   },
   getters: {
-    getName: (state, getters) => () => {
+    getName: (state, getters) => {
       return state.userName;
     },
     isLogin: (state, getters) => {

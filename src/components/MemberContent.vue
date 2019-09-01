@@ -112,33 +112,12 @@
 import { Component, Vue } from 'vue-property-decorator';
 import jQuery from 'jQuery';
 
-const fadein = () => {
-  const offset = - 60;
-  const effectPos = $(window).height()! - offset;
-  $('.column').each( function() {
-    const thisPos = $(this).offset()!.top;
-    if ( effectPos > thisPos ) {
-      $(this).css({
-          'opacity': 1,
-          'transform': 'translate(0px, 0px)',
-          '-ms-filter': 'blur(0px)',
-          'filter': 'blur(0px)',
-      });
-    } else {
-      $(this).css({
-          'opacity': 0,
-          'transition-delay': '0s',
-      });
-    }
-  });
-};
-
 @Component
 export default class MemberContent extends Vue {
   private mounted() {
-    fadein();
+    this.fadein();
     $('.content').scroll(() => {
-      fadein();
+      this.fadein();
     });
   }
 
@@ -146,6 +125,27 @@ export default class MemberContent extends Vue {
     setTimeout(() => {
       $('.content').css('top', '60px');
     }, 1000);
+  }
+
+  private fadein(): void {
+    const offset = - 60;
+    const effectPos = $(window).height()! - offset;
+    $('.column').each( function() {
+      const thisPos = $(this).offset()!.top;
+      if ( effectPos > thisPos ) {
+        $(this).css({
+            'opacity': 1,
+            'transform': 'translate(0px, 0px)',
+            '-ms-filter': 'blur(0px)',
+            'filter': 'blur(0px)',
+        });
+      } else {
+        $(this).css({
+            'opacity': 0,
+            'transition-delay': '0s',
+        });
+      }
+    });
   }
 }
 </script>
