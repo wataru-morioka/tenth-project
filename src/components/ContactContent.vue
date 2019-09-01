@@ -84,8 +84,6 @@ import jQuery from 'jQuery';
 
 const fadein = () => {
   const offset = - 60;
-  // const scrollTop = $(window).scrollTop()!;
-  // const scrollBtm = scrollTop + $(window).height()!;
   const effectPos = $(window).height()! - offset;
   $('.column').each( function() {
     const thisPos = $(this).offset()!.top;
@@ -151,8 +149,8 @@ export default class ContactContent extends Vue {
   opacity: 0;
   transform: translate(0px, 60px) translate3d(0, 0, 0);
   transition: 1s;
-  -ms-filter: blur(30px);
-  filter: blur(30px);
+  -ms-filter: blur(50px);
+  filter: blur(50px);
 }
 
 h5 {

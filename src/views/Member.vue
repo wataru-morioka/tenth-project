@@ -15,7 +15,6 @@
         span E
       p(style='animation-delay: 1.5s')
         span R
-    CenterMenu
     MemberContent
 </template>
 
@@ -24,14 +23,12 @@ import { Component, Vue } from 'vue-property-decorator';
 import BackImage from '@/components/BackImage.vue';
 import SubNav from '@/components/SubNav.vue';
 import MemberContent from '@/components/MemberContent.vue';
-import CenterMenu from '@/components/CenterMenu.vue';
 
 @Component({
   components: {
     BackImage,
     SubNav,
     MemberContent,
-    CenterMenu,
   },
 })
 export default class Member extends Vue {}
@@ -42,7 +39,6 @@ export default class Member extends Vue {}
   position: relative;
   animation-name: body-fadein;
   animation-duration: 2s;
-  // will-change: transform;
 }
 
 .subject {

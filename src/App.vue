@@ -5,6 +5,7 @@
 
 <script lang='ts'>
 import { Component, Vue } from 'vue-property-decorator';
+import jQuert from 'jQuery';
 
 @Component
 export default class App extends Vue {

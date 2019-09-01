@@ -1,11 +1,11 @@
 <template lang='pug'>
-  div.content(class="ui two column divided grid")
+  div.content(class="ui two column divided grid", @click='stop')
     div.row(style='margin-top: 70px;')
       div.column.left(style='transition-delay: 2s;')
-        div.content-box.box-left
-          div.video-div
-            video(controls playsinline)
-              source(src='../assets/jager.mp4' type='video/mp4')
+        div.content-box.box-left#video-1(@click='play($event)')
+          div.image
+            i.huge.play.icon
+            img(src='../assets/6.jpg')
           div.subject
             p 海浜幕張公園
             h4 
@@ -32,10 +32,10 @@
               p(style='transition-delay: 0.20s')
                 span R
       div.column(style='transition-delay: 2.2s;')
-        div.content-box.box-right
-          div
-            video(controls playsinline)
-               source(src='../assets/sauza.mp4' type='video/mp4')
+        div.content-box.box-right(@click='play($event)')
+          div.image
+            i.huge.play.icon
+            img(src='../assets/12.jpg')
           div.subject
             p お台場臨時特設会場
             h4 
@@ -51,8 +51,9 @@
                 span A
     div.row
       div.column.left(style='transition-delay: 2.4s;')
-        div.content-box.box-left
-          div
+        div.content-box.box-left(@click='play($event)')
+          div.image
+            i.huge.play.icon
             img(src='../assets/1.jpg')
           div.subject
             p レインボーブリッジ
@@ -70,8 +71,9 @@
               p(style='transition-delay: 0.10s')
                 span U
       div.column(style='transition-delay: 2.6s;')
-        div.content-box.box-right
-          div
+        div.content-box.box-right(@click='play($event)')
+          div.image
+            i.huge.play.icon
             img(src='../assets/2.jpg')
           div.subject
             p Club
@@ -90,8 +92,9 @@
                 span I
     div.row
       div.column.left(style='transition-delay: 2.8s;')
-        div.content-box.box-left
-          div
+        div.content-box.box-left(@click='play($event)')
+          div.image
+            i.huge.play.icon
             img(src='../assets/3.jpg')
           div.subject
             p Club
@@ -105,8 +108,9 @@
               p(style='transition-delay: 0.06s')
                 span Y
       div.column(style='transition-delay: 3s;')
-        div.content-box.box-right
-          div
+        div.content-box.box-right(@click='play($event)')
+          div.image
+            i.huge.play.icon
             img(src='../assets/4.jpg')
           div.subject
             p Club
@@ -131,8 +135,9 @@
                 span R
     div.row
       div.column.left(style='transition-delay: 3.2s;')
-        div.content-box.box-left
-          div
+        div.content-box.box-left(@click='play($event)')
+          div.image
+            i.huge.play.icon
             img(src='../assets/5.jpg')
           div.subject
             p Club
@@ -150,8 +155,9 @@
               p(style='transition-delay: 0.10s')
                 span I
       div.column(style='transition-delay: 3.4s;')
-        div.content-box.box-right
-          div
+        div.content-box.box-right(@click='play($event)')
+          div.image
+            i.huge.play.icon
             img(src='../assets/6.jpg')
           div.subject
             p Club
@@ -176,8 +182,9 @@
                 span E
     div.row
       div.column.left
-        div.content-box.box-left
-          div
+        div.content-box.box-left(@click='play($event)')
+          div.image
+            i.huge.play.icon
             img(src='../assets/7.jpg')
           div.subject
             p Club
@@ -199,8 +206,9 @@
               p(style='transition-delay: 0.14s')
                 span N
       div.column
-        div.content-box.box-right
-          div
+        div.content-box.box-right(@click='play($event)')
+          div.image
+            i.huge.play.icon
             img(src='../assets/9.jpg')
           div.subject
             p Club
@@ -223,8 +231,9 @@
                 span M
     div.row
       div.column.left
-        div.content-box.box-left
-          div
+        div.content-box.box-left(@click='play($event)')
+          div.image
+            i.huge.play.icon
             img(src='../assets/10.jpg')
           div.subject
             p Club
@@ -248,8 +257,9 @@
               p(style='transition-delay: 0.16s')
                 span G
       div.column
-        div.content-box.box-right
-          div
+        div.content-box.box-right(@click='play($event)')
+          div.image
+            i.huge.play.icon
             img(src='../assets/11.jpg')
           div.subject
             p Club
@@ -268,8 +278,9 @@
                 span I
     div.row(style='margin-top: 70px;')
       div.column.left(style='transition-delay: 2s;')
-        div.content-box.box-left
-          div
+        div.content-box.box-left(@click='play($event)')
+          div.image
+            i.huge.play.icon
             img(src='../assets/12.jpg')
           div.subject
             p 海浜幕張公園
@@ -297,8 +308,9 @@
               p(style='transition-delay: 0.20s')
                 span R
       div.column(style='transition-delay: 2.2s;')
-        div.content-box.box-right
-          div
+        div.content-box.box-right(@click='play($event)')
+          div.image
+            i.huge.play.icon
             img(src='../assets/13.jpg')
           div.subject
             p お台場臨時特設会場
@@ -315,8 +327,9 @@
                 span A
     div.row
       div.column.left(style='transition-delay: 2.4s;')
-        div.content-box.box-left
-          div
+        div.content-box.box-left(@click='play($event)')
+          div.image
+            i.huge.play.icon
             img(src='../assets/14.jpg')
           div.subject
             p レインボーブリッジ
@@ -334,8 +347,9 @@
               p(style='transition-delay: 0.10s')
                 span U
       div.column(style='transition-delay: 2.6s;')
-        div.content-box.box-right
-          div
+        div.content-box.box-right(@click='play($event)')
+          div.image
+            i.huge.play.icon
             img(src='../assets/15.jpg')
           div.subject
             p Club
@@ -354,8 +368,9 @@
                 span I
     div.row
       div.column.left(style='transition-delay: 2.8s;')
-        div.content-box.box-left
-          div
+        div.content-box.box-left(@click='play($event)')
+          div.image
+            i.huge.play.icon
             img(src='../assets/16.jpg')
           div.subject
             p Club
@@ -369,8 +384,9 @@
               p(style='transition-delay: 0.06s')
                 span Y
       div.column(style='transition-delay: 3s;')
-        div.content-box.box-right
-          div
+        div.content-box.box-right(@click='play($event)')
+          div.image
+            i.huge.play.icon
             img(src='../assets/17.jpg')
           div.subject
             p Club
@@ -398,33 +414,6 @@
 <script lang='ts'>
 import { Component, Vue } from 'vue-property-decorator';
 import jQuery from 'jQuery';
-// import SubMenu from '@/components/SubMenu.vue';
-
-const fadein = () => {
-  const offset = - 60;
-  // const scrollTop = $(window).scrollTop()!;
-  // const scrollBtm = scrollTop + $(window).height()!;
-  const effectPos = $(window).height()! - offset;
-  $('.column').each( function() {
-    if ($(this) === undefined) {
-      return;
-    }
-    const thisPos = $(this).offset()!.top;
-    if ( effectPos > thisPos ) {
-      $(this).css({
-          'opacity': 1,
-          'transform': 'translate(0px, 0px)',
-          '-ms-filter': 'blur(0px)',
-          'filter': 'blur(0px)',
-      });
-    } else {
-      $(this).css({
-          'opacity': 0,
-          'transition-delay': '0s',
-      });
-    }
-  });
-};
 
 @Component({
   components: {
@@ -432,10 +421,54 @@ const fadein = () => {
   },
 })
 export default class ProjectContent extends Vue {
+  private isDisplay: boolean = false;
+  private isPlaying: boolean = false;
+
   private mounted() {
-    fadein();
+    this.fadein();
     $('.content').scroll(() => {
-      fadein();
+      this.fadein();
+      this.stop();
+    });
+  }
+
+  private fadein(): void {
+    const offset = - 60;
+    const effectPos = $(window).height()! - offset;
+    $('.column').each( function() {
+      const thisPos = $(this).offset()!.top;
+      if ( effectPos > thisPos ) {
+        $(this).css({
+            'opacity': 1,
+            'transform': 'translate(0px, 0px)',
+            '-ms-filter': 'blur(0px)',
+            'filter': 'blur(0px)',
+        });
+      } else {
+        $(this).css({
+            'opacity': 0,
+            'transition-delay': '0s',
+        });
+      }
+    });
+  }
+
+  private stop(): void {
+    if (this.isPlaying) {
+      this.isPlaying = false;
+      return;
+    }
+
+    document.querySelector('video')!.pause();
+    this.isDisplay = false;
+
+    $('.content, #sub-menu').css({
+      opacity: 1,
+    });
+
+    $('video').css({
+      'opacity': 0,
+      'z-index': -10,
     });
   }
 
@@ -443,6 +476,25 @@ export default class ProjectContent extends Vue {
     setTimeout(() => {
       $('.content').css('top', '60px');
     }, 1000);
+  }
+
+  private play(event: any): void {
+    if ( this.isDisplay) {
+      this.stop();
+      return;
+    }
+
+    this.isDisplay = true;
+    this.isPlaying = true;
+
+    $('.content, #sub-menu').css({
+      opacity: 0,
+    });
+
+    $('video').css({
+      'opacity': 1,
+      'z-index': 10,
+    });
   }
 }
 </script>
@@ -464,7 +516,17 @@ export default class ProjectContent extends Vue {
   -webkit-appearance: none;
 }
 
-video, img {
+.image {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  i {
+    position: fixed;
+  }
+}
+
+img {
   width: 100%;
 }
 
@@ -489,14 +551,16 @@ video, img {
   // height: 100%;
   opacity: 0;
   transform: translate(0px, 80px) translate3d(0, 0, 0);
-  transition: 1.5s;
+  transition: 1s;
   will-change: transform;
   -ms-filter: blur(30px);
   filter: blur(30px);
   
   .content-box {
+    // position: relative;
     width: 340px;
-    cursor: default;
+    cursor: pointer;
+    // z-index: 5;
 
     .subject {
       text-align: left;

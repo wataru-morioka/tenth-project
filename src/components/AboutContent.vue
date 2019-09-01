@@ -145,17 +145,13 @@ import { setTimeout } from 'timers';
 
 const fadein = () => {
   const offset = - 60;
-  // const scrollTop = $(window).scrollTop()!;
-  // const scrollBtm = scrollTop! + $(window).height()!;
   const effectPos = $(window).height()! - offset;
   $('.column').each( function() {
     const thisPos = $(this).offset()!.top;
     if ( effectPos > thisPos ) {
       $(this).css({
-          'opacity': 1,
-          'transform': 'translate(0px, 0px)',
-          '-ms-filter': 'blur(0px)',
-          'filter': 'blur(0px)',
+          opacity: 1,
+          transform: 'translate(0px, 0px)',
       });
     } else {
       $(this).css({
@@ -208,12 +204,8 @@ $menu-color: #ffffff77;
   min-width: 50%;
   width: 100%;
   opacity: 0;
-  transform: translate(0px, 80px) translate3d(0, 0, 0);
+  transform: translate(0px, 80px);
   transition: 1s;
-  will-change: transform;
-  -ms-filter: blur(30px);
-  filter: blur(30px);
-  will-change: transform;
 
   .message {
       width: 70%;

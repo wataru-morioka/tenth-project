@@ -1,23 +1,18 @@
 <template lang='pug'>
 div#home
-  BackImage
   video(id='home-video' autoplay muted playsinline)
     source(src='../assets/jagermeister.mp4' type='video/mp4')
   MainNav
-  CenterMenu
 </template>
 
 <script lang='ts'>
 import { Component, Vue } from 'vue-property-decorator';
 import MainNav from '@/components/MainNav.vue';
-import CenterMenu from '@/components/CenterMenu.vue';
 import BackImage from '@/components/BackImage.vue';
 
 @Component({
   components: {
     MainNav,
-    CenterMenu,
-    BackImage,
   },
 })
 export default class Home extends Vue {}

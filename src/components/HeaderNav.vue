@@ -101,69 +101,13 @@ export default class HeaderNav extends Vue {
     ($('#menu-dropdown') as any).dropdown({
       on: 'hover',
       onShow: () => {
-        $('.content').css('top', '300px');
+        $('.content').css('z-index', '-3');
       },
       onHide: () => {
-        $('.content').css('top', '60px');
+        $('.content').css('z-index', '0');
       },
-      // onLabelSelect: ($selectedLabels) => {
-      //   alert('test');
-      // },
     });
   }
-
-  // private controleMenu(): void {
-  //   const isDisplay = this.isMenuDisplay();
-  //   this.$store.commit('setIsMenuDisplay', {
-  //     condition: !isDisplay,
-  //   });
-
-  //   if (isDisplay) {
-  //     $('#center-menu').css({
-  //       'z-index': '-1',
-  //     });
-  //     $('.column').each( function() {
-  //       $(this).css({
-  //         opacity: 1,
-  //       });
-  //     });
-  //     $('#sub-menu').css('opacity', 1);
-  //     $('#center-menu').find('.menu-item').css({
-  //       'opacity': 0,
-  //       'z-index': '-1',
-  //     });
-  //     $('#center-menu').find('.menu-item').css({
-  //       '-ms-filter': 'blur(60px)',
-  //       'filter': 'blur(60px)',
-  //     });
-  //   } else {
-  //     $('#center-menu').css({
-  //       'z-index': '3',
-  //     });
-  //     $('.column').each( function() {
-  //       $(this).css({
-  //         'opacity': 0,
-  //         'transition-delay': '0s',
-  //       });
-  //     });
-  //     $('#sub-menu').css('opacity', 0);
-  //     $('#center-menu').find('.menu-item').css({
-  //       'opacity': 1,
-  //       '-ms-filter': 'blur(0px)',
-  //       'filter': 'blur(0px)',
-  //     });
-  //   }
-  // }
-
-  // private isMenuDisplay(): boolean {
-  //   return this.$store.state.isMenuDisplay;
-  // }
-
-  // private setIsMenuDisplay(): void {
-  //   this.$store.commit('setIsMenuDisplay', {
-  //     condition: false,
-  //   });
-  // }
 
   private toHome(): void {
     this.$store.commit('setViewIndex', {
@@ -291,10 +235,10 @@ a:hover {
 
 @keyframes rotate_anime {
     0% {
-        transform:rotateX(0deg);/* アニメーションの進みが0%の時の状態 */
+        transform: rotateX(0deg);/* アニメーションの進みが0%の時の状態 */
     }
     100% {
-        transform:rotateX(360deg);/* アニメーションの進みが100%の時の状態 */
+        transform: rotateX(360deg);/* アニメーションの進みが100%の時の状態 */
     }
 }
 </style>

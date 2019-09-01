@@ -114,13 +114,8 @@ import jQuery from 'jQuery';
 
 const fadein = () => {
   const offset = - 60;
-  // const scrollTop = $(window).scrollTop()!;
-  // const scrollBtm = scrollTop + $(window).height()!;
   const effectPos = $(window).height()! - offset;
   $('.column').each( function() {
-    if ($(this) === undefined) {
-      return;
-    }
     const thisPos = $(this).offset()!.top;
     if ( effectPos > thisPos ) {
       $(this).css({
@@ -159,6 +154,7 @@ export default class MemberContent extends Vue {
 .content {
   position: fixed;
   overflow-y: scroll;
+  overflow-x: hidden;
   -webkit-overflow-scrolling: touch;
   display: flex;
   flex-direction: column;
@@ -179,24 +175,6 @@ export default class MemberContent extends Vue {
 .row {
   margin-top: 30px;
   margin-bottom: 30px;
-
-  .left {
-    text-align: right;
-    opacity: 0;
-    transform: translate(5px, 40px) translate3d(0, 0, 0);
-    transition: 1s;
-    -ms-filter: blur(30px);
-    filter: blur(30px);
-  }
-
-  .right {
-    text-align: left;
-    opacity: 0;
-    transform: translate(5px, 40px) translate3d(0, 0, 0);
-    transition: 1s;
-    -ms-filter: blur(30px);
-    filter: blur(30px);
-  }
 }
 
 #mimber-1 {
@@ -216,6 +194,19 @@ export default class MemberContent extends Vue {
 
 .column {
   min-width: 50%;
+  opacity: 0;
+  transform: translate(5px, 40px) translate3d(0, 0, 0);
+  transition: 1s;
+  -ms-filter: blur(50px);
+  filter: blur(50px);
+
+  .left {
+    text-align: right;
+  }
+
+  .right {
+    text-align: left;
+  }
 }
 
 .profile tr {
@@ -234,7 +225,6 @@ export default class MemberContent extends Vue {
   }
 }
 
-
 @media screen and (max-width: 768px){
   .content {
     justify-content: flex-start;
@@ -250,12 +240,6 @@ export default class MemberContent extends Vue {
 
   .column {
     min-width: 100%;
-  }
-
-  .row {
-    table {
-      margin: auto;
-    }
     .left {
       text-align: center;
       img {
@@ -267,6 +251,12 @@ export default class MemberContent extends Vue {
       h5 {
         font-size: 11px;
       }
+    }
+  }
+
+  .row {
+    table {
+      margin: auto;
     }
   }
 
