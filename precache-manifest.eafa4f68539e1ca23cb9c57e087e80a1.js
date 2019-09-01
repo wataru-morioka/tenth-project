@@ -1,11 +1,11 @@
 self.__precacheManifest = [
   {
-    "revision": "2ea69c447cca8f680f13",
-    "url": "/tenth-project/css/app.aa0f96ab.css"
+    "revision": "4b4606a461f78906246a",
+    "url": "/tenth-project/css/app.1e2c738a.css"
   },
   {
-    "revision": "2ea69c447cca8f680f13",
-    "url": "/tenth-project/js/app.08e9f136.js"
+    "revision": "4b4606a461f78906246a",
+    "url": "/tenth-project/js/app.8fc21069.js"
   },
   {
     "revision": "b0e5309300489f088ecc",
@@ -148,7 +148,7 @@ self.__precacheManifest = [
     "url": "/tenth-project/img/bg-sp.27fa81b3.jpg"
   },
   {
-    "revision": "883eb2fc0bcbea30458134df83d7d773",
+    "revision": "be082d08564a0ecba5c19c603c245c69",
     "url": "/tenth-project/index.html"
   },
   {
@@ -158,13 +158,5 @@ self.__precacheManifest = [
   {
     "revision": "b6216d61c03e6ce0c9aea6ca7808f7ca",
     "url": "/tenth-project/robots.txt"
-  },
-  {
-    "revision": "a73704f81b988caa8b8753b84992479c",
-    "url": "/tenth-project/semantic.min.js"
-  },
-  {
-    "revision": "979091fc4831c0cdf5dcecb2746c982f",
-    "url": "/tenth-project/semantic.min.css"
   }
 ];
