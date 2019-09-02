@@ -10,10 +10,10 @@
               label Name
               div(class='four fields')
                 div.field
-                  input(type='text' name='shipping[name]' placeholder='Last Name' v-model.lazy='lastName')
+                  input(type='text' name='shipping[name]' placeholder='Last Name' maxlength=30 v-model.lazy='lastName')
                   p(v-show='!validateLastName') ※必須です
                 div.field
-                  input(type='text' name='shipping[name]' placeholder='First Name' v-model.lazy='firstName')
+                  input(type='text' name='shipping[name]' placeholder='First Name' maxlength=30 v-model.lazy='firstName')
                   p(v-show='!validateFirstName') ※必須です
             div.thin(class='four fields')
               div.field
@@ -33,15 +33,15 @@
             div(class='two fields')
               div.field
                 label Email
-                input(type='text' placeholder='Email' v-model.lazy='email') 
+                input(type='text' placeholder='Email' maxlength=200 v-model.lazy='email') 
                 p(v-show='!validateEmail') ※正しいメールアドレス表記の必要があります
             div.thin(class='three fields')
               div.field
                 label Phone
-                input(type='text' placeholder='Phone' v-model.lazy='phone')
+                input(type='text' placeholder='Phone' maxlength=16 v-model.lazy='phone')
             div.field
               label Message
-              textarea(rows='17' v-model.lazy='message')
+              textarea(rows='17' maxlength=5000 v-model.lazy='message')
               p(v-show='!validateMessage') ※必須です
             button(class='ui inverted orange basic button' type='submit') Submit
         div.column(style='transition-delay: 2.2s;')
@@ -164,6 +164,7 @@ export default class ContactContent extends Vue {
     '宮崎県',
     '鹿児島県',
     '沖縄県',
+    'Foreign Country',
   );
 
   get validateLastName(): boolean {
@@ -271,7 +272,7 @@ export default class ContactContent extends Vue {
     setTimeout(() => {
       const data = {
         name: this.lastName + ' ' + this.firstName,
-        type: this.selectedType,
+        organization: this.selectedType,
         state: this.selectedType,
         email: this.email,
         phone: this.phone,
@@ -293,7 +294,7 @@ export default class ContactContent extends Vue {
         console.log(err);
         ($('.ui.basic.modal')as any).modal('hide');
       });
-    }, 1000);
+    }, 1500);
   }
 }
 </script>
