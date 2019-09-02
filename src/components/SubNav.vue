@@ -15,7 +15,7 @@ import HeaderNav from '@/components/HeaderNav.vue';
     // FooterNav,
   },
 })
-export default class MainNav extends Vue {}
+export default class SubNav extends Vue {}
 </script>
 
 <style scoped lang='scss'>

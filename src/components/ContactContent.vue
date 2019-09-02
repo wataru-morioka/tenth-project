@@ -1,5 +1,6 @@
 <template lang='pug'>
   div.content
+    Modal
     div(class='ui two column divided grid')
       div.row
         div.column(style='transition-delay: 2s;')
@@ -17,14 +18,18 @@
             div.thin(class='four fields')
               div.field
                 label Type
-                select(class='ui fluid dropdown')
+                select(class='ui fluid dropdown' v-model='selectedType')
+                  option(value='' disabled) 個人or会社
                   option(value='private') private
                   option(value='companies') companies
+                p(v-show='!validateType') ※必須です
             div.thin(class='four fields')
               div.field
                 label State
-                select(class='ui fluid dropdown')
+                select(class='ui fluid dropdown' v-model='selectedState')
+                  option(value='' disabled) 地域
                   option(v-for='state in states', :key='state', :value='state') {{ state }}
+                p(v-show='!validateState') ※必須です
             div(class='two fields')
               div.field
                 label Email
@@ -89,8 +94,14 @@ import jQuery from 'jQuery';
 import axios from 'axios';
 // tslint:disable-next-line:no-var-requires
 const https = require('https');
+import Modal from '@/components/Modal.vue';
+import { setTimeout } from 'timers';
 
-@Component
+@Component({
+  components: {
+    Modal,
+  },
+})
 export default class ContactContent extends Vue {
   private lastName: string = '';
   private lastNameValid: boolean = false;
@@ -101,6 +112,10 @@ export default class ContactContent extends Vue {
   private phone: string = '';
   private message: string = '';
   private messageValid: boolean = false;
+  private selectedType: string = '';
+  private typeValid: boolean = false;
+  private selectedState: string = '';
+  private stateValid: boolean = false;
   private states: string[] = new Array<string>(
     '北海道',
     '青森県',
@@ -169,6 +184,24 @@ export default class ContactContent extends Vue {
     return false;
   }
 
+  get validateType(): boolean {
+    if (this.selectedType.length > 0) {
+      this.typeValid = true;
+      return true;
+    }
+    this.typeValid = false;
+    return false;
+  }
+
+  get validateState(): boolean {
+    if (this.selectedState.length > 0) {
+      this.typeValid = true;
+      return true;
+    }
+    this.typeValid = false;
+    return false;
+  }
+
   get validateEmail(): boolean {
     const regexp = /^[A-Za-z0-9]{1}[A-Za-z0-9_.-]*@{1}[A-Za-z0-9_.-]{1,}\.[A-Za-z0-9]{1,}$/;
 
@@ -224,29 +257,43 @@ export default class ContactContent extends Vue {
   }
 
   private onSubmit(): void {
-    if (!this.lastNameValid || !this.firstNameValid || !this.emailValid || !this.messageValid) {
+    if (!this.lastNameValid || !this.firstNameValid || !this.emailValid
+     || !this.messageValid || !this.selectedType || !this.selectedState) {
       alert('無効な項目があります');
       return;
     }
 
-    const data = {
-        idToken: this.$store.state.idToken,
-    };
-
-    const header = {
-      // 'Content-Type': 'application/json',
-      Authorization: `Bearer ${this.$store.state.idToken}`,
-    };
-
-    axios.post('https://flask.site:443/contact', data, {
-      headers: header,
+    ($('.ui.basic.modal')as any).modal({
+      closable: false,
     })
-    .then((res) => {
-      alert(res.data.idToken);
-    })
-    .catch((err) => {
-      console.log(err);
-    });
+    .modal('show');
+
+    setTimeout(() => {
+      const data = {
+        name: this.lastName + ' ' + this.firstName,
+        type: this.selectedType,
+        state: this.selectedType,
+        email: this.email,
+        phone: this.phone,
+        message: this.message,
+    };
+      const header = {
+        Authorization: `Bearer ${this.$store.state.idToken}`,
+      };
+
+      axios.post('https://flask.site:443/contact', data, {
+        headers: header,
+      })
+      .then((res) => {
+        ($('.ui.basic.modal')as any).modal('hide');
+        console.log(res.data.result);
+        alert('送信が完了しました');
+      })
+      .catch((err) => {
+        console.log(err);
+        ($('.ui.basic.modal')as any).modal('hide');
+      });
+    }, 1000);
   }
 }
 </script>
