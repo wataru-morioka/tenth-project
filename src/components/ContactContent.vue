@@ -41,7 +41,7 @@
                 input(type='text' placeholder='Phone' maxlength=16 v-model.lazy='phone')
             div.field
               label Message
-              textarea(rows='17' maxlength=5000 v-model.lazy='message')
+              textarea(rows='17' maxlength=5000 v-model='message')
               p(v-show='!validateMessage') ※必須です
             button(class='ui inverted orange basic button' type='submit') Submit
         div.column(style='transition-delay: 2.2s;')
@@ -269,32 +269,45 @@ export default class ContactContent extends Vue {
     })
     .modal('show');
 
-    setTimeout(() => {
-      const data = {
-        name: this.lastName + ' ' + this.firstName,
-        organization: this.selectedType,
-        state: this.selectedType,
-        email: this.email,
-        phone: this.phone,
-        message: this.message,
+    const data = {
+      name: this.lastName + ' ' + this.firstName,
+      organization: this.selectedType,
+      state: this.selectedState,
+      email: this.email,
+      phone: this.phone,
+      message: this.message,
     };
-      const header = {
-        Authorization: `Bearer ${this.$store.state.idToken}`,
-      };
+    const header = {
+      Authorization: `Bearer ${this.$store.state.idToken}`,
+    };
 
-      axios.post('https://flask.site:443/contact', data, {
-        headers: header,
-      })
-      .then((res) => {
-        ($('.ui.basic.modal')as any).modal('hide');
-        console.log(res.data.result);
-        alert('送信が完了しました');
-      })
-      .catch((err) => {
-        console.log(err);
-        ($('.ui.basic.modal')as any).modal('hide');
-      });
-    }, 1500);
+    // setTimeout(() => {
+    //   ($('.ui.basic.modal')as any).modal('hide');
+    // }, 3000);
+
+    axios.post('https://flask.site:443/contact', data, {
+      headers: header,
+    })
+    .then((res) => {
+      ($('.ui.basic.modal')as any).modal('hide');
+      if (!res.data.result) {
+        alert('送信に失敗しました');
+        return;
+      }
+      this.lastName = '';
+      this.firstName = '';
+      this.selectedType = '';
+      this.selectedState = '';
+      this.email = '';
+      this.phone = '';
+      this.message = '';
+      alert('送信が完了しました');
+    })
+    .catch((err) => {
+      console.log(err);
+      ($('.ui.basic.modal')as any).modal('hide');
+      alert('送信に失敗しました');
+    });
   }
 }
 </script>
@@ -387,6 +400,7 @@ input, select {
   p {
     text-align: left;
     color: #b14c2d;
+    font-size: 12px;
   }
 }
 
@@ -425,6 +439,10 @@ input, select {
 
     h5 {
       font-size: 10px !important;
+    }
+
+    p {
+      font-size: 10px;
     }
 
     label {

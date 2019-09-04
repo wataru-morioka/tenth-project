@@ -27,7 +27,13 @@
       "dom",
       "dom.iterable",
       "scripthost"
-    ]
+    ],
+    // "extends": "tslint:recommended",
+    // "rules": {
+    //   "no-console": [
+    //       false
+    //   ]
+    // }
   },
   "include": [
     "src/**/*.ts",

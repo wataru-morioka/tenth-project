@@ -15,8 +15,6 @@ export default class Modal extends Vue {}
 <style scoped lang='scss'>
 #modal {
   position: fixed;
-  width: 100vw;
-  height: 100vh;
 }
 
 .content {

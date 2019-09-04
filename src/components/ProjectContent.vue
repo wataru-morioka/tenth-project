@@ -460,11 +460,12 @@ export default class ProjectContent extends Vue {
   }
 
   private play(event: any): void {
-    if ( this.isDisplay) {
+    if ( this.isDisplay ) {
       this.stop();
       return;
     }
 
+    document.querySelector('video')!.play();
     this.isDisplay = true;
     this.isPlaying = true;
 

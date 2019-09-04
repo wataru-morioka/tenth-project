@@ -35,6 +35,22 @@
                 span A
               p(style='transition-delay: 0.10s')
                 span D
+          div.rotate-menu
+            a(href='#', @click.stop.prevent='toAbout')
+              p(style='transition-delay: 0s')
+                span C
+              p(style='transition-delay: 0.02s')
+                span O
+              p(style='transition-delay: 0.04s')
+                span N
+              p(style='transition-delay: 0.06s')
+                span T
+              p(style='transition-delay: 0.08s')
+                span A
+              p(style='transition-delay: 0.10s')
+                span C
+              p(style='transition-delay: 0.10s')
+                span T
         div#menu-dropdown(class="ui pointing link icon dropdown")
           //- div.text MENU
           i(class="large bars icon")
@@ -43,6 +59,7 @@
             div.divider
             div.item(@click='toHome') ACCOUNT
             div.item(@click='toAbout') UPLOAD
+            div.item(@click='toAbout') CONTACT
 </template>
 
 <script lang='ts'>

@@ -145,7 +145,7 @@ $menu-color: #ffffff77;
 }
 
 #header-logo {
-  margin-top: 20px;
+  margin-top: 10px;
   margin-left: 50px;
   height: 40px;
   cursor: pointer;
@@ -153,7 +153,7 @@ $menu-color: #ffffff77;
 }
 
 #header-menu {
-  margin-top: 30px;
+  margin-top: 20px;
   display: flex;
   justify-content:space-between;
   -webkit-box-pack:justify;

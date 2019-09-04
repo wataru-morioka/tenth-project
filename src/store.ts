@@ -65,13 +65,6 @@ export default new Vuex.Store({
       const body = {
         idToken: this.state.idToken,
       };
-      // await axios.post('https://flask.site:443/user', body)
-      // .then((res) => {
-      //   commit('setDisplayName', {
-      //     displayName: res.data.displayName,
-      //   });
-      // });
-
       await axios.get('https://django.service/api/service/user')
       .then((res) => {
         commit('setDisplayName', {
@@ -85,6 +78,28 @@ export default new Vuex.Store({
       await firebase.auth().signInWithPopup(provider)
       .then(async (result) => {
         console.log('google認証');
+        // DBにアカウント登録
+        const currentUser = firebase.auth().currentUser!;
+        const token = await currentUser.getIdToken(true);
+        const header = {
+          Authorization: `Bearer ${token}`,
+        };
+        const body = {
+          name: currentUser.displayName,
+        };
+
+        await axios.post('https://django.service:443/api/service/account', body, {
+          headers: header,
+        })
+        .then((res) => {
+          if (!res.data.result) {
+            console.log('サーバのログイン処理に失敗しました');
+          }
+          console.log('ログインしました');
+        })
+        .catch((err) => {
+          console.log('サーバのログイン処理に失敗しました');
+        });
       }).catch((error) => {
         alert('ログインに失敗しました');
       });
