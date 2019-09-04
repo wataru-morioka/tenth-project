@@ -9,6 +9,9 @@ import Contact from './views/Contact.vue';
 import Jagermeister from './views/Jagermeister.vue';
 import Sauza from './views/Sauza.vue';
 import Management from './views/Management.vue';
+import ManagementAccount from './components/ManagementAccount.vue';
+import ManagementUpload from './components/ManagementUpload.vue';
+import ManagementContact from './components/ManagementContact.vue';
 import Service from './views/Service.vue';
 import Webrtc from './views/Webrtc.vue';
 import store from './store';
@@ -62,8 +65,24 @@ const router = new Router({
     },
     {
       path: '/management',
-      name: 'management',
       component: Management,
+      children: [
+        {
+          path: 'account',
+          name: 'management-account',
+          component: ManagementAccount,
+        },
+        {
+          path: 'upload',
+          name: 'management-upload',
+          component: ManagementUpload,
+        },
+        {
+          path: 'contact',
+          name: 'management-contact',
+          component: ManagementContact,
+        },
+      ],
     },
     {
       path: '/service',

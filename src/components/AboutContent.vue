@@ -40,9 +40,9 @@
             p
               span もともと欲張りでわがままな性格なのでしょう。向き・不向きはあるにせよ、ラルゴでは現場監督も、デザインも、設計も、営業も、ひととおり経験するようにしています。お客様に対しても「こっちのほうがいい」と思えば、頼まれてもいないことをやってしまう人間が揃っているほどです。
     div.row
-      div.column
+      div.column(style='transition-delay: 2s;')
         img.content-img(src='../assets/about3.jpg')
-      div.column.msg
+      div.column.msg(style='transition-delay: 2.3s;')
         div.message
           div.header
             span Video Photograph
@@ -184,7 +184,7 @@ $menu-color: #ffffff77;
 
 .content {
   position: fixed;
-  top: 60px; right: 0; bottom: 0; left: 0;
+  top: 54px; right: 0; bottom: 0; left: 0;
   overflow-y: scroll;
   -webkit-overflow-scrolling: touch;
   height: auto;

@@ -113,23 +113,23 @@ export default class HeaderNav extends Vue {
     this.$store.commit('setViewIndex', {
       index: 0,
     });
-    this.$router.push({ name: 'home', params: { user: 'admin' } });
+    this.$router.push({ name: 'home' });
   }
 
   private toAbout(): void {
-    this.$router.push({ name: 'about', params: { user: 'admin' } });
+    this.$router.push({ name: 'about' });
   }
 
   private toProject(): void {
-    this.$router.push({ name: 'project', params: { user: 'admin' } });
+    this.$router.push({ name: 'project' });
   }
 
   private toMember(): void {
-    this.$router.push({ name: 'member', params: { user: 'admin' } });
+    this.$router.push({ name: 'member' });
   }
 
   private toContact(): void {
-    this.$router.push({ name: 'contact', params: { user: 'admin' } });
+    this.$router.push({ name: 'contact' });
   }
 }
 </script>
@@ -158,7 +158,6 @@ $menu-color: #ffffff77;
   justify-content:space-between;
   -webkit-box-pack:justify;
   position: relative;
-  z-index: 12px !important;
 }
 
 a {

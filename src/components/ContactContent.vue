@@ -324,7 +324,7 @@ export default class ContactContent extends Vue {
   margin: auto;
   height: auto;
   // width: 100%;
-  top: 60px; right: 0; bottom: 0; left: 0;
+  top: 54px; right: 0; bottom: 0; left: 0;
 }
 
 ::-webkit-scrollbar {

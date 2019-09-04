@@ -1,10 +1,10 @@
 <template lang='pug'>
   div#footer-nav
     div
-      a(href='#', @click.stop.prevent='login', v-show='!isLogin') Login
-      div(v-show='!isLogin', style='height: 10px;')
-      a(href='#', @click.stop.prevent='logout', v-show='isLogin') Logout
-      br
+      div#login-out
+        a(href='#', @click.stop.prevent='login', v-show='!isLogin') Login
+        div(v-show='!isLogin', style='height: 10px;')
+        a(href='#', @click.stop.prevent='logout', v-show='isLogin') Logout
       p#user-account(v-if='isLogin') {{ email }}
       div.horizontal-array
         div
@@ -101,19 +101,19 @@ export default class FooterNav extends Vue {
     this.$store.commit('setViewIndex', {
       index: 0,
     });
-    this.$router.push({ name: 'home', params: { user: 'admin' } });
+    this.$router.push({ name: 'home' });
   }
 
   private toManagement(): void {
-    this.$router.push({ name: 'management', params: { user: 'admin' } });
+    this.$router.push({ name: 'management-account', params: { user: 'admin' } });
   }
 
   private toService(): void {
-    this.$router.push({ name: 'service', params: { user: 'admin' } });
+    this.$router.push({ name: 'service' });
   }
 
   private toWebrtc(): void {
-    this.$router.push({ name: 'webrtc', params: { user: 'admin' } });
+    this.$router.push({ name: 'webrtc' });
   }
 }
 </script>
@@ -122,7 +122,7 @@ export default class FooterNav extends Vue {
 $mes-color: #42b983;
 
 #footer-nav {
-  position: absolute;
+  position: fixed;
   right: 0; bottom: 15px; left: 0;
   width: auto;
   height: auto;

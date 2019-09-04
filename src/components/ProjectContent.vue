@@ -503,7 +503,7 @@ export default class ProjectContent extends Vue {
 <style scoped lang='scss'>
 .content {
   position: fixed;
-  top: 60px; right: 0; bottom: 0; left: 0;
+  top: 54px; right: 0; bottom: 0; left: 0;
   overflow-y: scroll;
   -webkit-overflow-scrolling: touch;
   height: auto;

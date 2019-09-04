@@ -26,6 +26,7 @@
     div.nav
       ManagementHeaderNav
       FooterNav
+    router-view
 </template>
 
 <script lang='ts'>
@@ -46,7 +47,7 @@ import jQuery from 'jQuery';
 })
 export default class Management extends Vue {
   private mounted() {
-    $('.horizontal-array, #footer-icon2').css({
+    $('.horizontal-array, #footer-icon2, #login-out, #user-account').css({
       display: 'none',
     });
   }

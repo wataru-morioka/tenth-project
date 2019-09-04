@@ -116,10 +116,29 @@ export default new Vuex.Store({
     },
 
     checkLoginStatus({ commit, state, rootState }) {
-      firebase.auth().onAuthStateChanged((user) => {
+      firebase.auth().onAuthStateChanged( async (user) => {
         if (user) {
           if (user.email != null && user.email.length > 0) {
             console.log('google認証済み');
+            // TODO ログインカウントインクリメント
+            const token = await user.getIdToken(true);
+            const header = {
+              Authorization: `Bearer ${token}`,
+            };
+            const body = {};
+            await axios.put('https://django.service:443/api/service/account', body, {
+              headers: header,
+            })
+            .then((res) => {
+              if (!res.data.result) {
+                console.log('サーバのログイン処理に失敗しました');
+              }
+              console.log('ログイン');
+            })
+            .catch((err) => {
+              console.log('サーバのログイン処理に失敗しました');
+            });
+
             this.dispatch('setUserInfo', {
               isLoginAuth: true,
               isAnonymousAuth: false,

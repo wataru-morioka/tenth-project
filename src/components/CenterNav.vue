@@ -23,12 +23,12 @@ export default class CenterNav extends Vue {
 
   private toNext(): void {
     const targetIndex = this.getTargetIndex(1);
-    this.$router.push({ name: this.viewMap[targetIndex], params: { user: 'admin' } });
+    this.$router.push({ name: this.viewMap[targetIndex] });
   }
 
   private toPrev(): void {
     const targetIndex = this.getTargetIndex(2);
-    this.$router.push({ name: this.viewMap[targetIndex], params: { user: 'admin' } });
+    this.$router.push({ name: this.viewMap[targetIndex] });
   }
 
   private getTargetIndex(additional: number): number {

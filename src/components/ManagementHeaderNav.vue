@@ -6,7 +6,7 @@
       div#header-menu
         div.pc-menu
           div.rotate-menu
-            a(href='#', @click.stop.prevent='toHome')
+            a(href='#', @click.stop.prevent='toAccount')
               p(style='transition-delay: 0s')
                 span A
               p(style='transition-delay: 0.02s')
@@ -22,7 +22,7 @@
               p(style='transition-delay: 0.12s')
                 span T
           div.rotate-menu
-            a(href='#', @click.stop.prevent='toAbout')
+            a(href='#', @click.stop.prevent='toUpload')
               p(style='transition-delay: 0s')
                 span U
               p(style='transition-delay: 0.02s')
@@ -36,7 +36,7 @@
               p(style='transition-delay: 0.10s')
                 span D
           div.rotate-menu
-            a(href='#', @click.stop.prevent='toAbout')
+            a(href='#', @click.stop.prevent='toContact')
               p(style='transition-delay: 0s')
                 span C
               p(style='transition-delay: 0.02s')
@@ -57,9 +57,9 @@
           div.menu
             div.header CONTROLLER
             div.divider
-            div.item(@click='toHome') ACCOUNT
-            div.item(@click='toAbout') UPLOAD
-            div.item(@click='toAbout') CONTACT
+            div.item(@click='toAccount') ACCOUNT
+            div.item(@click='toUpload') UPLOAD
+            div.item(@click='toContact') CONTACT
 </template>
 
 <script lang='ts'>
@@ -89,23 +89,19 @@ export default class ManagementHeaderNav extends Vue {
     this.$store.commit('setViewIndex', {
       index: 0,
     });
-    this.$router.push({ name: 'home', params: { user: 'admin' } });
+    this.$router.push({ name: 'home' });
   }
 
-  private toAbout(): void {
-    this.$router.push({ name: 'about', params: { user: 'admin' } });
+  private toAccount(): void {
+    this.$router.push({ name: 'management-account' });
   }
 
-  private toProject(): void {
-    this.$router.push({ name: 'project', params: { user: 'admin' } });
-  }
-
-  private toMember(): void {
-    this.$router.push({ name: 'member', params: { user: 'admin' } });
+  private toUpload(): void {
+    this.$router.push({ name: 'management-upload' });
   }
 
   private toContact(): void {
-    this.$router.push({ name: 'contact', params: { user: 'admin' } });
+    this.$router.push({ name: 'management-contact' });
   }
 }
 </script>
@@ -121,7 +117,7 @@ $menu-color: #ffffff77;
 }
 
 #header-logo {
-  margin-top: 17px;
+  margin-top: 7px;
   margin-left: 50px;
   height: 50px;
   cursor: pointer;
@@ -134,7 +130,7 @@ $menu-color: #ffffff77;
 }
 
 #header-menu {
-  margin-top: 30px;
+  margin-top: 20px;
   display: flex;
   justify-content:space-between;
   -webkit-box-pack:justify;
