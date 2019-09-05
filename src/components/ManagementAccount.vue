@@ -33,10 +33,17 @@
         tbody
           tr(v-for='account in accountList', :key='account.uid')
             td.edit
+              input(type="text" name="public", hidden, :value='account.uid')
               button(type=button class='ui inverted primary button', @click='edit($event)') edit
               button(type=button class='ui inverted secondary button', @click='confirm($event)') confirm
-            td.webrtc {{ account.webrtcFlag }}
-            td.admin {{ account.adminFlag }}
+            td.webrtc
+              div(class="ui toggle checkbox")
+                input(type="checkbox" name="public", :checked='account.webrtcFlag', disabled)
+                label 
+            td.admin
+              div(class="ui toggle checkbox")
+                input(type="checkbox" name="public", :checked='account.adminFlag', disabled)
+                label 
             td.account {{ account.account }}
             td.loginCount {{ account.loginCount }}
             td.latestLogin {{ account.latestLogin }}
@@ -44,7 +51,10 @@
             td.state {{ account.state }}
             td.createdDatetime {{ account.createdDatetime }}
             td.modifiedDatetime {{ account.modifiedDatetime }}
-            td.delete {{ account.deleteFlag }}
+            td.delete
+              div(class="ui toggle checkbox")
+                input(type="checkbox" name="public", :checked='account.deleteFlag', disabled)
+                label 
 </template>
 
 <script lang='ts'>
@@ -255,7 +265,76 @@ export default class ManagementAccount extends Vue {
   }
 
   private edit(event: any): void {
-    alert('test');
+    const target = event.currentTarget;
+    const parent = $(target).closest('tr');
+    const next = $(target).next('button');
+
+    if ($(target).hasClass('secondary')) {
+      $(target).removeClass('secondary');
+      $(target).addClass('primary');
+      $(next).removeClass('red');
+      $(next).addClass('secondary');
+      $(target).text('edit');
+      $(parent).find('input').prop('disabled', true);
+    } else {
+      $(target).removeClass('primary');
+      $(target).addClass('secondary');
+      $(next).removeClass('secondary');
+      $(next).addClass('red');
+      $(target).text('cancel');
+      $(parent).find('input').prop('disabled', false);
+    }
+  }
+
+  private async confirm(event: any): Promise<void> {
+    const target = event.currentTarget;
+    const parent = $(target).closest('tr');
+    const prev = $(target).prev('button');
+
+    if ($(target).hasClass('secondary')) {
+      alert('編集中ではありません');
+      return;
+    }
+    // ローディング
+    $(target).addClass('loading');
+
+    // update
+    const currentUser = firebase.auth().currentUser!;
+    const token = await currentUser.getIdToken(true);
+    const header = {
+      Authorization: `Bearer ${token}`,
+    };
+
+    const body = {
+      uid: $(parent).children('.edit').find('input').val(),
+      webrtc: $(parent).children('.webrtc').find('input').prop('checked'),
+      admin: $(parent).children('.admin').find('input').prop('checked'),
+      delete: $(parent).children('.delete').find('input').prop('checked'),
+    };
+
+    console.log(body);
+
+    await axios.put('https://django.service:443/api/service/account', body, {
+        headers: header,
+    })
+    .then((res) => {
+      if (!res.data.result) {
+        console.log('account更新に失敗しました');
+        return;
+      }
+      console.log('account更新');
+    })
+    .catch((err) => {
+      console.log('account更新に失敗しました');
+    });
+
+    $(target).removeClass('loading');
+    $(target).removeClass('red');
+    $(target).addClass('secondary');
+    $(prev).removeClass('secondary');
+    $(prev).addClass('primary');
+    $(prev).text('edit');
+    $(parent).find('input').prop('disabled', true);
   }
 }
 </script>
@@ -351,7 +430,7 @@ export default class ManagementAccount extends Vue {
 
     tbody {
       overflow-y: scroll;
-      height: 77vh;
+      height: 75vh;
       -webkit-overflow-scrolling: touch;
 
       tr {
@@ -362,10 +441,6 @@ export default class ManagementAccount extends Vue {
           font-size: 10px;
         }
       }
-
-      // tr:hover {
-      //   // cursor: pointer;
-      // }
 
       td {
         color: #ffffff;
