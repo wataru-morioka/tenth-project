@@ -5,8 +5,7 @@ import store from './store';
 import './registerServiceWorker';
 import firebase from 'firebase/app';
 import 'firebase/auth';
-// const VueAnalytics = require('vue-analytics');
-// import 'firebase/messaging';
+// tslint:disable-next-line:no-var-requires
 const SuiVue = require('semantic-ui-vue');
 
 // interface JQuery<HTMLElement> {

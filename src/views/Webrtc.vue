@@ -16,7 +16,7 @@
         span C
     div.nav
       WebRtcHeaderNav
-      FooterNav
+    router-view
 </template>
 
 <script lang='ts'>
@@ -34,11 +34,8 @@ import jQuery from 'jQuery';
   },
 })
 export default class WebRtc extends Vue {
-  private mounted() {
-    $('.horizontal-array, #footer-icon2').css({
-      display: 'none',
-    });
-  }
+  // private mounted() {
+  // }
 }
 </script>
 

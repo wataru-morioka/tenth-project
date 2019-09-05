@@ -291,7 +291,7 @@ export default class ContactContent extends Vue {
     .then((res) => {
       ($('.ui.basic.modal')as any).modal('hide');
       if (!res.data.result) {
-        alert('送信に失敗しました');
+        console.log('送信に失敗しました');
         return;
       }
       this.lastName = '';
@@ -306,7 +306,7 @@ export default class ContactContent extends Vue {
     .catch((err) => {
       console.log(err);
       ($('.ui.basic.modal')as any).modal('hide');
-      alert('送信に失敗しました');
+      console.log('送信に失敗しました');
     });
   }
 }

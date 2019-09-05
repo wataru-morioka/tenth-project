@@ -101,7 +101,7 @@ export default new Vuex.Store({
           console.log('サーバのログイン処理に失敗しました');
         });
       }).catch((error) => {
-        alert('ログインに失敗しました');
+        console.log('ログインに失敗しました');
       });
     },
 
@@ -111,7 +111,7 @@ export default new Vuex.Store({
         console.log('ログアウト');
       })
       .catch((err) => {
-        alert('ログアウトに失敗しました');
+        console.log('ログアウトに失敗しました');
       });
     },
 

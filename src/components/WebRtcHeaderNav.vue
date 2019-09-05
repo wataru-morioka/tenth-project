@@ -1,59 +1,35 @@
 <template lang='pug'>
   div#header-nav
     div#header
-      div
-        img#header-logo(src='../assets/jager-logo.png', @click='toHome')
-      div#header-menu
-        div.pc-menu
-          div.rotate-menu
-            a(href='#', @click.stop.prevent='toHome')
-              p(style='transition-delay: 0s')
-                span C
-              p(style='transition-delay: 0.02s')
-                span H
-              p(style='transition-delay: 0.04s')
-                span A
-              p(style='transition-delay: 0.06s')
-                span T
-          div.rotate-menu
-            a(href='#', @click.stop.prevent='toAbout')
-              p(style='transition-delay: 0s')
-                span T
-              p(style='transition-delay: 0.02s')
-                span R
-              p(style='transition-delay: 0.04s')
-                span A
-              p(style='transition-delay: 0.06s')
-                span S
-              p(style='transition-delay: 0.08s')
-                span F
-              p(style='transition-delay: 0.10s')
-                span E
-              p(style='transition-delay: 0.12s')
-                span R
-        div#menu-dropdown(class="ui pointing link icon dropdown")
-          //- div.text MENU
-          i(class="large bars icon")
-          div.menu
-            div.header CONTROLLER
-            div.divider
-            div.item(@click='toHome') CHAT
-            div.item(@click='toAbout') TRANSFER
+      div#webrtc-dropdown(class="ui pointing link icon dropdown")
+        img.icon#header-logo(src='../assets/jager-logo.png')
+        i(class="dropdown icon")
+        div.menu
+          div.header CONTROLLER
+          div.divider
+          div.item(@click='toChat') CHAT
+          div.item(@click='toTransfer') TRANSFER
+      VipMenuNav
 </template>
 
 <script lang='ts'>
 import { Component, Prop, Vue } from 'vue-property-decorator';
+import VipMenuNav from '@/components/VipMenuNav.vue';
 import axios from 'axios';
 import jQuery from 'jquery';
 // tslint:disable-next-line:no-var-requires
 const fs = require('fs');
 
-@Component
+@Component({
+  components: {
+    VipMenuNav,
+  },
+})
 export default class WebRtcHeaderNav extends Vue {
   private isDroped: boolean = false;
 
   private mounted() {
-    ($('#menu-dropdown') as any).dropdown({
+    ($('#webrtc-dropdown') as any).dropdown({
       on: 'hover',
       onShow: () => {
         $('.content').css('z-index', '-3');
@@ -64,27 +40,12 @@ export default class WebRtcHeaderNav extends Vue {
     });
   }
 
-  private toHome(): void {
-    this.$store.commit('setViewIndex', {
-      index: 0,
-    });
-    this.$router.push({ name: 'home', params: { user: 'admin' } });
+  private toChat(): void {
+    this.$router.push({ name: 'webrtc-chat' });
   }
 
-  private toAbout(): void {
-    this.$router.push({ name: 'about', params: { user: 'admin' } });
-  }
-
-  private toProject(): void {
-    this.$router.push({ name: 'project', params: { user: 'admin' } });
-  }
-
-  private toMember(): void {
-    this.$router.push({ name: 'member', params: { user: 'admin' } });
-  }
-
-  private toContact(): void {
-    this.$router.push({ name: 'contact', params: { user: 'admin' } });
+  private toTransfer(): void {
+    this.$router.push({ name: 'webrtc-transfer' });
   }
 }
 </script>
@@ -107,30 +68,8 @@ $menu-color: #ffffff77;
   opacity: .8;
 }
 
-#management-menu {
-  display: flex;
-  flex-direction: row;
-}
-
-#header-menu {
-  margin-top: 30px;
-  display: flex;
-  justify-content:space-between;
-  -webkit-box-pack:justify;
-  position: relative;
-  z-index: 12px !important;
-}
-
-a {
-  font-size: 11px;
-  color: $menu-color;
-  p {
-    color: $menu-color;
-  }
-}
-
-#temp {
-  width: 100px;
+.item {
+  font-size: 12px !important;
 }
 
 .menu {
@@ -141,64 +80,17 @@ a {
 }
 
 @media screen and (max-width: 768px){
-  .pc-menu {
-    display:none;
-  }
-
   #header-logo {
     margin-top: 12px;
     margin-left: 20px;
     height: 40px;
   }
 
-  #header-menu {
-    margin-top: 20px;
-  }
-
-  #menu-dropdown {
-    .item {
-      font-size: 10px;
-    }
-  }
-
-  .bars {
-    margin-right: 20px !important;
+  .item {
+    font-size: 10px !important;
   }
 }
 
 @media screen and (min-width: 768px){
-  .rotate-menu {
-    margin-right: 80px;
-    display: inline-block;
-  }
-}
-
-a {
-  p {
-    display: inline-block;
-    transition: 0.7s;
-    will-change: transform;
-  }
-} 
-
-a:hover {
-  p {
-    -webkit-transform: rotateX(360deg);
-    transform: rotateX(360deg);
-  }
-} 
-
-.bars {
-  margin-right: 50px;
-  cursor: pointer;
-}
-
-@keyframes rotate_anime {
-    0% {
-        transform: rotateX(0deg);/* アニメーションの進みが0%の時の状態 */
-    }
-    100% {
-        transform: rotateX(360deg);/* アニメーションの進みが100%の時の状態 */
-    }
 }
 </style>

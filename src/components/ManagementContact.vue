@@ -10,14 +10,7 @@ import jQuery from 'jQuery';
 
 @Component
 export default class ManagementContact extends Vue {
-  private mounted() {
-    $('.horizontal-array, #footer-icon2').css({
-      display: 'none',
-    });
-    $('#user-account').css({
-      margin: '0 0 0em',
-    });
-  }
+
 }
 </script>
 
