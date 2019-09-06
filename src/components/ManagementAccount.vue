@@ -25,7 +25,7 @@
             th.name name
             th.state state
             th.createdDatetime created
-              i(class='sort icon down', v-if='!sortedCreated')
+              i.created-sort(class='sort icon down', v-if='!sortedCreated')
             th.modifiedDatetime.pointer(@click='sort(2)') modified
               i(class='sort icon', v-if='!sortedModified')
               i(class='sort icon', v-if='sortedModified', :class='{ down: isDescModified, up: !isDescModified }')
@@ -109,7 +109,7 @@ class Result {
   }
 }
 
-const getAccountList = (searchString: string, orderBy: number = -1, orderType: boolean = true) => {
+const getAccountList = (searchString: string = '', orderBy: number = -1, orderType: boolean = true) => {
   return new Promise<Result>(async (resolve, reject) => {
     const result = new Result();
     const currentUser = firebase.auth().currentUser!;
@@ -133,7 +133,7 @@ const getAccountList = (searchString: string, orderBy: number = -1, orderType: b
       }
       console.log('accountリスト取得');
       result.totalCount = res.data.totalCount;
-      const list = res.data.list;
+      const list = res.data.accountList;
       let account: AccountInfo;
       list.forEach((el: any) => {
         account = new AccountInfo(
@@ -150,15 +150,15 @@ const getAccountList = (searchString: string, orderBy: number = -1, orderType: b
           el.modified_datetime,
         );
         result.accountList.push(account);
-        resolve(result);
       });
+      resolve(result);
     })
     .catch((err) => {
       console.log('accountリスト取得に失敗しました');
       reject();
     });
   });
-}
+};
 
 @Component
 export default class ManagementAccount extends Vue {
@@ -218,7 +218,8 @@ export default class ManagementAccount extends Vue {
   private async redo(): Promise<void> {
     this.isLoading = true;
     this.resetFlag();
-    await getAccountList(this.searchString).then((result) => {
+    this.searchString = '';
+    await getAccountList().then((result) => {
       this.accountList = result.accountList;
       this.totalCount = result.totalCount;
     })
@@ -233,7 +234,7 @@ export default class ManagementAccount extends Vue {
     let orderType = false;
     this.resetFlag();
     this.sortedCreated = true;
-    switch(order) {
+    switch (order) {
       case OrderEnum.LoginCount:
         this.sortedLoginCount = true;
         this.isDescLoginCount = !this.isDescLoginCount;
@@ -256,12 +257,11 @@ export default class ManagementAccount extends Vue {
     await getAccountList(this.searchString, order, orderType).then((result) => {
       this.accountList = result.accountList;
       this.totalCount = result.totalCount;
-      this.isLoading = false;
     })
     .catch((err) => {
       console.log(err);
-      this.isLoading = false;
     });
+    this.isLoading = false;
   }
 
   private edit(event: any): void {
@@ -391,7 +391,6 @@ export default class ManagementAccount extends Vue {
 
 #account-list-wrap {
   width: 90%;
-  display: fixed;
   bottom: 50px;
 
   h5 {
@@ -424,6 +423,10 @@ export default class ManagementAccount extends Vue {
       padding: 3px;
 
       .sort {
+        color: #ffffff;
+      }
+
+      .created-sort {
         color: #ffffff78;
       }
     }
@@ -446,6 +449,7 @@ export default class ManagementAccount extends Vue {
         color: #ffffff;
         text-align: left;
         font-size: 12px;
+        word-break : break-all;
       }
     }
   }
