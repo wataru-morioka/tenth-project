@@ -2,10 +2,21 @@
   div.content
     div#contact-list-wrap
       h5 contact
-      div(class='ui search')
-        div(class='ui icon input', :class='{ loading: isLoading }')
-          input(class='prompt' type='text' placeholder='fullTextSearch...', maxlength=20, v-model='searchString')
-          i(class='circular search link icon', @click='search')
+      div#filter-wrap
+        div.filter(class='ui search')
+          div(class='ui icon input', :class='{ loading: isLoading }')
+            input(class='prompt' type='text' placeholder='fullTextSearch...', maxlength=20, v-model='searchString')
+        //- div.filter(class='ui search')
+        //-   div(class='ui icon input', :class='{ loading: isLoading }')
+        //-     input.date-picker(class='prompt' type='text' placeholder='from...', maxlength=20, v-model='from')
+        //- div
+        //-   span 〜
+        div.filter(class='ui search')
+          div(class='ui icon input', :class='{ loading: isLoading }')
+            input.date-picker(class='prompt' type='text' placeholder='created to...', maxlength=20, v-model='to')
+        div.filter
+          button(class="circular ui icon button", :class='{ loading: isLoading }', @click='search')
+            i(class='circular search link icon', :class='{ hidden: isLoading }')
       div.subject
         p 全 {{ totalCount }} 件中 {{ contactList.length }} 件
         i(class='redo icon', @click='redo')
@@ -36,7 +47,7 @@
               td.email {{ contact.email }}
               td.phone {{ contact.phone }}
               td.message {{ contact.message.slice(0, 50) + '.....' }}
-            div.detail
+            div.detail(class="ui accordion")
               tr
                 p message detail:
                 td {{ contact.message }}
@@ -83,7 +94,8 @@ class Result {
   }
 }
 
-const getContactList = (searchString: string = '', orderType: boolean = true) => {
+const getContactList = (searchString: string = '', from: string = '',
+                        to: string = '', orderType: boolean = true) => {
   return new Promise<Result>(async (resolve, reject) => {
     const result = new Result();
     const currentUser = firebase.auth().currentUser!;
@@ -96,6 +108,7 @@ const getContactList = (searchString: string = '', orderType: boolean = true) =>
         params: {
           search: searchString,
           type: orderType,
+          createdTo : to,
         },
     })
     .then((res) => {
@@ -139,6 +152,8 @@ export default class ManagementContact extends Vue {
   private searchString: string = '';
   private isLoading: boolean = false;
   private isDescCreated: boolean = true;
+  private from: string = '';
+  private to: string = '';
 
   private async beforeCreate() {
     await getContactList(this.searchString).then((result) => {
@@ -151,11 +166,7 @@ export default class ManagementContact extends Vue {
   }
 
   private mounted() {
-    // ($('.ui.search') as any).search({
-    //   onSearchQuery: (query: any) => {
-    //     alert(query);
-    //   },
-    // });
+    ($('.date-picker') as any).flatpickr();
   }
 
   private resetFlag(): void {
@@ -165,7 +176,7 @@ export default class ManagementContact extends Vue {
   private async search(): Promise<void> {
     this.isLoading = true;
     this.resetFlag();
-    await getContactList(this.searchString).then((result) => {
+    await getContactList(this.searchString, this.from, this.to).then((result) => {
       this.contactList = result.contactList;
       this.totalCount = result.totalCount;
     })
@@ -178,6 +189,8 @@ export default class ManagementContact extends Vue {
   private async redo(): Promise<void> {
     this.isLoading = true;
     this.resetFlag();
+    this.from = '';
+    this.to = '';
     this.searchString = '';
     await getContactList().then((result) => {
       this.contactList = result.contactList;
@@ -192,7 +205,7 @@ export default class ManagementContact extends Vue {
   private async sort(order: number): Promise<void> {
     this.isLoading = true;
     this.isDescCreated = !this.isDescCreated;
-    await getContactList(this.searchString, this.isDescCreated).then((result) => {
+    await getContactList(this.searchString, this.from, this.to, this.isDescCreated).then((result) => {
       this.contactList = result.contactList;
       this.totalCount = result.totalCount;
     })
@@ -211,15 +224,12 @@ export default class ManagementContact extends Vue {
     if (icon.hasClass('up')) {
       $(icon).removeClass('up');
       $(icon).addClass('down');
-      $(detail).css({
-        display: 'none',
-     });
+      $(detail).hide(300);
+
     } else {
       $(icon).removeClass('down');
       $(icon).addClass('up');
-      $(detail).css({
-        display: 'block',
-      });
+      $(detail).slideToggle(300);
     }
   }
 }
@@ -243,6 +253,34 @@ export default class ManagementContact extends Vue {
 
 .pointer:hover {
   cursor: pointer;
+}
+
+#filter-wrap {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  .filter {
+    margin-left: 10px;
+    margin-right: 10px;
+
+    input:hover {
+      cursor: pointer !important;
+    }
+
+    .hidden {
+      color: #00000000 !important;
+    }
+  }
+
+  span {
+    color: #ffffff;
+  }
+
+  button {
+    background: rgba($color: #000000, $alpha: 0) !important;
+    color: #ffffff78 !important;
+  }
 }
 
 .ui.search {
@@ -372,23 +410,23 @@ export default class ManagementContact extends Vue {
 }
 
 .account {
-  width: 10%;
+  width: 12%;
 }
 
 .name {
-  width: 5%;
+  width: 7%;
 }
 
 .organization {
-  width: 5%;
+  width: 7%;
 }
 
 .state {
-  width: 5%;
+  width: 7%;
 }
 
 .email {
-  width: 10%;
+  width: 12%;
 }
 
 .phone {
