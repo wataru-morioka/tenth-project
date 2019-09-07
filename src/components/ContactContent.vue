@@ -264,10 +264,9 @@ export default class ContactContent extends Vue {
       return;
     }
 
-    ($('.ui.basic.modal.loading') as any).modal({
+    ($('.ui.basic.modal') as any).modal({
       closable: false,
-    })
-    .modal('show');
+    }).modal('show');
 
     const data = {
       name: this.lastName + ' ' + this.firstName,
@@ -289,7 +288,6 @@ export default class ContactContent extends Vue {
       headers: header,
     })
     .then((res) => {
-      ($('.ui.basic.modal.loading')as any).modal('hide');
       if (!res.data.result) {
         console.log('送信に失敗しました');
         return;
@@ -305,9 +303,9 @@ export default class ContactContent extends Vue {
     })
     .catch((err) => {
       console.log(err);
-      ($('.ui.basic.modal.loading') as any).modal('hide');
       console.log('送信に失敗しました');
     });
+    ($('.ui.basic.modal') as any).modal('hide');
   }
 }
 </script>

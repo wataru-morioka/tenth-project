@@ -5,10 +5,12 @@ div
   div#sub-menu-wrap
     SubMenu
   video(controls playsinline)
-    source(src='../assets/jager.mp4' type='video/mp4')
+    source(:src='videoSrc' type='video/mp4')
   div#add-image
     button(type=button class='ui inverted orange button', @click='addImage($event)') add image
     input#add-input(type='file', @change='onChangeAdd($event)')
+    button(type=button class='ui inverted orange button', @click='addVideo($event)') add video
+    input#add-video-input(type='file', @change='onChangeAddVideo($event)')
   div.content(class="ui two column divided grid", @click='stop')
     div.row(v-for='(photoArray, index) in photoMultiArray', :key='index', :style='firstChildRow(index)')
       div.column.left(:style='transitionDelay(0.2, index * 2)')
@@ -21,7 +23,6 @@ div
             h4 
               p(v-for='(char, charIndex) in Array.from(photoArray[0].title)', :key='charIndex', :style='transitionDelay(0.02, charIndex)')
                 span {{ char }}
-              
       div.column(:style='transitionDelay(0.2, index * 2 + 1)')
         div.content-box.box-right(@click='play(photoArray[1].id)')
           div.image
@@ -69,6 +70,57 @@ class PhotoInfo {
   }
 }
 
+class VideoInfo {
+  // public id: number;
+  public mimetype: string;
+  // public fileName: string;
+  // public size: number;
+  public data: Buffer;
+  // public createdDatetime: string;
+  // public modifiedDatetime: string;
+
+  constructor(mimetype: string, data: Buffer) {
+    // this.id = id;
+    this.mimetype = mimetype;
+    // this.fileName = file_ame;
+    // this.size = size;
+    this.data = data;
+    // this.createdDatetime = createdDatetime;
+    // this.modifiedDatetime = modifiedDatetime;
+  }
+}
+
+const getVideo = () => {
+  return new Promise<VideoInfo>(async (resolve, reject) => {
+    const currentUser = firebase.auth().currentUser!;
+    const token = await currentUser.getIdToken(true);
+    const header = {
+      Authorization: `Bearer ${token}`,
+    };
+    await axios.get('https://express.management/video', {
+        headers: header,
+    })
+    .then((res) => {
+      if (!res.data.result) {
+        console.log('video取得に失敗しました');
+        reject();
+        return;
+      }
+      console.log('video取得');
+      const videoInfo = res.data.videoInfo;
+      const video = new VideoInfo(
+        videoInfo.mimetype,
+        videoInfo.data,
+      );
+      resolve(video);
+    })
+    .catch((err) => {
+      console.log('video取得に失敗しました');
+      reject();
+    });
+  });
+};
+
 @Component({
   components: {
     Modal,
@@ -81,6 +133,7 @@ export default class ManagementUpload extends Vue {
   private isPlaying: boolean = false;
   private confirmMessage: string = '';
   private photoMultiArray: PhotoInfo[][] = [];
+  private videoSrc: string = '';
 
   private transitionDelay(rate: number, index: number): string {
     const delay = rate * index;
@@ -144,7 +197,11 @@ export default class ManagementUpload extends Vue {
   }
 
   private addImage(event: any): void {
-    $('input').click();
+    $('#add-input').click();
+  }
+
+  private addVideo(event: any): void {
+    $('#add-video-input').click();
   }
 
   private onChangeAdd(event: any): void {
@@ -152,6 +209,10 @@ export default class ManagementUpload extends Vue {
     ($('.ui.basic.modal.confirm') as any).modal({
       closable: false,
       onApprove: async (el: any) => {
+        ($('.ui.basic.modal.loading') as any).modal({
+            closable: false,
+        }).modal('show');
+
         const params = new FormData();
         params.append('file', event.target.files[0]);
         await axios.post('https://express.management/image', params)
@@ -161,6 +222,8 @@ export default class ManagementUpload extends Vue {
         .catch((err) => {
           alert(err);
         });
+
+        ($('.ui.basic.modal') as any).modal('hide');
         $('#add-input').val('');
 
         // TODO 画面更新
@@ -175,11 +238,60 @@ export default class ManagementUpload extends Vue {
     }).modal('show');
   }
 
-  private play(event: any): void {
+  private onChangeAddVideo(event: any): void {
+    this.confirmMessage = 'will you add video really?';
+    ($('.ui.basic.modal.confirm') as any).modal({
+      closable: false,
+      onApprove: async (el: any) => {
+        ($('.ui.basic.modal.loading') as any).modal({
+            closable: false,
+        }).modal('show');
+
+        const params = new FormData();
+        params.append('file', event.target.files[0]);
+        await axios.post('https://express.management/video', params)
+        .then((res) => {
+          alert('success');
+        })
+        .catch((err) => {
+          alert(err);
+        });
+
+        ($('.ui.basic.modal') as any).modal('hide');
+        $('#add-video-input').val('');
+
+        // TODO 画面更新
+
+
+
+        alert('アップロードが完了しました');
+      },
+      onDeny: (el: any) => {
+        $('#add-video-input').val('');
+      },
+    }).modal('show');
+  }
+
+  private async play(id: number): Promise<void> {
     if ( this.isDisplay ) {
       this.stop();
       return;
     }
+
+    ($('.ui.basic.modal.loading') as any).modal({
+      closable: false,
+    }).modal('show');
+
+    await getVideo().then((videoInfo) => {
+      const buffer = Buffer.from(videoInfo.data);
+      const blob = new Blob([buffer], {type: videoInfo.mimetype});
+      const blobURL = window.URL.createObjectURL(blob);
+      document.querySelector('source')!.src = blobURL;
+    }).catch((err) => {
+      alert(err);
+    });
+
+    ($('.ui.basic.modal') as any).modal('hide');
 
     document.querySelector('video')!.play();
     this.isDisplay = true;
@@ -280,7 +392,7 @@ video {
   bottom: 0;
   margin: auto;
   width: 40%;
-  transition: 1s;
+  transition: 0.2s;
   z-index: -10;
 }
 
