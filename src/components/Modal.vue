@@ -1,6 +1,6 @@
 <template lang='pug'>
   div#modal
-    div(class="ui basic modal")
+    div(class="ui basic modal loading")
       div.content
         div(class="ui active inverted loader")
 </template>

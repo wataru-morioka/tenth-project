@@ -32,6 +32,7 @@ import { Component, Vue } from 'vue-property-decorator';
 import BackImage from '@/components/BackImage.vue';
 import FooterNav from '@/components/FooterNav.vue';
 import ManagementHeaderNav from '@/components/ManagementHeaderNav.vue';
+import SubMenu from '@/components/SubMenu.vue';
 import jQuery from 'jQuery';
 
 @Component({
@@ -39,6 +40,7 @@ import jQuery from 'jQuery';
     BackImage,
     FooterNav,
     ManagementHeaderNav,
+    SubMenu,
   },
 })
 export default class Management extends Vue {

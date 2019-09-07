@@ -538,7 +538,7 @@ img {
 
 .box-right {
   margin-top: 70px;
-  margin-left: 155px;
+  margin-left: 150px;
   margin-bottom: 30px;
 }
   
@@ -551,17 +551,15 @@ img {
   width: 100%;
   // height: 100%;
   opacity: 0;
-  transform: translate(0px, 0px) translate3d(0, 0, 0);
+  transform: translate(0px, 30px) translate3d(0, 0, 0);
   transition: 1s;
   will-change: transform;
   -ms-filter: blur(30px);
   filter: blur(30px);
   
   .content-box {
-    // position: relative;
     width: 340px;
     cursor: pointer;
-    // z-index: 5;
 
     .subject {
       text-align: left;

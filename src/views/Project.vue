@@ -17,7 +17,8 @@
         span C
       p(style='animation-delay: 1.6s')
         span T
-    SubMenu
+    div#sub-menu-wrap
+      SubMenu
     video(controls playsinline)
       source(src='../assets/jager.mp4' type='video/mp4')
     ProjectContent
@@ -47,6 +48,29 @@ export default class Project extends Vue {}
   animation-name: body-fadein;
   animation-duration: 2s;
   height: 100vw;
+}
+
+::-webkit-scrollbar {
+  display: none;
+  -webkit-appearance: none;
+}
+
+#sub-menu-wrap {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  flex-direction: column;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin: auto;
+  width: 100px;
+  height: 270px;
+  overflow-y: scroll;
+  -webkit-overflow-scrolling: touch;
+  z-index: 2;
 }
 
 video {
@@ -96,6 +120,10 @@ video {
 
   video {
     width: 100%;
+  }
+
+  #sub-menu-wrap {
+    display: none;
   }
 }
 

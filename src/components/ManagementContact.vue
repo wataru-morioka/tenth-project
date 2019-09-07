@@ -445,6 +445,10 @@ export default class ManagementContact extends Vue {
       // width: 90%;
       height: 100%;
 
+      #filter-wrap {
+        display: inline-block;
+      }
+
       tbody {
         height: 40vh;
       }

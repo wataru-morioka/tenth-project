@@ -21,8 +21,6 @@
 import { Component, Prop, Vue } from 'vue-property-decorator';
 // import { url } from 'inspector';
 import axios from 'axios';
-// tslint:disable-next-line:no-var-requires
-const fs = require('fs');
 
 @Component
 export default class HelloWorld extends Vue {

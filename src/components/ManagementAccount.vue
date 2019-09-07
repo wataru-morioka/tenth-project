@@ -35,7 +35,7 @@
             td.edit
               input(type="text" name="public", hidden, :value='account.uid')
               button(type=button class='ui inverted primary button', @click='edit($event)') edit
-              button(type=button class='ui inverted secondary button', @click='confirm($event)') confirm
+              button(type=button class='ui inverted secondary button', @click='confirm($event)', :disabled='isLoading') confirm
             td.webrtc
               div(class="ui toggle checkbox")
                 input(type="checkbox" name="public", :checked='account.webrtcFlag', disabled)
@@ -70,17 +70,17 @@ enum OrderEnum {
 }
 
 class AccountInfo {
-  private uid: string;
-  private deleteFlag: boolean;
-  private webrtcFlag: boolean;
-  private adminFlag: boolean;
-  private account: string;
-  private name: string;
-  private state: string;
-  private loginCount: number;
-  private latestLogin: string;
-  private createdDatetime: string;
-  private modifiedDatetime: string;
+  public uid: string;
+  public deleteFlag: boolean;
+  public webrtcFlag: boolean;
+  public adminFlag: boolean;
+  public account: string;
+  public name: string;
+  public state: string;
+  public loginCount: number;
+  public latestLogin: string;
+  public createdDatetime: string;
+  public modifiedDatetime: string;
 
   constructor(uid: string, deleteFlag: boolean, webrtcFlag: boolean, adminFlag: boolean, account: string,
               name: string, state: string, loginCount: number, latestLogin: string,
@@ -184,13 +184,8 @@ export default class ManagementAccount extends Vue {
     });
   }
 
-  private mounted() {
-    // ($('.ui.search') as any).search({
-    //   onSearchQuery: (query: any) => {
-    //     alert(query);
-    //   },
-    // });
-  }
+  // private mounted() {
+  // }
 
   private resetFlag(): void {
     this.isDescLoginCount = false;
@@ -272,7 +267,7 @@ export default class ManagementAccount extends Vue {
     if ($(target).hasClass('secondary')) {
       $(target).removeClass('secondary');
       $(target).addClass('primary');
-      $(next).removeClass('red');
+      $(next).removeClass('orange');
       $(next).addClass('secondary');
       $(target).text('edit');
       $(parent).find('input').prop('disabled', true);
@@ -280,7 +275,7 @@ export default class ManagementAccount extends Vue {
       $(target).removeClass('primary');
       $(target).addClass('secondary');
       $(next).removeClass('secondary');
-      $(next).addClass('red');
+      $(next).addClass('orange');
       $(target).text('cancel');
       $(parent).find('input').prop('disabled', false);
     }
@@ -297,6 +292,7 @@ export default class ManagementAccount extends Vue {
     }
     // ローディング
     $(target).addClass('loading');
+    this.isLoading = true;
 
     // update
     const currentUser = firebase.auth().currentUser!;
@@ -328,8 +324,9 @@ export default class ManagementAccount extends Vue {
       console.log('account更新に失敗しました');
     });
 
+    this.isLoading = false;
     $(target).removeClass('loading');
-    $(target).removeClass('red');
+    $(target).removeClass('orange');
     $(target).addClass('secondary');
     $(prev).removeClass('secondary');
     $(prev).addClass('primary');

@@ -9,6 +9,98 @@ const https = require('https');
 
 Vue.use(Vuex);
 
+export class PhotoInfo {
+  public id: number;
+  public subTitle: string;
+  public title: string;
+  public mimetype: string;
+  // public fileName: string;
+  // public size: number;
+  public data: Buffer;
+  public createdDatetime: string;
+  // public modifiedDatetime: string;
+
+  constructor(id: number, subTitle: string, title: string, mimetype: string, fileName: string,
+              size: number, data: Buffer, createdDatetime: string, modifiedDatetime: string) {
+    this.id = id;
+    this.subTitle = subTitle;
+    this.title = title;
+    this.mimetype = mimetype;
+    // this.fileName = file_ame;
+    // this.size = size;
+    this.data = data;
+    this.createdDatetime = createdDatetime;
+    // this.modifiedDatetime = modifiedDatetime;
+  }
+}
+
+class Result {
+  public photoMultiArray: PhotoInfo[][];
+  public projectTitleArray: string[];
+
+  constructor() {
+    this.photoMultiArray = [];
+    this.projectTitleArray = [];
+  }
+}
+
+const getPhotoList = () => {
+  return new Promise<Result>(async (resolve, reject) => {
+    const result = new Result();
+    const photoMultiArray: PhotoInfo[][] = [];
+    const projectTitleArray: string[] = [];
+    let photoArray: PhotoInfo[] = [];
+    const currentUser = firebase.auth().currentUser!;
+    const token = await currentUser.getIdToken(true);
+    const header = {
+      Authorization: `Bearer ${token}`,
+    };
+    await axios.get('https://express.management/photographs', {
+        headers: header,
+    })
+    .then((res) => {
+      if (!res.data.result) {
+        console.log('photoリスト取得に失敗しました');
+        reject();
+        return;
+      }
+      console.log('photoリスト取得');
+      const resArray = res.data.photoArray;
+      let photo: PhotoInfo;
+      let index = 0;
+      resArray.forEach((el: any) => {
+        photo = new PhotoInfo(
+          el.id,
+          el.sub_title,
+          el.title,
+          el.mimetype,
+          el.fileName,
+          el.size,
+          el.data,
+          el.created_datetime,
+          el.modified_datetime,
+        );
+        projectTitleArray.push(photo.title);
+        photoArray.push(photo);
+        if (index === 1) {
+          photoMultiArray.push(photoArray);
+          photoArray = [];
+          index = 0;
+          return;
+        }
+        index++;
+      });
+      result.photoMultiArray = photoMultiArray;
+      result.projectTitleArray = projectTitleArray;
+      resolve(result);
+    })
+    .catch((err) => {
+      console.log('photoリスト取得に失敗しました');
+      reject();
+    });
+  });
+};
+
 export default new Vuex.Store({
   state: {
     userName: 'wataru',
@@ -19,6 +111,8 @@ export default new Vuex.Store({
     email: '',
     displayName: '',
     currentViewIndex: 0,
+    photoMultiArray: [],
+    projectTitleArray: [],
   },
   mutations: {
     setUser(state, payload) {
@@ -43,6 +137,11 @@ export default new Vuex.Store({
 
     setViewIndex(state, payload) {
       state.currentViewIndex = payload.index;
+    },
+
+    setPhotoMutiArray(state, payload) {
+      state.photoMultiArray = payload.photoMultiArray;
+      state.projectTitleArray = payload.projectTitleArray;
     },
   },
   actions: {
@@ -70,6 +169,17 @@ export default new Vuex.Store({
         commit('setDisplayName', {
           displayName: res.data.name,
         });
+      });
+    },
+
+    async getPhotos({ commit, state, rootState }) {
+      getPhotoList().then((result) => {
+        this.commit('setPhotoMutiArray', {
+          photoMultiArray: result.photoMultiArray,
+          projectTitleArray: result.projectTitleArray,
+        });
+      }).catch((err) => {
+        alert('err');
       });
     },
 
@@ -118,6 +228,8 @@ export default new Vuex.Store({
     checkLoginStatus({ commit, state, rootState }) {
       firebase.auth().onAuthStateChanged( async (user) => {
         if (user) {
+          this.dispatch('getPhotos');
+
           if (user.email != null && user.email.length > 0) {
             console.log('google認証済み');
             // TODO ログインカウントインクリメント
@@ -185,5 +297,11 @@ export default new Vuex.Store({
     isLogin: (state, getters) => {
       return state.isLogin;
     },
+    getPhotos: (state, getters) => {
+      return state.photoMultiArray;
+    },
+    getProjectTitles: (state, getter) => {
+      return state.projectTitleArray;
+    }
   },
 });
