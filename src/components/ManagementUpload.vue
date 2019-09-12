@@ -7,32 +7,57 @@ div
   video(controls playsinline)
     source(:src='videoSrc' type='video/mp4')
   div#add-image
-    button(type=button class='ui inverted orange button', @click='addImage($event)') add image
+    button(type=button class='ui inverted red button', @click='addImage($event)') add
     input#add-input(type='file', @change='onChangeAdd($event)')
-    button(type=button class='ui inverted orange button', @click='addVideo($event)') add video
+    button(type=button class='ui inverted orange button', @click='addVideo($event)', style='display: none') add video
     input#add-video-input(type='file', @change='onChangeAddVideo($event)')
   div.content(class="ui two column divided grid", @click='stop')
     div.row(v-for='(photoArray, index) in photoMultiArray', :key='index', :style='firstChildRow(index)')
       div.column.left(:style='transitionDelay(0.2, index * 2)')
-        div.content-box.box-left(@click='play(photoArray[0].id)')
-          div.image
+        div.content-box.box-left
+          div.edit-photo-wrap
+            button(type=button class='ui inverted primary button', @click='editPhoto($event)') edit
+            div.upload-wrap
+              button(type=button class='ui inverted orange button', @click='uploadThumbnail($event)') thumbnail
+              button(type=button class='ui inverted orange button', @click='uploadVideo($event)') video
+          div.image(@click='play(photoArray[0].id)')
             i.huge.play.icon
             img(:src='setPhoto(index, 0)')
           div.subject
-            p {{ photoArray[0].subTitle }}
+            //- p {{ photoArray[0].subTitle }}
+            input.sub-title(type='text', readonly=true, :value='photoArray[0].subTitle')
+            button(type=button class='ui inverted primary button', @click='editSubTitle($event)') edit
             h4 
-              p(v-for='(char, charIndex) in Array.from(photoArray[0].title)', :key='charIndex', :style='transitionDelay(0.02, charIndex)')
-                span {{ char }}
-      div.column(:style='transitionDelay(0.2, index * 2 + 1)')
-        div.content-box.box-right(@click='play(photoArray[1].id)')
-          div.image
+              //- p(v-for='(char, charIndex) in Array.from(photoArray[0].title)', :key='charIndex', :style='transitionDelay(0.02, charIndex)')
+              //-   span {{ char }}
+              //- span
+              //-   button(type=button class='ui inverted primary button', @click='editTitle($event)') edit
+              input.title(type='text', readonly=true, :value='photoArray[0].title')
+              button(type=button class='ui inverted primary button', @click='editTitle($event)') edit
+            button(type=button class='ui inverted yellow button', @click='minify($event)') minify
+            button(type=button class='ui inverted green button', @click='download($event)') download
+      div.column(v-if='existsPhoto(photoArray[1])', :style='transitionDelay(0.2, index * 2 + 1)')
+        div.content-box.box-right
+          div.edit-photo-wrap
+            button(type=button class='ui inverted primary button', @click='editPhoto($event)') edit
+            div.upload-wrap
+              button(type=button class='ui inverted orange button', @click='uploadThumbnail($event)') upload thumbnail
+              button(type=button class='ui inverted orange button', @click='uploadVideo($event)') upload video
+          div.image(@click='play(photoArray[1].id)')
             i.huge.play.icon
             img(:src='setPhoto(index, 1)')
           div.subject
-            p {{ photoArray[1].subTitle }}
+            //- p {{ photoArray[1].subTitle }}
+            input.sub-title(type='text', readonly=true, :value='photoArray[1].subTitle')
+            button(type=button class='ui inverted primary button', @click='editSubTitle($event)') edit
             h4 
-              p(v-for='(char, charIndex) in Array.from(photoArray[1].title)', :key='charIndex', :style='transitionDelay(0.02, charIndex)')
-                span {{ char }}
+              //- p(v-for='(char, charIndex) in Array.from(photoArray[1].title)', :key='charIndex', :style='transitionDelay(0.02, charIndex)')
+              //-   span {{ char }}
+              //- span
+              input.title(type='text', readonly=true, :value='photoArray[1].title')
+              button(type=button class='ui inverted primary button', @click='editTitle($event)') edit
+            button(type=button class='ui inverted yellow button', @click='minify($event)') minify
+            button(type=button class='ui inverted green button', @click='download($event)') download
 </template>
 
 <script lang='ts'>
@@ -129,8 +154,8 @@ const getVideo = () => {
   },
 })
 export default class ManagementUpload extends Vue {
-  private isDisplay: boolean = false;
-  private isPlaying: boolean = false;
+  // private isDisplay: boolean = false;
+  // private isPlaying: boolean = false;
   private confirmMessage: string = '';
   private photoMultiArray: PhotoInfo[][] = [];
   private videoSrc: string = '';
@@ -173,6 +198,8 @@ export default class ManagementUpload extends Vue {
 
   private created() {
     this.photoMultiArray = this.$store.getters.getPhotos;
+    this.fadein();
+    this.$store.commit('setInitVideoFlag');
   }
 
   private fadein(): void {
@@ -196,6 +223,86 @@ export default class ManagementUpload extends Vue {
     });
   }
 
+  private editPhoto(event: any): void {
+    const target = event.currentTarget;
+    const parent = $(target).closest('.edit-photo-wrap');
+    const uploadArea = $(parent).children('.upload-wrap');
+    if ($(target).hasClass('primary')) {
+      (uploadArea).slideToggle(300);
+      $(target).removeClass('primary');
+      $(target).addClass('secondary');
+      $(target).text('cancel');
+      return;
+    }
+    $(uploadArea).hide(300);
+    $(target).removeClass('secondary');
+    $(target).addClass('primary');
+    $(target).text('edit');
+  }
+
+  private uploadThumbnail(event: any): void {
+    const target = event.currentTarget;
+    const parent = $(target).closest('.edit-photo-wrap');
+    const uploadArea = $(parent).children('.upload-wrap');
+    const editButton = $(parent).children('button')[0];
+    $(uploadArea).hide(300);
+    $(editButton).removeClass('secondary');
+    $(editButton).addClass('primary');
+    $(editButton).text('edit');
+  }
+
+  private uploadVideo(event: any): void {
+    const target = event.currentTarget;
+    const parent = $(target).closest('.edit-photo-wrap');
+    const uploadArea = $(parent).children('.upload-wrap');
+    const editButton = $(parent).children('button')[0];
+    $(uploadArea).hide(300);
+    $(editButton).removeClass('secondary');
+    $(editButton).addClass('primary');
+    $(editButton).text('edit');
+  }
+
+  private editSubTitle(event: any): void {
+    const target = event.currentTarget;
+    const parent = $(target).closest('.subject');
+    const input = $(parent).children('.sub-title');
+    if ($(target).hasClass('primary')) {
+      $(input).prop('readonly', false);
+      $(target).removeClass('primary');
+      $(target).addClass('orange');
+      $(target).text('confirm');
+      return;
+    }
+    $(input).prop('readonly', true);
+    $(target).removeClass('orange');
+    $(target).addClass('primary');
+    $(target).text('edit');
+  }
+
+  private editTitle(event: any): void {
+    const target = event.currentTarget;
+    const parent = $(target).closest('h4');
+    const input = $(parent).children('.title');
+    if ($(target).hasClass('primary')) {
+      $(input).prop('readonly', false);
+      $(target).removeClass('primary');
+      $(target).addClass('orange');
+      $(target).text('confirm');
+      return;
+    }
+    $(input).prop('readonly', true);
+    $(target).removeClass('orange');
+    $(target).addClass('primary');
+    $(target).text('edit');
+  }
+
+  private existsPhoto(photo: any): boolean {
+    if (photo === undefined || photo === null) {
+      return false;
+    }
+    return true;
+  }
+
   private addImage(event: any): void {
     $('#add-input').click();
   }
@@ -206,10 +313,10 @@ export default class ManagementUpload extends Vue {
 
   private onChangeAdd(event: any): void {
     this.confirmMessage = 'will you add image really?';
-    ($('.ui.basic.modal.confirm') as any).modal({
+    ($('#confirm-modal') as any).modal({
       closable: false,
       onApprove: async (el: any) => {
-        ($('.ui.basic.modal.loading') as any).modal({
+        ($('#loading-modal') as any).modal({
             closable: false,
         }).modal('show');
 
@@ -223,7 +330,7 @@ export default class ManagementUpload extends Vue {
           alert(err);
         });
 
-        ($('.ui.basic.modal') as any).modal('hide');
+        ($('#loading-modal') as any).modal('hide');
         $('#add-input').val('');
 
         // TODO 画面更新
@@ -240,10 +347,10 @@ export default class ManagementUpload extends Vue {
 
   private onChangeAddVideo(event: any): void {
     this.confirmMessage = 'will you add video really?';
-    ($('.ui.basic.modal.confirm') as any).modal({
+    ($('#confirm-modal') as any).modal({
       closable: false,
       onApprove: async (el: any) => {
-        ($('.ui.basic.modal.loading') as any).modal({
+        ($('#loading-modal') as any).modal({
             closable: false,
         }).modal('show');
 
@@ -257,7 +364,7 @@ export default class ManagementUpload extends Vue {
           alert(err);
         });
 
-        ($('.ui.basic.modal') as any).modal('hide');
+        ($('#loading-modal') as any).modal('hide');
         $('#add-video-input').val('');
 
         // TODO 画面更新
@@ -273,12 +380,13 @@ export default class ManagementUpload extends Vue {
   }
 
   private async play(id: number): Promise<void> {
-    if ( this.isDisplay ) {
+    const isDisplay = this.$store.getters.getIsDisplay;
+    if ( isDisplay ) {
       this.stop();
       return;
     }
 
-    ($('.ui.basic.modal.loading') as any).modal({
+    ($('#loading-modal') as any).modal({
       closable: false,
     }).modal('show');
 
@@ -291,11 +399,17 @@ export default class ManagementUpload extends Vue {
       alert(err);
     });
 
-    ($('.ui.basic.modal') as any).modal('hide');
+    ($('#loading-modal') as any).modal('hide');
 
     document.querySelector('video')!.play();
-    this.isDisplay = true;
-    this.isPlaying = true;
+    this.$store.commit('setIsDisplay', {
+      isDisplay: true,
+    });
+    this.$store.commit('setIsPlaying', {
+      isPlaying: true,
+    });
+    // this.isDisplay = true;
+    // this.isPlaying = true;
 
     $('.content, #sub-menu').css({
       opacity: 0,
@@ -308,13 +422,20 @@ export default class ManagementUpload extends Vue {
   }
 
   private stop(): void {
-    if (this.isPlaying) {
-      this.isPlaying = false;
-      return;
+    const isPlaying = this.$store.getters.getIsPlaying;
+    if (isPlaying) {
+      this.$store.commit('setIsPlaying', {
+        isPlaying: false,
+      });
+      // this.isPlaying = false;
+      // return;
     }
 
     document.querySelector('video')!.pause();
-    this.isDisplay = false;
+    this.$store.commit('setIsDisplay', {
+      isDisplay: false,
+    });
+    // this.isDisplay = false;
 
     $('.content, #sub-menu').css({
       opacity: 1,
@@ -356,12 +477,32 @@ export default class ManagementUpload extends Vue {
 
   button {
     font-size: 12px;
-    // height: 20px;
   }
 
   input {
     height: 20px;
     display: none;
+  }
+}
+
+.edit-photo-wrap {
+  flex-direction: column;
+  display: flex;
+  button {
+    margin: auto;
+    margin-left: 0px;
+    margin-bottom: 2px;
+    font-size: 10px !important;
+  }
+}
+
+.upload-wrap {
+  display: none;
+  button {
+    margin-left: 2px;
+    margin-right: 2px;
+    margin-bottom: 2px;
+    font-size: 10px !important;
   }
 }
 
@@ -397,6 +538,7 @@ video {
 }
 
 .image {
+  cursor: pointer;
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -421,15 +563,11 @@ img {
   margin-bottom: 30px;
 }
   
-.row {
-  // margin-top: -30px; 
-}
-
 .column {
   min-width: 50%;
   width: 100%;
   // height: 100%;
-  // opacity: 0;
+  opacity: 0;
   transform: translate(0px, 30px) translate3d(0, 0, 0);
   transition: 2s;
   will-change: transform;
@@ -439,24 +577,42 @@ img {
   .content-box {
     // position: relative;
     width: 340px;
-    cursor: pointer;
     // z-index: 5;
 
     .subject {
+      cursor: default;
       text-align: left;
       margin-top: 10px;
-      p {
+      input {
+        color: #ffffff;
         font-size: 12px;
         margin-bottom: 0px;
+        background: (0, 0, 0, 0) !important;
       }
+
+      .primary {
+        // font-size: 10px;
+        margin-left: 5px;
+      }
+
       h4 {
         margin-top: 0px;
-        color: #ffffff;
-        p {
+        input {
+          color: #ffffff;
           font-size: 16px;
           display: inline-block;
-          transition: 0.6s
+          transition: 0.6s;
+          background: (0, 0, 0, 0) !important;
         }
+
+        button {
+          // font-size: 10px;
+          margin-left: 5px;
+        }
+      }
+
+      button {
+        font-size: 10px;
       }
     }
   }

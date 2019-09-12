@@ -1,6 +1,6 @@
 <template lang='pug'>
   div#confirm-modal
-    div(class="ui basic modal confirm")
+    div#confirm-modal(class="ui basic modal confirm")
       div(class="content")
         p {{ confirmMessage }}
       div(class="actions")

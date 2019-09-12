@@ -36,11 +36,11 @@ export class PhotoInfo {
 
 class Result {
   public photoMultiArray: PhotoInfo[][];
-  public projectTitleArray: string[];
+  public projectTitleMap: Map<number, string>;
 
   constructor() {
     this.photoMultiArray = [];
-    this.projectTitleArray = [];
+    this.projectTitleMap = new Map<number, string>();
   }
 }
 
@@ -48,7 +48,7 @@ const getPhotoList = () => {
   return new Promise<Result>(async (resolve, reject) => {
     const result = new Result();
     const photoMultiArray: PhotoInfo[][] = [];
-    const projectTitleArray: string[] = [];
+    const projectTitleMap: Map<number, string> = new Map<number, string>();
     let photoArray: PhotoInfo[] = [];
     const currentUser = firebase.auth().currentUser!;
     const token = await currentUser.getIdToken(true);
@@ -80,7 +80,8 @@ const getPhotoList = () => {
           el.created_datetime,
           el.modified_datetime,
         );
-        projectTitleArray.push(photo.title);
+        const map = new Map<number, string>();
+        projectTitleMap.set(photo.id, photo.title);
         photoArray.push(photo);
         if (index === 1) {
           photoMultiArray.push(photoArray);
@@ -91,7 +92,7 @@ const getPhotoList = () => {
         index++;
       });
       result.photoMultiArray = photoMultiArray;
-      result.projectTitleArray = projectTitleArray;
+      result.projectTitleMap = projectTitleMap;
       resolve(result);
     })
     .catch((err) => {
@@ -112,7 +113,9 @@ export default new Vuex.Store({
     displayName: '',
     currentViewIndex: 0,
     photoMultiArray: [],
-    projectTitleArray: [],
+    projectTitleMap: new Map<number, string>(),
+    isDisplay: false,
+    isPlaying: false,
   },
   mutations: {
     setUser(state, payload) {
@@ -141,7 +144,17 @@ export default new Vuex.Store({
 
     setPhotoMutiArray(state, payload) {
       state.photoMultiArray = payload.photoMultiArray;
-      state.projectTitleArray = payload.projectTitleArray;
+      state.projectTitleMap = payload.projectTitleMap;
+    },
+    setInitVideoFlag(state, payload) {
+      state.isDisplay = false;
+      state.isPlaying = false;
+    },
+    setIsDisplay(state, payload) {
+      state.isDisplay = payload.isDisplay;
+    },
+    setIsPlaying(state, payload) {
+      state.isPlaying = payload.isPlaying;
     },
   },
   actions: {
@@ -176,7 +189,7 @@ export default new Vuex.Store({
       getPhotoList().then((result) => {
         this.commit('setPhotoMutiArray', {
           photoMultiArray: result.photoMultiArray,
-          projectTitleArray: result.projectTitleArray,
+          projectTitleMap: result.projectTitleMap,
         });
       }).catch((err) => {
         alert('err');
@@ -300,8 +313,14 @@ export default new Vuex.Store({
     getPhotos: (state, getters) => {
       return state.photoMultiArray;
     },
-    getProjectTitles: (state, getter) => {
-      return state.projectTitleArray;
-    }
+    getProjectTitleMap: (state, getter) => {
+      return state.projectTitleMap;
+    },
+    getIsDisplay: (state, getters) => {
+      return state.isDisplay;
+    },
+    getIsPlaying: (state, getters) => {
+      return state.isPlaying;
+    },
   },
 });

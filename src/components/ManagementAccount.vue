@@ -227,23 +227,33 @@ export default class ManagementAccount extends Vue {
   private async sort(order: number): Promise<void> {
     this.isLoading = true;
     let orderType = false;
+    switch (order) {
+      case OrderEnum.LoginCount:
+        orderType = !this.isDescLoginCount;
+        break;
+      case OrderEnum.LatestLogin:
+        orderType = !this.isDescLatestLogin;
+        break;
+      case OrderEnum.Modified:
+        orderType = !this.isDescModified;
+        break;
+      default:
+        break;
+    }
     this.resetFlag();
     this.sortedCreated = true;
     switch (order) {
       case OrderEnum.LoginCount:
         this.sortedLoginCount = true;
-        this.isDescLoginCount = !this.isDescLoginCount;
-        orderType = this.isDescLoginCount;
+        this.isDescLoginCount = orderType;
         break;
       case OrderEnum.LatestLogin:
         this.sortedLatestLogin = true;
-        this.isDescLatestLogin = !this.isDescLatestLogin;
-        orderType = this.isDescLatestLogin;
+        this.isDescLatestLogin = orderType;
         break;
       case OrderEnum.Modified:
         this.sortedModified = true;
-        this.isDescModified = !this.isDescModified;
-        orderType = this.isDescModified;
+        this.isDescModified = orderType;
         break;
       default:
         break;
