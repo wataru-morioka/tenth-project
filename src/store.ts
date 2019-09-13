@@ -55,6 +55,7 @@ const getPhotoList = () => {
     const header = {
       Authorization: `Bearer ${token}`,
     };
+
     await axios.get('https://express.management/photographs', {
         headers: header,
     })
@@ -91,6 +92,11 @@ const getPhotoList = () => {
         }
         index++;
       });
+
+      if (resArray.length % 2 === 1) {
+        photoMultiArray.push(photoArray);
+      }
+
       result.photoMultiArray = photoMultiArray;
       result.projectTitleMap = projectTitleMap;
       resolve(result);
@@ -112,7 +118,7 @@ export default new Vuex.Store({
     email: '',
     displayName: '',
     currentViewIndex: 0,
-    photoMultiArray: [],
+    photoMultiArray: new Array<PhotoInfo[]>(),
     projectTitleMap: new Map<number, string>(),
     isDisplay: false,
     isPlaying: false,
@@ -145,6 +151,10 @@ export default new Vuex.Store({
     setPhotoMutiArray(state, payload) {
       state.photoMultiArray = payload.photoMultiArray;
       state.projectTitleMap = payload.projectTitleMap;
+      // state.photoMultiArray.splice(0, state.photoMultiArray.length);
+      // state.photoMultiArray.join(payload.photoMultiArray);
+      // state.projectTitleMap.clear();
+      // state.projectTitleMap = payload.projectTitleMap;
     },
     setInitVideoFlag(state, payload) {
       state.isDisplay = false;
@@ -186,7 +196,7 @@ export default new Vuex.Store({
     },
 
     async getPhotos({ commit, state, rootState }) {
-      getPhotoList().then((result) => {
+      await getPhotoList().then((result) => {
         this.commit('setPhotoMutiArray', {
           photoMultiArray: result.photoMultiArray,
           projectTitleMap: result.projectTitleMap,

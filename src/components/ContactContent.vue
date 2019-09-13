@@ -257,14 +257,14 @@ export default class ContactContent extends Vue {
     });
   }
 
-  private onSubmit(): void {
+  private async onSubmit(): Promise<void> {
     if (!this.lastNameValid || !this.firstNameValid || !this.emailValid
      || !this.messageValid || !this.selectedType || !this.selectedState) {
       alert('無効な項目があります');
       return;
     }
 
-    ($('.ui.basic.modal') as any).modal({
+    await ($('.ui.basic.modal') as any).modal({
       closable: false,
     }).modal('show');
 

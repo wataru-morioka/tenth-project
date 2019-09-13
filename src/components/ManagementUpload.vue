@@ -5,10 +5,10 @@ div
   div#sub-menu-wrap
     SubMenu
   video(controls playsinline)
-    source(:src='videoSrc' type='video/mp4')
+    //- source(:src='videoSrc' type='video/mp4')
   div#add-image
-    button(type=button class='ui inverted red button', @click='addImage($event)') add
-    input#add-input(type='file', @change='onChangeAdd($event)')
+    button(type=button class='ui inverted red button', @click='addPhoto($event)') add
+    input#add-input(type='file', @change='onChangeAddPhoto($event)')
     button(type=button class='ui inverted orange button', @click='addVideo($event)', style='display: none') add video
     input#add-video-input(type='file', @change='onChangeAddVideo($event)')
   div.content(class="ui two column divided grid", @click='stop')
@@ -19,45 +19,51 @@ div
             button(type=button class='ui inverted primary button', @click='editPhoto($event)') edit
             div.upload-wrap
               button(type=button class='ui inverted orange button', @click='uploadThumbnail($event)') thumbnail
+              input.edit-thumbnail(type='file', @change='onChangeThumbnail($event, photoArray[0].id)')
               button(type=button class='ui inverted orange button', @click='uploadVideo($event)') video
+              input.edit-video(type='file', @change='onChangeVideo($event, photoArray[0].id)')
           div.image(@click='play(photoArray[0].id)')
             i.huge.play.icon
             img(:src='setPhoto(index, 0)')
           div.subject
             //- p {{ photoArray[0].subTitle }}
             input.sub-title(type='text', readonly=true, :value='photoArray[0].subTitle')
-            button(type=button class='ui inverted primary button', @click='editSubTitle($event)') edit
+            button(type=button class='ui inverted primary button', @click='editSubTitle($event, photoArray[0].id)') edit
             h4 
               //- p(v-for='(char, charIndex) in Array.from(photoArray[0].title)', :key='charIndex', :style='transitionDelay(0.02, charIndex)')
               //-   span {{ char }}
               //- span
               //-   button(type=button class='ui inverted primary button', @click='editTitle($event)') edit
               input.title(type='text', readonly=true, :value='photoArray[0].title')
-              button(type=button class='ui inverted primary button', @click='editTitle($event)') edit
-            button(type=button class='ui inverted yellow button', @click='minify($event)') minify
-            button(type=button class='ui inverted green button', @click='download($event)') download
+              button(type=button class='ui inverted primary button', @click='editTitle($event, photoArray[0].id)') edit
+            button(type=button class='ui inverted yellow button', @click='minify(photoArray[0].id)') minify
+            button(type=button class='ui inverted green button', @click='download(photoArray[0].id)') download
+            button(type=button class='ui inverted red button', @click='deletePhoto(photoArray[0].id)') delete
       div.column(v-if='existsPhoto(photoArray[1])', :style='transitionDelay(0.2, index * 2 + 1)')
         div.content-box.box-right
           div.edit-photo-wrap
             button(type=button class='ui inverted primary button', @click='editPhoto($event)') edit
             div.upload-wrap
-              button(type=button class='ui inverted orange button', @click='uploadThumbnail($event)') upload thumbnail
-              button(type=button class='ui inverted orange button', @click='uploadVideo($event)') upload video
+              button(type=button class='ui inverted orange button', @click='uploadThumbnail($event)') thumbnail
+              input.edit-thumbnail(type='file', @change='onChangeThumbnail($event, photoArray[1].id)')
+              button(type=button class='ui inverted orange button', @click='uploadVideo($event)') video
+              input.edit-video(type='file', @change='onChangeVideo($event, photoArray[1].id)')
           div.image(@click='play(photoArray[1].id)')
             i.huge.play.icon
             img(:src='setPhoto(index, 1)')
           div.subject
             //- p {{ photoArray[1].subTitle }}
             input.sub-title(type='text', readonly=true, :value='photoArray[1].subTitle')
-            button(type=button class='ui inverted primary button', @click='editSubTitle($event)') edit
+            button(type=button class='ui inverted primary button', @click='editSubTitle($event, photoArray[1].id)') edit
             h4 
               //- p(v-for='(char, charIndex) in Array.from(photoArray[1].title)', :key='charIndex', :style='transitionDelay(0.02, charIndex)')
               //-   span {{ char }}
               //- span
               input.title(type='text', readonly=true, :value='photoArray[1].title')
-              button(type=button class='ui inverted primary button', @click='editTitle($event)') edit
-            button(type=button class='ui inverted yellow button', @click='minify($event)') minify
-            button(type=button class='ui inverted green button', @click='download($event)') download
+              button(type=button class='ui inverted primary button', @click='editTitle($event, photoArray[1].id)') edit
+            button(type=button class='ui inverted yellow button', @click='minify(photoArray[1].id)') minify
+            button(type=button class='ui inverted green button', @click='download(photoArray[1].id)') download
+            button(type=button class='ui inverted red button', @click='deletePhoto(photoArray[1].id)') delete
 </template>
 
 <script lang='ts'>
@@ -115,15 +121,19 @@ class VideoInfo {
   }
 }
 
-const getVideo = () => {
+const getVideo = (id: number) => {
   return new Promise<VideoInfo>(async (resolve, reject) => {
     const currentUser = firebase.auth().currentUser!;
     const token = await currentUser.getIdToken(true);
     const header = {
       Authorization: `Bearer ${token}`,
     };
+
     await axios.get('https://express.management/video', {
         headers: header,
+        params: {
+          photoId: id,
+        },
     })
     .then((res) => {
       if (!res.data.result) {
@@ -223,6 +233,76 @@ export default class ManagementUpload extends Vue {
     });
   }
 
+   private async download(id: number): Promise<void> {
+    const currentUser = firebase.auth().currentUser!;
+    const token = await currentUser.getIdToken(true);
+    const header = {
+      Authorization: `Bearer ${token}`,
+    };
+    axios.get('https://express.management/download', {
+      headers: header,
+      params: {
+        photoId: id,
+      },
+    })
+    .then((res: any) => {
+      const photo = res.data.photoInfo;
+      const buffer = Buffer.from(photo.data);
+      const blob = new Blob([buffer], {type: photo.mimetype});
+      const blobURL = window.URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.download = photo.file_name;
+      a.href = blobURL;
+      a.click();
+    })
+    .catch((err) => {
+      alert(err);
+    });
+  }
+
+  private async minify(id: number): Promise<void> {
+    this.confirmMessage = 'will you minify thumbnail really?';
+    ($('.ui.basic.modal.confirm') as any).modal({
+      closable: false,
+      onApprove: async (el: any) => {
+        ($('#loading-modal') as any).modal({
+          closable: false,
+          onVisible: async () => {
+            const currentUser = firebase.auth().currentUser!;
+            const token = await currentUser.getIdToken(true);
+            const header = {
+              Authorization: `Bearer ${token}`,
+            };
+
+            await axios.get('https://express.management/minify', {
+              headers: header,
+              params: {
+                photoId: id,
+              },
+            })
+            .then((res: any) => {
+              if (res.data.result) {
+                alert('圧縮が完了しました');
+              } else {
+                alert('圧縮に失敗しました');
+              }
+            })
+            .catch((err) => {
+              alert(err);
+            });
+
+            await this.$store.dispatch('getPhotos');
+            this.photoMultiArray = this.$store.getters.getPhotos;
+
+            ($('#loading-modal') as any).modal('hide');
+          },
+        }).modal('show');
+      },
+      // onDeny: (el: any) => {
+      // },
+    }).modal('show');
+  }
+
   private editPhoto(event: any): void {
     const target = event.currentTarget;
     const parent = $(target).closest('.edit-photo-wrap');
@@ -240,29 +320,135 @@ export default class ManagementUpload extends Vue {
     $(target).text('edit');
   }
 
-  private uploadThumbnail(event: any): void {
+  private async onChangeThumbnail(event: any, id: number): Promise<void> {
     const target = event.currentTarget;
-    const parent = $(target).closest('.edit-photo-wrap');
-    const uploadArea = $(parent).children('.upload-wrap');
-    const editButton = $(parent).children('button')[0];
-    $(uploadArea).hide(300);
-    $(editButton).removeClass('secondary');
-    $(editButton).addClass('primary');
-    $(editButton).text('edit');
+    this.confirmMessage = 'will you change photograph really?';
+    ($('.ui.basic.modal.confirm') as any).modal({
+      closable: false,
+      onApprove: async (el: any) => {
+        ($('#loading-modal') as any).modal({
+          closable: false,
+          onVisible: async () => {
+            const currentUser = firebase.auth().currentUser!;
+            const token = await currentUser.getIdToken(true);
+            const header = {
+              Authorization: `Bearer ${token}`,
+            };
+
+            const body = new FormData();
+            body.append('file', event.target.files[0]);
+            body.append('photoId', String(id));
+            await axios.put('https://express.management/photographs', body, {
+              headers: header,
+            })
+            .then((res: any) => {
+              if (res.data.result) {
+                console.log('photoアップロードが完了');
+              } else {
+                alert('photoアップロードに失敗しました');
+              }
+            })
+            .catch((err) => {
+              alert(err);
+            });
+
+            alert('アップロードが完了しました');
+
+            const parent = $(target).closest('.edit-photo-wrap');
+            const uploadArea = $(parent).children('.upload-wrap');
+            const editButton = $(parent).children('button')[0];
+
+            $(uploadArea).hide(300);
+            $(editButton).removeClass('secondary');
+            $(editButton).addClass('primary');
+            $(editButton).text('edit');
+
+            await this.$store.dispatch('getPhotos');
+            this.photoMultiArray = this.$store.getters.getPhotos;
+
+            ($('#loading-modal') as any).modal('hide');
+            $(target).val('');
+          },
+        }).modal('show');
+      },
+      onDeny: (el: any) => {
+        $(target).val('');
+      },
+    }).modal('show');
   }
 
-  private uploadVideo(event: any): void {
+  private async onChangeVideo(event: any, id: number): Promise<void> {
     const target = event.currentTarget;
-    const parent = $(target).closest('.edit-photo-wrap');
-    const uploadArea = $(parent).children('.upload-wrap');
-    const editButton = $(parent).children('button')[0];
-    $(uploadArea).hide(300);
-    $(editButton).removeClass('secondary');
-    $(editButton).addClass('primary');
-    $(editButton).text('edit');
+    this.confirmMessage = 'will you change video really?';
+    ($('.ui.basic.modal.confirm') as any).modal({
+      closable: false,
+      onApprove: async (el: any) => {
+        ($('#loading-modal') as any).modal({
+          closable: false,
+          onVisible: async () => {
+            const currentUser = firebase.auth().currentUser!;
+            const token = await currentUser.getIdToken(true);
+            const header = {
+              Authorization: `Bearer ${token}`,
+            };
+
+            const body = new FormData();
+            body.append('file', event.target.files[0]);
+            body.append('photoId', String(id));
+            await axios.put('https://express.management/video', body, {
+              headers: header,
+            })
+            .then((res: any) => {
+              if (res.data.result) {
+                console.log('photoアップロードが完了');
+              } else {
+                alert('photoアップロードに失敗しました');
+              }
+            })
+            .catch((err) => {
+              alert(err);
+            });
+
+            alert('アップロードが完了しました');
+
+            const parent = $(target).closest('.edit-photo-wrap');
+            const uploadArea = $(parent).children('.upload-wrap');
+            const editButton = $(parent).children('button')[0];
+
+            $(uploadArea).hide(300);
+            $(editButton).removeClass('secondary');
+            $(editButton).addClass('primary');
+            $(editButton).text('edit');
+
+            await this.$store.dispatch('getPhotos');
+            this.photoMultiArray = this.$store.getters.getPhotos;
+
+            ($('#loading-modal') as any).modal('hide');
+            $(target).val('');
+          },
+        }).modal('show');
+      },
+      onDeny: (el: any) => {
+        $(target).val('');
+      },
+    }).modal('show');
   }
 
-  private editSubTitle(event: any): void {
+  private async uploadThumbnail(event: any, id: number): Promise<void> {
+    const target = event.currentTarget;
+    const parent = $(target).closest('.upload-wrap');
+    const input = $(parent).children('.edit-thumbnail');
+    $(input).click();
+  }
+
+  private async uploadVideo(event: any, id: number): Promise<void> {
+    const target = event.currentTarget;
+    const parent = $(target).closest('.upload-wrap');
+    const input = $(parent).children('.edit-video');
+    $(input).click();
+  }
+
+  private async editSubTitle(event: any, id: number): Promise<void> {
     const target = event.currentTarget;
     const parent = $(target).closest('.subject');
     const input = $(parent).children('.sub-title');
@@ -273,13 +459,46 @@ export default class ManagementUpload extends Vue {
       $(target).text('confirm');
       return;
     }
+
+    $(target).prop('disabled', true);
+    $(target).addClass('loading');
+    const currentUser = firebase.auth().currentUser!;
+    const token = await currentUser.getIdToken(true);
+    const header = {
+      Authorization: `Bearer ${token}`,
+    };
+
+    const body = {
+      photoId: id,
+      subTitle: $(input).val(),
+    };
+    await axios.put('https://express.management/photographs', body, {
+      headers: header,
+    })
+    .then((res: any) => {
+      if (res.data.result) {
+        console.log('photo更新が完了');
+      } else {
+        alert('更新に失敗しました');
+      }
+    })
+    .catch((err) => {
+      alert(err);
+    });
+
+    await this.$store.dispatch('getPhotos');
+    this.photoMultiArray = this.$store.getters.getPhotos;
+
+    alert('更新が完了しました');
+    $(target).prop('disabled', false);
     $(input).prop('readonly', true);
     $(target).removeClass('orange');
+    $(target).removeClass('loading');
     $(target).addClass('primary');
     $(target).text('edit');
   }
 
-  private editTitle(event: any): void {
+  private async editTitle(event: any, id: number): Promise<void> {
     const target = event.currentTarget;
     const parent = $(target).closest('h4');
     const input = $(parent).children('.title');
@@ -290,20 +509,53 @@ export default class ManagementUpload extends Vue {
       $(target).text('confirm');
       return;
     }
+
+    $(target).prop('disabled', true);
+    $(target).addClass('loading');
+    const currentUser = firebase.auth().currentUser!;
+    const token = await currentUser.getIdToken(true);
+    const header = {
+      Authorization: `Bearer ${token}`,
+    };
+
+    const body = {
+      photoId: id,
+      title: $(input).val(),
+    };
+    await axios.put('https://express.management/photographs', body, {
+      headers: header,
+    })
+    .then((res: any) => {
+      if (res.data.result) {
+        console.log('photo更新が完了');
+      } else {
+        alert('更新に失敗しました');
+      }
+    })
+    .catch((err) => {
+      alert(err);
+    });
+
+    await this.$store.dispatch('getPhotos');
+    this.photoMultiArray = this.$store.getters.getPhotos;
+
+    alert('更新が完了しました');
+    $(target).prop('disabled', false);
     $(input).prop('readonly', true);
+    $(target).removeClass('loading');
     $(target).removeClass('orange');
     $(target).addClass('primary');
     $(target).text('edit');
   }
 
   private existsPhoto(photo: any): boolean {
-    if (photo === undefined || photo === null) {
+    if (photo === undefined) {
       return false;
     }
     return true;
   }
 
-  private addImage(event: any): void {
+  private addPhoto(event: any): void {
     $('#add-input').click();
   }
 
@@ -311,37 +563,89 @@ export default class ManagementUpload extends Vue {
     $('#add-video-input').click();
   }
 
-  private onChangeAdd(event: any): void {
-    this.confirmMessage = 'will you add image really?';
-    ($('#confirm-modal') as any).modal({
+  private onChangeAddPhoto(event: any): void {
+    this.confirmMessage = 'will you add photograph really?';
+    ($('.ui.basic.modal.confirm') as any).modal({
       closable: false,
       onApprove: async (el: any) => {
         ($('#loading-modal') as any).modal({
-            closable: false,
+          closable: false,
+          onVisible: async () => {
+            const currentUser = firebase.auth().currentUser!;
+            const token = await currentUser.getIdToken(true);
+            const header = {
+              Authorization: `Bearer ${token}`,
+            };
+
+            const body = new FormData();
+            body.append('file', event.target.files[0]);
+            await axios.post('https://express.management/photographs', body, {
+              headers: header,
+            })
+            .then((res) => {
+              console.log('photoアップロードが完了');
+            })
+            .catch((err) => {
+              alert(err);
+            });
+
+            await this.$store.dispatch('getPhotos');
+            this.photoMultiArray = this.$store.getters.getPhotos;
+
+            ($('#loading-modal') as any).modal('hide');
+            $('#add-input').val('');
+            alert('アップロードが完了しました');
+          },
         }).modal('show');
-
-        const params = new FormData();
-        params.append('file', event.target.files[0]);
-        await axios.post('https://express.management/image', params)
-        .then((res) => {
-          alert('success');
-        })
-        .catch((err) => {
-          alert(err);
-        });
-
-        ($('#loading-modal') as any).modal('hide');
-        $('#add-input').val('');
-
-        // TODO 画面更新
-
-
-
-        alert('アップロードが完了しました');
       },
       onDeny: (el: any) => {
         $('#add-input').val('');
       },
+    }).modal('show');
+  }
+
+  private deletePhoto(id: number) {
+    this.confirmMessage = 'will you delete photograph really?';
+    ($('.ui.basic.modal.confirm') as any).modal({
+      closable: false,
+      onApprove: async (el: any) => {
+        ($('#loading-modal') as any).modal({
+          closable: false,
+          onVisible: async () => {
+            const currentUser = firebase.auth().currentUser!;
+            const token = await currentUser.getIdToken(true);
+            const header = {
+              Authorization: `Bearer ${token}`,
+            };
+
+            await axios.delete('https://express.management/photographs', {
+              headers: header,
+              params: {
+                photoId: id,
+              },
+            })
+            .then((res: any) => {
+              console.log(res.data.result);
+              if (res.data.result) {
+                alert('削除が完了しました');
+              } else {
+                alert('削除に失敗しました');
+              }
+            })
+            .catch((err) => {
+              alert(err);
+              return;
+            });
+
+            await this.$store.dispatch('getPhotos');
+            this.photoMultiArray = this.$store.getters.getPhotos;
+
+            ($('#loading-modal') as any).modal('hide');
+          },
+        }).modal('show');
+      },
+      // onDeny: (el: any) => {
+      // },
     }).modal('show');
   }
 
@@ -390,26 +694,35 @@ export default class ManagementUpload extends Vue {
       closable: false,
     }).modal('show');
 
-    await getVideo().then((videoInfo) => {
+    const video = document.querySelector('video')!;
+    let result = false;
+
+    await getVideo(id).then((videoInfo) => {
+      result = true;
       const buffer = Buffer.from(videoInfo.data);
       const blob = new Blob([buffer], {type: videoInfo.mimetype});
       const blobURL = window.URL.createObjectURL(blob);
-      document.querySelector('source')!.src = blobURL;
+      // document.querySelector('source')!.src = blobURL;
+      video.src = blobURL;
+      video.load();
+      video.play();
     }).catch((err) => {
-      alert(err);
+      alert('videoがアップロードされていません');
+      ($('#loading-modal') as any).modal('hide');
     });
 
     ($('#loading-modal') as any).modal('hide');
 
-    document.querySelector('video')!.play();
+    if (!result) {
+      return;
+    }
+
     this.$store.commit('setIsDisplay', {
       isDisplay: true,
     });
     this.$store.commit('setIsPlaying', {
       isPlaying: true,
     });
-    // this.isDisplay = true;
-    // this.isPlaying = true;
 
     $('.content, #sub-menu').css({
       opacity: 0,
@@ -483,6 +796,10 @@ export default class ManagementUpload extends Vue {
     height: 20px;
     display: none;
   }
+}
+
+.edit-thumbnail, .edit-video {
+  display: none;
 }
 
 .edit-photo-wrap {

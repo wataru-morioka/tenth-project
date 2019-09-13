@@ -332,7 +332,7 @@ const fadein = () => {
   });
 };
 
-const getVideo = () => {
+const getVideo = (id: number) => {
   return new Promise<VideoInfo>(async (resolve, reject) => {
     const currentUser = firebase.auth().currentUser!;
     const token = await currentUser.getIdToken(true);
@@ -341,6 +341,9 @@ const getVideo = () => {
     };
     await axios.get('https://express.management/video', {
         headers: header,
+        params: {
+          photoId: id,
+        },
     })
     .then((res) => {
       if (!res.data.result) {
@@ -391,18 +394,28 @@ export default class SubMenu extends Vue {
       closable: false,
     }).modal('show');
 
-    await getVideo().then((videoInfo) => {
+    const video = document.querySelector('video')!;
+    let result = false;
+
+    await getVideo(id).then((videoInfo) => {
+      result = true;
       const buffer = Buffer.from(videoInfo.data);
       const blob = new Blob([buffer], {type: videoInfo.mimetype});
       const blobURL = window.URL.createObjectURL(blob);
-      document.querySelector('source')!.src = blobURL;
+      video.src = blobURL;
+      video.load();
     }).catch((err) => {
-      alert(err);
+      alert('videoがアップロードされていません');
+      ($('#loading-modal') as any).modal('hide');
     });
 
     ($('#loading-modal') as any).modal('hide');
 
-    document.querySelector('video')!.play();
+    if (!result) {
+      return;
+    }
+
+    video.play();
     this.$store.commit('setIsDisplay', {
       isDisplay: true,
     });
