@@ -189,7 +189,7 @@ export default class ManagementUpload extends Vue {
     return blobURL;
   }
 
-  private mounted() {
+  private async mounted() {
     this.fadein();
     $('.content').scroll(() => {
       this.fadein();
@@ -204,6 +204,9 @@ export default class ManagementUpload extends Vue {
         });
       }
     });
+
+    await this.$store.dispatch('getPhotos');
+    this.photoMultiArray = this.$store.getters.getPhotos;
   }
 
   private created() {
@@ -365,6 +368,7 @@ export default class ManagementUpload extends Vue {
 
             await this.$store.dispatch('getPhotos');
             this.photoMultiArray = this.$store.getters.getPhotos;
+            $('#update-menu-bt').click();
 
             ($('#loading-modal') as any).modal('hide');
             $(target).val('');
@@ -538,6 +542,7 @@ export default class ManagementUpload extends Vue {
 
     await this.$store.dispatch('getPhotos');
     this.photoMultiArray = this.$store.getters.getPhotos;
+    $('#update-menu-bt').click();
 
     alert('更新が完了しました');
     $(target).prop('disabled', false);
@@ -591,6 +596,7 @@ export default class ManagementUpload extends Vue {
 
             await this.$store.dispatch('getPhotos');
             this.photoMultiArray = this.$store.getters.getPhotos;
+            $('#update-menu-bt').click();
 
             ($('#loading-modal') as any).modal('hide');
             $('#add-input').val('');
@@ -639,6 +645,7 @@ export default class ManagementUpload extends Vue {
 
             await this.$store.dispatch('getPhotos');
             this.photoMultiArray = this.$store.getters.getPhotos;
+            $('#update-menu-bt').click();
 
             ($('#loading-modal') as any).modal('hide');
           },

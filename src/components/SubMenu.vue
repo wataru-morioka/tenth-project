@@ -1,5 +1,6 @@
 <template lang='pug'>
   div#sub-menu
+    button#update-menu-bt(@click='updateMenuArray')
     div.menu-item(v-for='[id, title] in projectTitleMap', :key='id')
       a(href='#', @click.stop.prevent='play(id)')
         p(v-for='(char, charIndex) in Array.from(title)', :key='charIndex', :style='transitionDelay(0, 0.02, charIndex)')
@@ -383,6 +384,10 @@ export default class SubMenu extends Vue {
     return 'transition-delay: ' + delay + 's';
   }
 
+  private updateMenuArray(): void {
+    this.projectTitleMap = this.$store.getters.getProjectTitleMap;
+  }
+
   private async play(id: number): Promise<void> {
     const isDisplay = this.$store.getters.getIsDisplay;
     if ( isDisplay ) {
@@ -471,6 +476,10 @@ export default class SubMenu extends Vue {
   opacity: 0;
   transform: translate(0px, 50px);
   transition: 2s;
+
+  #update-menu-bt {
+    display: none;
+  }
 
   .menu-item {
     a p {

@@ -58,6 +58,7 @@ import { Component, Vue, Prop } from 'vue-property-decorator';
 import jQuery from 'jQuery';
 import axios from 'axios';
 import firebase from 'firebase/app';
+import flatpickr from 'flatpickr';
 
 class ContactInfo {
   public id: number;
@@ -166,7 +167,10 @@ export default class ManagementContact extends Vue {
   }
 
   private mounted() {
-    ($('.date-picker') as any).flatpickr();
+    const config =  {
+      disableMobile: true,
+    }
+    flatpickr('.date-picker', config);
   }
 
   private resetFlag(): void {

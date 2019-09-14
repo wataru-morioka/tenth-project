@@ -113,7 +113,7 @@ export default class VipMenuNav extends Vue {
   }
 
   private toWebrtc(): void {
-    this.$router.push({ name: 'mwebrtc' });
+    this.$router.push({ name: 'webrtc' });
   }
 }
 </script>

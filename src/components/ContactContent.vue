@@ -264,7 +264,7 @@ export default class ContactContent extends Vue {
       return;
     }
 
-    await ($('.ui.basic.modal') as any).modal({
+    await ($('#loading-modal') as any).modal({
       closable: false,
     }).modal('show');
 
@@ -284,7 +284,7 @@ export default class ContactContent extends Vue {
     //   ($('.ui.basic.modal')as any).modal('hide');
     // }, 3000);
 
-    axios.post('https://flask.site:443/contact', data, {
+    await axios.post('https://flask.site:443/contact', data, {
       headers: header,
     })
     .then((res) => {
@@ -305,7 +305,7 @@ export default class ContactContent extends Vue {
       console.log(err);
       console.log('送信に失敗しました');
     });
-    ($('.ui.basic.modal') as any).modal('hide');
+    ($('#loading-modal') as any).modal('hide');
   }
 }
 </script>
