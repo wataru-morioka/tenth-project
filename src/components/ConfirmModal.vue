@@ -1,5 +1,5 @@
 <template lang='pug'>
-  div#confirm-modal
+  div#confirmation-modal
     div#confirm-modal(class="ui basic modal confirm")
       div(class="content")
         p {{ confirmMessage }}
@@ -20,7 +20,7 @@ export default class ConfirmModal extends Vue {
 </script>
 
 <style scoped lang='scss'>
-#confirm-modal {
+#confirmation-modal {
   position: fixed;
 }
 

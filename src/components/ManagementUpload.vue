@@ -9,8 +9,8 @@ div
   div#add-image
     button(type=button class='ui inverted red button', @click='addPhoto($event)') add
     input#add-input(type='file', @change='onChangeAddPhoto($event)')
-    button(type=button class='ui inverted orange button', @click='addVideo($event)', style='display: none') add video
-    input#add-video-input(type='file', @change='onChangeAddVideo($event)')
+    //- button(type=button class='ui inverted orange button', @click='addVideo($event)', style='display: none') add video
+    //- input#add-video-input(type='file', @change='onChangeAddVideo($event)')
   div.content(class="ui two column divided grid", @click='stop')
     div.row(v-for='(photoArray, index) in photoMultiArray', :key='index', :style='firstChildRow(index)')
       div.column.left(:style='transitionDelay(0.2, index * 2)')
@@ -81,11 +81,8 @@ class PhotoInfo {
   public subTitle: string;
   public title: string;
   public mimetype: string;
-  // public fileName: string;
-  // public size: number;
   public data: Buffer;
   public createdDatetime: string;
-  // public modifiedDatetime: string;
 
   constructor(id: number, subTitle: string, title: string, mimetype: string, fileName: string,
               size: number, data: Buffer, createdDatetime: string, modifiedDatetime: string) {
@@ -93,31 +90,18 @@ class PhotoInfo {
     this.subTitle = subTitle;
     this.title = title;
     this.mimetype = mimetype;
-    // this.fileName = file_ame;
-    // this.size = size;
     this.data = data;
     this.createdDatetime = createdDatetime;
-    // this.modifiedDatetime = modifiedDatetime;
   }
 }
 
 class VideoInfo {
-  // public id: number;
   public mimetype: string;
-  // public fileName: string;
-  // public size: number;
   public data: Buffer;
-  // public createdDatetime: string;
-  // public modifiedDatetime: string;
 
   constructor(mimetype: string, data: Buffer) {
-    // this.id = id;
     this.mimetype = mimetype;
-    // this.fileName = file_ame;
-    // this.size = size;
     this.data = data;
-    // this.createdDatetime = createdDatetime;
-    // this.modifiedDatetime = modifiedDatetime;
   }
 }
 
@@ -236,12 +220,22 @@ export default class ManagementUpload extends Vue {
     });
   }
 
+  private getHeader(): Promise<any> {
+    return new Promise<any>(async (resolve, reject) => {
+      const currentUser = firebase.auth().currentUser!;
+      const token = await currentUser.getIdToken(true);
+      const header = {
+        Authorization: `Bearer ${token}`,
+      };
+      resolve(header);
+    });
+  }
+
    private async download(id: number): Promise<void> {
-    const currentUser = firebase.auth().currentUser!;
-    const token = await currentUser.getIdToken(true);
-    const header = {
-      Authorization: `Bearer ${token}`,
-    };
+    let header = {};
+    await this.getHeader().then((result) => {
+      header = result;
+    });
     axios.get('https://express.management/download', {
       headers: header,
       params: {
@@ -265,18 +259,16 @@ export default class ManagementUpload extends Vue {
 
   private async minify(id: number): Promise<void> {
     this.confirmMessage = 'will you minify thumbnail really?';
-    ($('.ui.basic.modal.confirm') as any).modal({
+    ($('#confirm-modal') as any).modal({
       closable: false,
       onApprove: async (el: any) => {
         ($('#loading-modal') as any).modal({
           closable: false,
           onVisible: async () => {
-            const currentUser = firebase.auth().currentUser!;
-            const token = await currentUser.getIdToken(true);
-            const header = {
-              Authorization: `Bearer ${token}`,
-            };
-
+            let header = {};
+            await this.getHeader().then((result) => {
+              header = result;
+            });
             await axios.get('https://express.management/minify', {
               headers: header,
               params: {
@@ -297,7 +289,7 @@ export default class ManagementUpload extends Vue {
             await this.$store.dispatch('getPhotos');
             this.photoMultiArray = this.$store.getters.getPhotos;
 
-            ($('#loading-modal') as any).modal('hide');
+            ($('.modal') as any).modal('hide');
           },
         }).modal('show');
       },
@@ -326,18 +318,16 @@ export default class ManagementUpload extends Vue {
   private async onChangeThumbnail(event: any, id: number): Promise<void> {
     const target = event.currentTarget;
     this.confirmMessage = 'will you change photograph really?';
-    ($('.ui.basic.modal.confirm') as any).modal({
+    ($('#confirm-modal') as any).modal({
       closable: false,
       onApprove: async (el: any) => {
         ($('#loading-modal') as any).modal({
           closable: false,
           onVisible: async () => {
-            const currentUser = firebase.auth().currentUser!;
-            const token = await currentUser.getIdToken(true);
-            const header = {
-              Authorization: `Bearer ${token}`,
-            };
-
+            let header = {};
+            await this.getHeader().then((result) => {
+              header = result;
+            });
             const body = new FormData();
             body.append('file', event.target.files[0]);
             body.append('photoId', String(id));
@@ -370,7 +360,7 @@ export default class ManagementUpload extends Vue {
             this.photoMultiArray = this.$store.getters.getPhotos;
             $('#update-menu-bt').click();
 
-            ($('#loading-modal') as any).modal('hide');
+            ($('.modal') as any).modal('hide');
             $(target).val('');
           },
         }).modal('show');
@@ -384,18 +374,16 @@ export default class ManagementUpload extends Vue {
   private async onChangeVideo(event: any, id: number): Promise<void> {
     const target = event.currentTarget;
     this.confirmMessage = 'will you change video really?';
-    ($('.ui.basic.modal.confirm') as any).modal({
+    ($('#confirm-modal') as any).modal({
       closable: false,
       onApprove: async (el: any) => {
         ($('#loading-modal') as any).modal({
           closable: false,
           onVisible: async () => {
-            const currentUser = firebase.auth().currentUser!;
-            const token = await currentUser.getIdToken(true);
-            const header = {
-              Authorization: `Bearer ${token}`,
-            };
-
+            let header = {};
+            await this.getHeader().then((result) => {
+              header = result;
+            });
             const body = new FormData();
             body.append('file', event.target.files[0]);
             body.append('photoId', String(id));
@@ -427,7 +415,7 @@ export default class ManagementUpload extends Vue {
             await this.$store.dispatch('getPhotos');
             this.photoMultiArray = this.$store.getters.getPhotos;
 
-            ($('#loading-modal') as any).modal('hide');
+            ($('.modal') as any).modal('hide');
             $(target).val('');
           },
         }).modal('show');
@@ -466,12 +454,10 @@ export default class ManagementUpload extends Vue {
 
     $(target).prop('disabled', true);
     $(target).addClass('loading');
-    const currentUser = firebase.auth().currentUser!;
-    const token = await currentUser.getIdToken(true);
-    const header = {
-      Authorization: `Bearer ${token}`,
-    };
-
+    let header = {};
+    await this.getHeader().then((result) => {
+      header = result;
+    });
     const body = {
       photoId: id,
       subTitle: $(input).val(),
@@ -516,12 +502,10 @@ export default class ManagementUpload extends Vue {
 
     $(target).prop('disabled', true);
     $(target).addClass('loading');
-    const currentUser = firebase.auth().currentUser!;
-    const token = await currentUser.getIdToken(true);
-    const header = {
-      Authorization: `Bearer ${token}`,
-    };
-
+    let header = {};
+    await this.getHeader().then((result) => {
+      header = result;
+    });
     const body = {
       photoId: id,
       title: $(input).val(),
@@ -570,18 +554,16 @@ export default class ManagementUpload extends Vue {
 
   private onChangeAddPhoto(event: any): void {
     this.confirmMessage = 'will you add photograph really?';
-    ($('.ui.basic.modal.confirm') as any).modal({
+    ($('#confirm-modal') as any).modal({
       closable: false,
       onApprove: async (el: any) => {
         ($('#loading-modal') as any).modal({
           closable: false,
           onVisible: async () => {
-            const currentUser = firebase.auth().currentUser!;
-            const token = await currentUser.getIdToken(true);
-            const header = {
-              Authorization: `Bearer ${token}`,
-            };
-
+            let header = {};
+            await this.getHeader().then((result) => {
+              header = result;
+            });
             const body = new FormData();
             body.append('file', event.target.files[0]);
             await axios.post('https://express.management/photographs', body, {
@@ -598,7 +580,7 @@ export default class ManagementUpload extends Vue {
             this.photoMultiArray = this.$store.getters.getPhotos;
             $('#update-menu-bt').click();
 
-            ($('#loading-modal') as any).modal('hide');
+            ($('.modal') as any).modal('hide');
             $('#add-input').val('');
             alert('アップロードが完了しました');
           },
@@ -612,18 +594,16 @@ export default class ManagementUpload extends Vue {
 
   private deletePhoto(id: number) {
     this.confirmMessage = 'will you delete photograph really?';
-    ($('.ui.basic.modal.confirm') as any).modal({
+    ($('#confirm-modal') as any).modal({
       closable: false,
       onApprove: async (el: any) => {
         ($('#loading-modal') as any).modal({
           closable: false,
           onVisible: async () => {
-            const currentUser = firebase.auth().currentUser!;
-            const token = await currentUser.getIdToken(true);
-            const header = {
-              Authorization: `Bearer ${token}`,
-            };
-
+            let header = {};
+            await this.getHeader().then((result) => {
+              header = result;
+            });
             await axios.delete('https://express.management/photographs', {
               headers: header,
               params: {
@@ -647,45 +627,9 @@ export default class ManagementUpload extends Vue {
             this.photoMultiArray = this.$store.getters.getPhotos;
             $('#update-menu-bt').click();
 
-            ($('#loading-modal') as any).modal('hide');
+            ($('.modal') as any).modal('hide');
           },
         }).modal('show');
-      },
-      // onDeny: (el: any) => {
-      // },
-    }).modal('show');
-  }
-
-  private onChangeAddVideo(event: any): void {
-    this.confirmMessage = 'will you add video really?';
-    ($('#confirm-modal') as any).modal({
-      closable: false,
-      onApprove: async (el: any) => {
-        ($('#loading-modal') as any).modal({
-            closable: false,
-        }).modal('show');
-
-        const params = new FormData();
-        params.append('file', event.target.files[0]);
-        await axios.post('https://express.management/video', params)
-        .then((res) => {
-          alert('success');
-        })
-        .catch((err) => {
-          alert(err);
-        });
-
-        ($('#loading-modal') as any).modal('hide');
-        $('#add-video-input').val('');
-
-        // TODO 画面更新
-
-
-
-        alert('アップロードが完了しました');
-      },
-      onDeny: (el: any) => {
-        $('#add-video-input').val('');
       },
     }).modal('show');
   }
@@ -709,16 +653,16 @@ export default class ManagementUpload extends Vue {
       const buffer = Buffer.from(videoInfo.data);
       const blob = new Blob([buffer], {type: videoInfo.mimetype});
       const blobURL = window.URL.createObjectURL(blob);
-      // document.querySelector('source')!.src = blobURL;
       video.src = blobURL;
       video.load();
       video.play();
     }).catch((err) => {
       alert('videoがアップロードされていません');
-      ($('#loading-modal') as any).modal('hide');
+      // ($('#loading-modal') as any).modal('hide');
     });
 
-    ($('#loading-modal') as any).modal('hide');
+    // ($('#loading-modal') as any).modal('hide');
+    ($('.modal') as any).modal('hide');
 
     if (!result) {
       return;
@@ -747,15 +691,12 @@ export default class ManagementUpload extends Vue {
       this.$store.commit('setIsPlaying', {
         isPlaying: false,
       });
-      // this.isPlaying = false;
-      // return;
     }
 
     document.querySelector('video')!.pause();
     this.$store.commit('setIsDisplay', {
       isDisplay: false,
     });
-    // this.isDisplay = false;
 
     $('.content, #sub-menu').css({
       opacity: 1,
