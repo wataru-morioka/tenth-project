@@ -95,57 +95,6 @@ class Result {
   }
 }
 
-const getContactList = (searchString: string = '', from: string = '',
-                        to: string = '', orderType: boolean = true) => {
-  return new Promise<Result>(async (resolve, reject) => {
-    const result = new Result();
-    const currentUser = firebase.auth().currentUser!;
-    const token = await currentUser.getIdToken(true);
-    const header = {
-      Authorization: `Bearer ${token}`,
-    };
-    await axios.get('https://express.management/contact', {
-        headers: header,
-        params: {
-          search: searchString,
-          type: orderType,
-          createdTo : to,
-        },
-    })
-    .then((res) => {
-      if (!res.data.result) {
-        console.log('contactリスト取得に失敗しました');
-        reject();
-        return;
-      }
-      console.log('contactリスト取得');
-      result.totalCount = res.data.totalCount;
-      const list = res.data.contactList;
-      console.log(list);
-      let contact: ContactInfo;
-      list.forEach((el: any) => {
-        contact = new ContactInfo(
-          el.id,
-          el.created_datetime,
-          el.account,
-          el.name,
-          el.organization,
-          el.state,
-          el.email,
-          el.phone,
-          el.message,
-        );
-        result.contactList.push(contact);
-      });
-      resolve(result);
-    })
-    .catch((err) => {
-      console.log('contactリスト取得に失敗しました');
-      reject();
-    });
-  });
-};
-
 @Component
 export default class ManagementContact extends Vue {
   private contactList: ContactInfo[] = [];
@@ -156,8 +105,54 @@ export default class ManagementContact extends Vue {
   private from: string = '';
   private to: string = '';
 
-  private async beforeCreate() {
-    await getContactList(this.searchString).then((result) => {
+  private async getContactList(searchString: string = '', from: string = '',
+                               to: string = '', orderType: boolean = true): Promise<Result> {
+    return new Promise<Result>(async (resolve, reject) => {
+      const result = new Result();
+      await axios.get('https://express.management/contact', {
+          headers: this.$store.state.authHeader,
+          params: {
+            search: searchString,
+            type: orderType,
+            createdTo : to,
+          },
+      })
+      .then((res) => {
+        if (!res.data.result) {
+          console.log('contactリスト取得に失敗しました');
+          reject();
+          return;
+        }
+        console.log('contactリスト取得');
+        result.totalCount = res.data.totalCount;
+        const list = res.data.contactList;
+        console.log(list);
+        let contact: ContactInfo;
+        list.forEach((el: any) => {
+          contact = new ContactInfo(
+            el.id,
+            el.created_datetime,
+            el.account,
+            el.name,
+            el.organization,
+            el.state,
+            el.email,
+            el.phone,
+            el.message,
+          );
+          result.contactList.push(contact);
+        });
+        resolve(result);
+      })
+      .catch((err) => {
+        console.log('contactリスト取得に失敗しました');
+        reject();
+      });
+    });
+  }
+
+  private async created() {
+    await this.getContactList(this.searchString).then((result) => {
       this.contactList = result.contactList;
       this.totalCount = result.totalCount;
     })
@@ -169,7 +164,7 @@ export default class ManagementContact extends Vue {
   private mounted() {
     const config =  {
       disableMobile: true,
-    }
+    };
     flatpickr('.date-picker', config);
   }
 
@@ -180,7 +175,7 @@ export default class ManagementContact extends Vue {
   private async search(): Promise<void> {
     this.isLoading = true;
     this.resetFlag();
-    await getContactList(this.searchString, this.from, this.to).then((result) => {
+    await this.getContactList(this.searchString, this.from, this.to).then((result) => {
       this.contactList = result.contactList;
       this.totalCount = result.totalCount;
     })
@@ -196,7 +191,7 @@ export default class ManagementContact extends Vue {
     this.from = '';
     this.to = '';
     this.searchString = '';
-    await getContactList().then((result) => {
+    await this.getContactList().then((result) => {
       this.contactList = result.contactList;
       this.totalCount = result.totalCount;
     })
@@ -209,7 +204,7 @@ export default class ManagementContact extends Vue {
   private async sort(order: number): Promise<void> {
     this.isLoading = true;
     this.isDescCreated = !this.isDescCreated;
-    await getContactList(this.searchString, this.from, this.to, this.isDescCreated).then((result) => {
+    await this.getContactList(this.searchString, this.from, this.to, this.isDescCreated).then((result) => {
       this.contactList = result.contactList;
       this.totalCount = result.totalCount;
     })

@@ -105,41 +105,6 @@ class VideoInfo {
   }
 }
 
-const getVideo = (id: number) => {
-  return new Promise<VideoInfo>(async (resolve, reject) => {
-    const currentUser = firebase.auth().currentUser!;
-    const token = await currentUser.getIdToken(true);
-    const header = {
-      Authorization: `Bearer ${token}`,
-    };
-
-    await axios.get('https://express.management/video', {
-        headers: header,
-        params: {
-          photoId: id,
-        },
-    })
-    .then((res) => {
-      if (!res.data.result) {
-        console.log('video取得に失敗しました');
-        reject();
-        return;
-      }
-      console.log('video取得');
-      const videoInfo = res.data.videoInfo;
-      const video = new VideoInfo(
-        videoInfo.mimetype,
-        videoInfo.data,
-      );
-      resolve(video);
-    })
-    .catch((err) => {
-      console.log('video取得に失敗しました');
-      reject();
-    });
-  });
-};
-
 @Component({
   components: {
     Modal,
@@ -148,8 +113,6 @@ const getVideo = (id: number) => {
   },
 })
 export default class ManagementUpload extends Vue {
-  // private isDisplay: boolean = false;
-  // private isPlaying: boolean = false;
   private confirmMessage: string = '';
   private photoMultiArray: PhotoInfo[][] = [];
   private videoSrc: string = '';
@@ -220,24 +183,44 @@ export default class ManagementUpload extends Vue {
     });
   }
 
-  private getHeader(): Promise<any> {
-    return new Promise<any>(async (resolve, reject) => {
+  private getVideo(id: number) {
+    return new Promise<VideoInfo>(async (resolve, reject) => {
       const currentUser = firebase.auth().currentUser!;
       const token = await currentUser.getIdToken(true);
       const header = {
         Authorization: `Bearer ${token}`,
       };
-      resolve(header);
+
+      await axios.get('https://express.management/video', {
+          headers: header,
+          params: {
+            photoId: id,
+          },
+      })
+      .then((res) => {
+        if (!res.data.result) {
+          console.log('video取得に失敗しました');
+          reject();
+          return;
+        }
+        console.log('video取得');
+        const videoInfo = res.data.videoInfo;
+        const video = new VideoInfo(
+          videoInfo.mimetype,
+          videoInfo.data,
+        );
+        resolve(video);
+      })
+      .catch((err) => {
+        console.log('video取得に失敗しました');
+        reject();
+      });
     });
   }
 
    private async download(id: number): Promise<void> {
-    let header = {};
-    await this.getHeader().then((result) => {
-      header = result;
-    });
     axios.get('https://express.management/download', {
-      headers: header,
+      headers: this.$store.state.authHeader,
       params: {
         photoId: id,
       },
@@ -265,12 +248,8 @@ export default class ManagementUpload extends Vue {
         ($('#loading-modal') as any).modal({
           closable: false,
           onVisible: async () => {
-            let header = {};
-            await this.getHeader().then((result) => {
-              header = result;
-            });
             await axios.get('https://express.management/minify', {
-              headers: header,
+              headers: this.$store.state.authHeader,
               params: {
                 photoId: id,
               },
@@ -293,8 +272,6 @@ export default class ManagementUpload extends Vue {
           },
         }).modal('show');
       },
-      // onDeny: (el: any) => {
-      // },
     }).modal('show');
   }
 
@@ -324,15 +301,11 @@ export default class ManagementUpload extends Vue {
         ($('#loading-modal') as any).modal({
           closable: false,
           onVisible: async () => {
-            let header = {};
-            await this.getHeader().then((result) => {
-              header = result;
-            });
             const body = new FormData();
             body.append('file', event.target.files[0]);
             body.append('photoId', String(id));
             await axios.put('https://express.management/photographs', body, {
-              headers: header,
+              headers: this.$store.state.authHeader,
             })
             .then((res: any) => {
               if (res.data.result) {
@@ -380,15 +353,11 @@ export default class ManagementUpload extends Vue {
         ($('#loading-modal') as any).modal({
           closable: false,
           onVisible: async () => {
-            let header = {};
-            await this.getHeader().then((result) => {
-              header = result;
-            });
             const body = new FormData();
             body.append('file', event.target.files[0]);
             body.append('photoId', String(id));
             await axios.put('https://express.management/video', body, {
-              headers: header,
+              headers: this.$store.state.authHeader,
             })
             .then((res: any) => {
               if (res.data.result) {
@@ -454,16 +423,12 @@ export default class ManagementUpload extends Vue {
 
     $(target).prop('disabled', true);
     $(target).addClass('loading');
-    let header = {};
-    await this.getHeader().then((result) => {
-      header = result;
-    });
     const body = {
       photoId: id,
       subTitle: $(input).val(),
     };
     await axios.put('https://express.management/photographs', body, {
-      headers: header,
+      headers: this.$store.state.authHeader,
     })
     .then((res: any) => {
       if (res.data.result) {
@@ -502,16 +467,12 @@ export default class ManagementUpload extends Vue {
 
     $(target).prop('disabled', true);
     $(target).addClass('loading');
-    let header = {};
-    await this.getHeader().then((result) => {
-      header = result;
-    });
     const body = {
       photoId: id,
       title: $(input).val(),
     };
     await axios.put('https://express.management/photographs', body, {
-      headers: header,
+      headers: this.$store.state.authHeader,
     })
     .then((res: any) => {
       if (res.data.result) {
@@ -560,14 +521,10 @@ export default class ManagementUpload extends Vue {
         ($('#loading-modal') as any).modal({
           closable: false,
           onVisible: async () => {
-            let header = {};
-            await this.getHeader().then((result) => {
-              header = result;
-            });
             const body = new FormData();
             body.append('file', event.target.files[0]);
             await axios.post('https://express.management/photographs', body, {
-              headers: header,
+              headers: this.$store.state.authHeader,
             })
             .then((res) => {
               console.log('photoアップロードが完了');
@@ -600,12 +557,8 @@ export default class ManagementUpload extends Vue {
         ($('#loading-modal') as any).modal({
           closable: false,
           onVisible: async () => {
-            let header = {};
-            await this.getHeader().then((result) => {
-              header = result;
-            });
             await axios.delete('https://express.management/photographs', {
-              headers: header,
+              headers: this.$store.state.authHeader,
               params: {
                 photoId: id,
               },
@@ -635,7 +588,7 @@ export default class ManagementUpload extends Vue {
   }
 
   private async play(id: number): Promise<void> {
-    const isDisplay = this.$store.getters.getIsDisplay;
+    const isDisplay = this.$store.getters.isVideoDisplay;
     if ( isDisplay ) {
       this.stop();
       return;
@@ -648,7 +601,7 @@ export default class ManagementUpload extends Vue {
     const video = document.querySelector('video')!;
     let result = false;
 
-    await getVideo(id).then((videoInfo) => {
+    await this.getVideo(id).then((videoInfo) => {
       result = true;
       const buffer = Buffer.from(videoInfo.data);
       const blob = new Blob([buffer], {type: videoInfo.mimetype});
@@ -669,10 +622,10 @@ export default class ManagementUpload extends Vue {
     }
 
     this.$store.commit('setIsDisplay', {
-      isDisplay: true,
+      isVideoDisplay: true,
     });
     this.$store.commit('setIsPlaying', {
-      isPlaying: true,
+      isVideoPlaying: true,
     });
 
     $('.content, #sub-menu').css({
@@ -686,16 +639,16 @@ export default class ManagementUpload extends Vue {
   }
 
   private stop(): void {
-    const isPlaying = this.$store.getters.getIsPlaying;
+    const isPlaying = this.$store.getters.isVideoPlaying;
     if (isPlaying) {
       this.$store.commit('setIsPlaying', {
-        isPlaying: false,
+        isVideoPlaying: false,
       });
     }
 
     document.querySelector('video')!.pause();
     this.$store.commit('setIsDisplay', {
-      isDisplay: false,
+      isVideoDisplay: false,
     });
 
     $('.content, #sub-menu').css({

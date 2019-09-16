@@ -389,7 +389,7 @@ export default class SubMenu extends Vue {
   }
 
   private async play(id: number): Promise<void> {
-    const isDisplay = this.$store.getters.getIsDisplay;
+    const isDisplay = this.$store.getters.isVideoDisplay;
     if ( isDisplay ) {
       this.stop();
       return;
@@ -411,10 +411,9 @@ export default class SubMenu extends Vue {
       video.load();
     }).catch((err) => {
       alert('videoがアップロードされていません');
-      ($('#loading-modal') as any).modal('hide');
     });
 
-    ($('#loading-modal') as any).modal('hide');
+    ($('.modal') as any).modal('hide');
 
     if (!result) {
       return;
@@ -422,13 +421,11 @@ export default class SubMenu extends Vue {
 
     video.play();
     this.$store.commit('setIsDisplay', {
-      isDisplay: true,
+      isVideoDisplay: true,
     });
     this.$store.commit('setIsPlaying', {
-      isPlaying: true,
+      isVideoPlaying: true,
     });
-    // this.isDisplay = true;
-    // this.isPlaying = true;
 
     $('.content, #sub-menu').css({
       opacity: 0,
@@ -441,20 +438,17 @@ export default class SubMenu extends Vue {
   }
 
   private stop(): void {
-    const isPlaying = this.$store.getters.getIsPlaying;
+    const isPlaying = this.$store.getters.isVideoPlaying;
     if (isPlaying) {
       this.$store.commit('setIsPlaying', {
-        isPlaying: false,
+        isVideoPlaying: false,
       });
-      // this.isPlaying = false;
-      // return;
     }
 
     document.querySelector('video')!.pause();
     this.$store.commit('setIsDisplay', {
-      isDisplay: false,
+      isVideoDisplay: false,
     });
-    // this.isDisplay = false;
 
     $('.content, #sub-menu').css({
       opacity: 1,

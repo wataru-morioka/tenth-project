@@ -31,10 +31,10 @@
               i(class='sort icon', v-if='sortedModified', :class='{ down: isDescModified, up: !isDescModified }')
             th.delete delete
         tbody
-          tr(v-for='account in accountList', :key='account.uid')
+          tr(v-for='(account, index) in accountList', :key='account.uid')
             td.edit
               input(type="text" name="public", hidden, :value='account.uid')
-              button(type=button class='ui inverted primary button', @click='edit($event)') edit
+              button(type=button class='ui inverted primary button', @click='edit($event, index)') edit
               button(type=button class='ui inverted secondary button', @click='confirm($event)', :disabled='isLoading') confirm
             td.webrtc
               div(class="ui toggle checkbox")
@@ -109,57 +109,6 @@ class Result {
   }
 }
 
-const getAccountList = (searchString: string = '', orderBy: number = -1, orderType: boolean = true) => {
-  return new Promise<Result>(async (resolve, reject) => {
-    const result = new Result();
-    const currentUser = firebase.auth().currentUser!;
-    const token = await currentUser.getIdToken(true);
-    const header = {
-      Authorization: `Bearer ${token}`,
-    };
-    await axios.get('https://django.service:443/api/service/account', {
-        headers: header,
-        params: {
-          search: searchString,
-          order: orderBy,
-          type: orderType,
-        },
-    })
-    .then((res) => {
-      if (!res.data.result) {
-        console.log('accountリスト取得に失敗しました');
-        reject();
-        return;
-      }
-      console.log('accountリスト取得');
-      result.totalCount = res.data.totalCount;
-      const list = res.data.accountList;
-      let account: AccountInfo;
-      list.forEach((el: any) => {
-        account = new AccountInfo(
-          el.uid,
-          el.delete_flag,
-          el.webrtc_flag,
-          el.admin_flag,
-          el.account,
-          el.name,
-          el.state,
-          el.login_count,
-          el.latest_login,
-          el.created_datetime,
-          el.modified_datetime,
-        );
-        result.accountList.push(account);
-      });
-      resolve(result);
-    })
-    .catch((err) => {
-      console.log('accountリスト取得に失敗しました');
-      reject();
-    });
-  });
-};
-
 @Component
 export default class ManagementAccount extends Vue {
   private accountList: AccountInfo[] = [];
@@ -174,8 +123,55 @@ export default class ManagementAccount extends Vue {
   private sortedModified: boolean = false;
   private sortedCreated: boolean = false;
 
-  private async beforeCreate() {
-    await getAccountList(this.searchString).then((result) => {
+  private getAccountList(searchString: string = '', orderBy: number = -1, orderType: boolean = true)
+  : Promise<Result> {
+    return new Promise<Result>(async (resolve, reject) => {
+      const result = new Result();
+      await axios.get('https://django.service:443/api/service/account', {
+          headers: this.$store.state.authHeader,
+          params: {
+            search: searchString,
+            order: orderBy,
+            type: orderType,
+          },
+      })
+      .then((res) => {
+        if (!res.data.result) {
+          console.log('accountリスト取得に失敗しました');
+          reject();
+          return;
+        }
+        console.log('accountリスト取得');
+        result.totalCount = res.data.totalCount;
+        const list = res.data.accountList;
+        let account: AccountInfo;
+        list.forEach((el: any) => {
+          account = new AccountInfo(
+            el.uid,
+            el.delete_flag,
+            el.webrtc_flag,
+            el.admin_flag,
+            el.account,
+            el.name,
+            el.state,
+            el.login_count,
+            el.latest_login,
+            el.created_datetime,
+            el.modified_datetime,
+          );
+          result.accountList.push(account);
+        });
+        resolve(result);
+      })
+      .catch((err) => {
+        console.log('accountリスト取得に失敗しました');
+        reject();
+      });
+    });
+  }
+
+  private async created() {
+    await this.getAccountList(this.searchString).then((result) => {
       this.accountList = result.accountList;
       this.totalCount = result.totalCount;
     })
@@ -200,7 +196,7 @@ export default class ManagementAccount extends Vue {
   private async search(): Promise<void> {
     this.isLoading = true;
     this.resetFlag();
-    await getAccountList(this.searchString).then((result) => {
+    await this.getAccountList(this.searchString).then((result) => {
       this.accountList = result.accountList;
       this.totalCount = result.totalCount;
     })
@@ -214,7 +210,7 @@ export default class ManagementAccount extends Vue {
     this.isLoading = true;
     this.resetFlag();
     this.searchString = '';
-    await getAccountList().then((result) => {
+    await this.getAccountList().then((result) => {
       this.accountList = result.accountList;
       this.totalCount = result.totalCount;
     })
@@ -259,7 +255,7 @@ export default class ManagementAccount extends Vue {
         break;
     }
 
-    await getAccountList(this.searchString, order, orderType).then((result) => {
+    await this.getAccountList(this.searchString, order, orderType).then((result) => {
       this.accountList = result.accountList;
       this.totalCount = result.totalCount;
     })
@@ -269,12 +265,14 @@ export default class ManagementAccount extends Vue {
     this.isLoading = false;
   }
 
-  private edit(event: any): void {
+  private async edit(event: any, index: number): Promise<void> {
     const target = event.currentTarget;
     const parent = $(target).closest('tr');
     const next = $(target).next('button');
 
     if ($(target).hasClass('secondary')) {
+      const tmp = this.accountList[index];
+      this.$set(this.accountList, index, tmp);
       $(target).removeClass('secondary');
       $(target).addClass('primary');
       $(next).removeClass('orange');
@@ -304,13 +302,6 @@ export default class ManagementAccount extends Vue {
     $(target).addClass('loading');
     this.isLoading = true;
 
-    // update
-    const currentUser = firebase.auth().currentUser!;
-    const token = await currentUser.getIdToken(true);
-    const header = {
-      Authorization: `Bearer ${token}`,
-    };
-
     const body = {
       uid: $(parent).children('.edit').find('input').val(),
       webrtc: $(parent).children('.webrtc').find('input').prop('checked'),
@@ -318,10 +309,8 @@ export default class ManagementAccount extends Vue {
       delete: $(parent).children('.delete').find('input').prop('checked'),
     };
 
-    console.log(body);
-
     await axios.put('https://django.service:443/api/service/account', body, {
-        headers: header,
+        headers: this.$store.state.authHeader,
     })
     .then((res) => {
       if (!res.data.result) {

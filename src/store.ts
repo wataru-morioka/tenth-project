@@ -14,11 +14,8 @@ export class PhotoInfo {
   public subTitle: string;
   public title: string;
   public mimetype: string;
-  // public fileName: string;
-  // public size: number;
   public data: Buffer;
   public createdDatetime: string;
-  // public modifiedDatetime: string;
 
   constructor(id: number, subTitle: string, title: string, mimetype: string, fileName: string,
               size: number, data: Buffer, createdDatetime: string, modifiedDatetime: string) {
@@ -26,11 +23,8 @@ export class PhotoInfo {
     this.subTitle = subTitle;
     this.title = title;
     this.mimetype = mimetype;
-    // this.fileName = file_ame;
-    // this.size = size;
     this.data = data;
     this.createdDatetime = createdDatetime;
-    // this.modifiedDatetime = modifiedDatetime;
   }
 }
 
@@ -120,8 +114,9 @@ export default new Vuex.Store({
     currentViewIndex: 0,
     photoMultiArray: new Array<PhotoInfo[]>(),
     projectTitleMap: new Map<number, string>(),
-    isDisplay: false,
-    isPlaying: false,
+    isVideoDisplay: false,
+    isVideoPlaying: false,
+    authHeader: {},
   },
   mutations: {
     setUser(state, payload) {
@@ -135,13 +130,6 @@ export default new Vuex.Store({
     setUserInfo(state, payload) {
       state.isLogin = payload.isLogin;
       state.isAnonymous = payload.isAnonymous;
-      state.uid = payload.uid;
-      state.idToken = payload.idToken;
-      state.email = payload.email;
-    },
-
-    changeStatus(state, payload) {
-      state.isLogin = payload.status;
     },
 
     setViewIndex(state, payload) {
@@ -151,20 +139,26 @@ export default new Vuex.Store({
     setPhotoMutiArray(state, payload) {
       state.photoMultiArray = payload.photoMultiArray;
       state.projectTitleMap = payload.projectTitleMap;
-      // state.photoMultiArray.splice(0, state.photoMultiArray.length);
-      // state.photoMultiArray.join(payload.photoMultiArray);
-      // state.projectTitleMap.clear();
-      // state.projectTitleMap = payload.projectTitleMap;
     },
+
     setInitVideoFlag(state, payload) {
-      state.isDisplay = false;
-      state.isPlaying = false;
+      state.isVideoDisplay = false;
+      state.isVideoPlaying = false;
     },
+
     setIsDisplay(state, payload) {
-      state.isDisplay = payload.isDisplay;
+      state.isVideoDisplay = payload.isVideoDisplay;
     },
+
     setIsPlaying(state, payload) {
-      state.isPlaying = payload.isPlaying;
+      state.isVideoPlaying = payload.isVideoPlaying;
+    },
+    setHeader(state, payload) {
+      state.authHeader = payload.authHeader;
+      state.displayName = payload.displayName;
+      state.idToken = payload.idToken;
+      state.uid = payload.uid;
+      state.email = payload.email;
     },
   },
   actions: {
@@ -179,18 +173,6 @@ export default new Vuex.Store({
       .then((res) => {
         commit('setUser', {
           name: res.data.name,
-        });
-      });
-    },
-
-    async post_test({ commit, state, rootState }) {
-      const body = {
-        idToken: this.state.idToken,
-      };
-      await axios.get('https://django.service/api/service/user')
-      .then((res) => {
-        commit('setDisplayName', {
-          displayName: res.data.name,
         });
       });
     },
@@ -212,17 +194,12 @@ export default new Vuex.Store({
       .then(async (result) => {
         console.log('google認証');
         // DBにアカウント登録
-        const currentUser = firebase.auth().currentUser!;
-        const token = await currentUser.getIdToken(true);
-        const header = {
-          Authorization: `Bearer ${token}`,
-        };
+        await this.dispatch('getHeader');
         const body = {
-          name: currentUser.displayName,
+          name: state.displayName,
         };
-
         await axios.post('https://django.service:443/api/service/account', body, {
-          headers: header,
+          headers: state.authHeader,
         })
         .then((res) => {
           if (!res.data.result) {
@@ -252,17 +229,13 @@ export default new Vuex.Store({
       firebase.auth().onAuthStateChanged( async (user) => {
         if (user) {
           this.dispatch('getPhotos');
+          await this.dispatch('getHeader');
 
           if (user.email != null && user.email.length > 0) {
             console.log('google認証済み');
-            // TODO ログインカウントインクリメント
-            const token = await user.getIdToken(true);
-            const header = {
-              Authorization: `Bearer ${token}`,
-            };
             const body = {};
             await axios.put('https://django.service:443/api/service/account', body, {
-              headers: header,
+              headers: state.authHeader,
             })
             .then((res) => {
               if (!res.data.result) {
@@ -281,7 +254,7 @@ export default new Vuex.Store({
             return;
           }
         } else {
-          console.log('匿名認証済み');
+          console.log('匿名認証');
           firebase.auth().signInAnonymously().catch((error) => {
             const errorCode = error.code;
             const errorMessage = error.message;
@@ -289,6 +262,7 @@ export default new Vuex.Store({
             console.log(error.message);
           });
         }
+        console.log('匿名認証済み');
         this.dispatch('setUserInfo', {
           isLoginAuth: false,
           isAnonymousAuth: true,
@@ -301,15 +275,28 @@ export default new Vuex.Store({
       if (currentUser == null) {
         return;
       }
-
       const token = await currentUser.getIdToken(true);
       this.commit('setUserInfo', {
         isLogin: isLoginAuth,
         isAnonymous: isAnonymousAuth,
-        uid: currentUser.uid,
-        idToken: token,
-        email: currentUser.email,
+      });
+    },
+
+    async getHeader({ commit, state, rootState }) {
+      const currentUser = firebase.auth().currentUser;
+      if (currentUser == null) {
+        return;
+      }
+      const token = await currentUser.getIdToken(true);
+      const header = {
+        Authorization: `Bearer ${token}`,
+      };
+      this.commit('setHeader', {
+        authHeader: header,
         displayName: currentUser.displayName,
+        idToken: token,
+        uid: currentUser.uid,
+        email: currentUser.email,
       });
     },
   },
@@ -326,11 +313,11 @@ export default new Vuex.Store({
     getProjectTitleMap: (state, getter) => {
       return state.projectTitleMap;
     },
-    getIsDisplay: (state, getters) => {
-      return state.isDisplay;
+    isVideoDisplay: (state, getters) => {
+      return state.isVideoDisplay;
     },
-    getIsPlaying: (state, getters) => {
-      return state.isPlaying;
+    isVideoPlaying: (state, getters) => {
+      return state.isVideoPlaying;
     },
   },
 });
