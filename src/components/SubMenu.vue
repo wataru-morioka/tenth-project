@@ -3,7 +3,7 @@
     button#update-menu-bt(@click='updateMenuArray')
     div.menu-item(v-for='[id, title] in projectTitleMap', :key='id')
       a(href='#', @click.stop.prevent='play(id)')
-        p(v-for='(char, charIndex) in Array.from(title)', :key='charIndex', :style='transitionDelay(0, 0.02, charIndex)')
+        p(v-for='(char, charIndex) in Array.from(title)', :key='charIndex', :style='transitionDelay2(0, 0.02, charIndex)')
           span {{ char }}
 
     //- div.menu-item(style='transition-delay: 2s;')
@@ -301,163 +301,40 @@
 </template>
 
 <script lang='ts'>
-import { Component, Vue } from 'vue-property-decorator';
+import Vue from 'vue';
+import { Component, Mixin, Mixins } from 'vue-mixin-decorator';
+// import { Component, Vue } from 'vue-property-decorator';
 import jQuery from 'jQuery';
 import axios from 'axios';
 import firebase from 'firebase/app';
-
-class VideoInfo {
-  // public id: number;
-  public mimetype: string;
-  // public fileName: string;
-  // public size: number;
-  public data: Buffer;
-  // public createdDatetime: string;
-  // public modifiedDatetime: string;
-
-  constructor(mimetype: string, data: Buffer) {
-    // this.id = id;
-    this.mimetype = mimetype;
-    // this.fileName = file_ame;
-    // this.size = size;
-    this.data = data;
-    // this.createdDatetime = createdDatetime;
-    // this.modifiedDatetime = modifiedDatetime;
-  }
-}
-
-const fadein = () => {
-  $('#sub-menu').css({
-    opacity: 1,
-    transform: 'translate(0px, 0px)',
-  });
-};
-
-const getVideo = (id: number) => {
-  return new Promise<VideoInfo>(async (resolve, reject) => {
-    const currentUser = firebase.auth().currentUser!;
-    const token = await currentUser.getIdToken(true);
-    const header = {
-      Authorization: `Bearer ${token}`,
-    };
-    await axios.get('https://express.management/video', {
-        headers: header,
-        params: {
-          photoId: id,
-        },
-    })
-    .then((res) => {
-      if (!res.data.result) {
-        console.log('video取得に失敗しました');
-        reject();
-        return;
-      }
-      console.log('video取得');
-      const videoInfo = res.data.videoInfo;
-      const video = new VideoInfo(
-        videoInfo.mimetype,
-        videoInfo.data,
-      );
-      resolve(video);
-    })
-    .catch((err) => {
-      console.log('video取得に失敗しました');
-      reject();
-    });
-  });
-};
+import VideoMixin from '@/components/VideoMixin.vue';
 
 @Component
-export default class SubMenu extends Vue {
+export default class SubMenu extends Mixins<VideoMixin>(VideoMixin) {
   private projectTitleMap: Map<number, string> = new Map<number, string>();
 
+  private fadein() {
+    $('#sub-menu').css({
+      opacity: 1,
+      transform: 'translate(0px, 0px)',
+    });
+  }
+
   private mounted() {
-    fadein();
+    this.fadein();
   }
 
   private created() {
     this.projectTitleMap = this.$store.getters.getProjectTitleMap;
   }
 
-  private transitionDelay(diff: number, rate: number, index: number): string {
+  private transitionDelay2(diff: number, rate: number, index: number): string {
     const delay = diff + rate * index;
     return 'transition-delay: ' + delay + 's';
   }
 
   private updateMenuArray(): void {
     this.projectTitleMap = this.$store.getters.getProjectTitleMap;
-  }
-
-  private async play(id: number): Promise<void> {
-    const isDisplay = this.$store.getters.isVideoDisplay;
-    if ( isDisplay ) {
-      this.stop();
-      return;
-    }
-
-    ($('#loading-modal') as any).modal({
-      closable: false,
-    }).modal('show');
-
-    const video = document.querySelector('video')!;
-    let result = false;
-
-    await getVideo(id).then((videoInfo) => {
-      result = true;
-      const buffer = Buffer.from(videoInfo.data);
-      const blob = new Blob([buffer], {type: videoInfo.mimetype});
-      const blobURL = window.URL.createObjectURL(blob);
-      video.src = blobURL;
-      video.load();
-    }).catch((err) => {
-      alert('videoがアップロードされていません');
-    });
-
-    ($('.modal') as any).modal('hide');
-
-    if (!result) {
-      return;
-    }
-
-    video.play();
-    this.$store.commit('setIsDisplay', {
-      isVideoDisplay: true,
-    });
-    this.$store.commit('setIsPlaying', {
-      isVideoPlaying: true,
-    });
-
-    $('.content, #sub-menu').css({
-      opacity: 0,
-    });
-
-    $('video').css({
-      'opacity': 1,
-      'z-index': 10,
-    });
-  }
-
-  private stop(): void {
-    const isPlaying = this.$store.getters.isVideoPlaying;
-    if (isPlaying) {
-      this.$store.commit('setIsPlaying', {
-        isVideoPlaying: false,
-      });
-    }
-
-    document.querySelector('video')!.pause();
-    this.$store.commit('setIsDisplay', {
-      isVideoDisplay: false,
-    });
-
-    $('.content, #sub-menu').css({
-      opacity: 1,
-    });
-
-    $('video').css({
-      'opacity': 0,
-      'z-index': -10,
-    });
   }
 }
 </script>

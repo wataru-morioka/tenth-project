@@ -4,14 +4,11 @@ div
   ConfirmModal(:confirmMessage='confirmMessage')
   div#sub-menu-wrap
     SubMenu
-  video(controls playsinline)
-    //- source(:src='videoSrc' type='video/mp4')
+  video(src='', controls playsinline)
   div#add-image
     button(type=button class='ui inverted red button', @click='addPhoto($event)') add
     input#add-input(type='file', @change='onChangeAddPhoto($event)')
-    //- button(type=button class='ui inverted orange button', @click='addVideo($event)', style='display: none') add video
-    //- input#add-video-input(type='file', @change='onChangeAddVideo($event)')
-  div.content(class="ui two column divided grid", @click='stop')
+  div.content(class='ui two column divided grid', @click='stop')
     div.row(v-for='(photoArray, index) in photoMultiArray', :key='index', :style='firstChildRow(index)')
       div.column.left(:style='transitionDelay(0.2, index * 2)')
         div.content-box.box-left
@@ -26,14 +23,9 @@ div
             i.huge.play.icon
             img(:src='setPhoto(index, 0)')
           div.subject
-            //- p {{ photoArray[0].subTitle }}
             input.sub-title(type='text', readonly=true, :value='photoArray[0].subTitle')
             button(type=button class='ui inverted primary button', @click='editSubTitle($event, photoArray[0].id)') edit
             h4 
-              //- p(v-for='(char, charIndex) in Array.from(photoArray[0].title)', :key='charIndex', :style='transitionDelay(0.02, charIndex)')
-              //-   span {{ char }}
-              //- span
-              //-   button(type=button class='ui inverted primary button', @click='editTitle($event)') edit
               input.title(type='text', readonly=true, :value='photoArray[0].title')
               button(type=button class='ui inverted primary button', @click='editTitle($event, photoArray[0].id)') edit
             button(type=button class='ui inverted yellow button', @click='minify(photoArray[0].id)') minify
@@ -52,13 +44,9 @@ div
             i.huge.play.icon
             img(:src='setPhoto(index, 1)')
           div.subject
-            //- p {{ photoArray[1].subTitle }}
             input.sub-title(type='text', readonly=true, :value='photoArray[1].subTitle')
             button(type=button class='ui inverted primary button', @click='editSubTitle($event, photoArray[1].id)') edit
             h4 
-              //- p(v-for='(char, charIndex) in Array.from(photoArray[1].title)', :key='charIndex', :style='transitionDelay(0.02, charIndex)')
-              //-   span {{ char }}
-              //- span
               input.title(type='text', readonly=true, :value='photoArray[1].title')
               button(type=button class='ui inverted primary button', @click='editTitle($event, photoArray[1].id)') edit
             button(type=button class='ui inverted yellow button', @click='minify(photoArray[1].id)') minify
@@ -67,11 +55,14 @@ div
 </template>
 
 <script lang='ts'>
-import { Component, Vue } from 'vue-property-decorator';
+import Vue from 'vue';
+import { Component, Mixin, Mixins } from 'vue-mixin-decorator';
+// import { Component, Vue } from 'vue-property-decorator';
 import { mapState } from 'vuex';
 import Modal from '@/components/Modal.vue';
 import ConfirmModal from '@/components/ConfirmModal.vue';
 import SubMenu from '@/components/SubMenu.vue';
+import VideoMixin from '@/components/VideoMixin.vue';
 import axios from 'axios';
 import jQuery from 'jQuery';
 import firebase from 'firebase/app';
@@ -95,16 +86,6 @@ class PhotoInfo {
   }
 }
 
-class VideoInfo {
-  public mimetype: string;
-  public data: Buffer;
-
-  constructor(mimetype: string, data: Buffer) {
-    this.mimetype = mimetype;
-    this.data = data;
-  }
-}
-
 @Component({
   components: {
     Modal,
@@ -112,7 +93,7 @@ class VideoInfo {
     SubMenu,
   },
 })
-export default class ManagementUpload extends Vue {
+export default class ManagementUpload extends Mixins<VideoMixin>(VideoMixin) {
   private confirmMessage: string = '';
   private photoMultiArray: PhotoInfo[][] = [];
   private videoSrc: string = '';
@@ -140,7 +121,7 @@ export default class ManagementUpload extends Vue {
     this.fadein();
     $('.content').scroll(() => {
       this.fadein();
-      this.stop();
+      (this as any).stop();
     });
 
     $('.project-row').each((index) => {
@@ -183,42 +164,7 @@ export default class ManagementUpload extends Vue {
     });
   }
 
-  private getVideo(id: number) {
-    return new Promise<VideoInfo>(async (resolve, reject) => {
-      const currentUser = firebase.auth().currentUser!;
-      const token = await currentUser.getIdToken(true);
-      const header = {
-        Authorization: `Bearer ${token}`,
-      };
-
-      await axios.get('https://express.management/video', {
-          headers: header,
-          params: {
-            photoId: id,
-          },
-      })
-      .then((res) => {
-        if (!res.data.result) {
-          console.log('video取得に失敗しました');
-          reject();
-          return;
-        }
-        console.log('video取得');
-        const videoInfo = res.data.videoInfo;
-        const video = new VideoInfo(
-          videoInfo.mimetype,
-          videoInfo.data,
-        );
-        resolve(video);
-      })
-      .catch((err) => {
-        console.log('video取得に失敗しました');
-        reject();
-      });
-    });
-  }
-
-   private async download(id: number): Promise<void> {
+  private async download(id: number): Promise<void> {
     axios.get('https://express.management/download', {
       headers: this.$store.state.authHeader,
       params: {
@@ -585,80 +531,6 @@ export default class ManagementUpload extends Vue {
         }).modal('show');
       },
     }).modal('show');
-  }
-
-  private async play(id: number): Promise<void> {
-    const isDisplay = this.$store.getters.isVideoDisplay;
-    if ( isDisplay ) {
-      this.stop();
-      return;
-    }
-
-    ($('#loading-modal') as any).modal({
-      closable: false,
-    }).modal('show');
-
-    const video = document.querySelector('video')!;
-    let result = false;
-
-    await this.getVideo(id).then((videoInfo) => {
-      result = true;
-      const buffer = Buffer.from(videoInfo.data);
-      const blob = new Blob([buffer], {type: videoInfo.mimetype});
-      const blobURL = window.URL.createObjectURL(blob);
-      video.src = blobURL;
-      video.load();
-      video.play();
-    }).catch((err) => {
-      alert('videoがアップロードされていません');
-      // ($('#loading-modal') as any).modal('hide');
-    });
-
-    // ($('#loading-modal') as any).modal('hide');
-    ($('.modal') as any).modal('hide');
-
-    if (!result) {
-      return;
-    }
-
-    this.$store.commit('setIsDisplay', {
-      isVideoDisplay: true,
-    });
-    this.$store.commit('setIsPlaying', {
-      isVideoPlaying: true,
-    });
-
-    $('.content, #sub-menu').css({
-      opacity: 0,
-    });
-
-    $('video').css({
-      'opacity': 1,
-      'z-index': 10,
-    });
-  }
-
-  private stop(): void {
-    const isPlaying = this.$store.getters.isVideoPlaying;
-    if (isPlaying) {
-      this.$store.commit('setIsPlaying', {
-        isVideoPlaying: false,
-      });
-    }
-
-    document.querySelector('video')!.pause();
-    this.$store.commit('setIsDisplay', {
-      isVideoDisplay: false,
-    });
-
-    $('.content, #sub-menu').css({
-      opacity: 1,
-    });
-
-    $('video').css({
-      'opacity': 0,
-      'z-index': -10,
-    });
   }
 }
 </script>

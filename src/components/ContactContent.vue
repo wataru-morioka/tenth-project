@@ -276,16 +276,9 @@ export default class ContactContent extends Vue {
       phone: this.phone,
       message: this.message,
     };
-    const header = {
-      Authorization: `Bearer ${this.$store.state.idToken}`,
-    };
-
-    // setTimeout(() => {
-    //   ($('.ui.basic.modal')as any).modal('hide');
-    // }, 3000);
 
     await axios.post('https://flask.site:443/contact', data, {
-      headers: header,
+      headers: this.$store.state.authHeader,
     })
     .then((res) => {
       if (!res.data.result) {

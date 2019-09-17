@@ -9,7 +9,7 @@ const https = require('https');
 
 Vue.use(Vuex);
 
-export class PhotoInfo {
+class PhotoInfo {
   public id: number;
   public subTitle: string;
   public title: string;
@@ -177,8 +177,8 @@ export default new Vuex.Store({
       });
     },
 
-    async getPhotos({ commit, state, rootState }) {
-      await getPhotoList().then((result) => {
+    getPhotos({ commit, state, rootState }) {
+      getPhotoList().then((result) => {
         this.commit('setPhotoMutiArray', {
           photoMultiArray: result.photoMultiArray,
           projectTitleMap: result.projectTitleMap,
