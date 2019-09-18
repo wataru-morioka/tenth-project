@@ -8,13 +8,31 @@
 <script lang='ts'>
 import { Component, Vue } from 'vue-property-decorator';
 import MainNav from '@/components/MainNav.vue';
+import Hls from 'hls.js';
 
 @Component({
   components: {
     MainNav,
   },
 })
-export default class Sauza extends Vue {}
+export default class Sauza extends Vue {
+  private mounted() {
+    const video = document.querySelector('video')!;
+    if (Hls.isSupported()) {
+      const hls = new Hls();
+      hls.loadSource('https://express.management/hls/sauza/index.m3u8');
+      hls.attachMedia(video);
+      hls.on(Hls.Events.MANIFEST_PARSED, () => {
+        video.play();
+      });
+    } else if (video.canPlayType('application/vnd.apple.mpegurl')) {
+      video.src = 'https://express.management/hls/sauza/index.m3u8';
+      video.addEventListener('loadedmetadata', () => {
+          video.play();
+      });
+    }
+  }
+}
 </script>
 
 <style scoped lang='scss'>

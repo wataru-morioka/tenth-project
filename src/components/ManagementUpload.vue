@@ -307,7 +307,7 @@ export default class ManagementUpload extends Mixins<VideoMixin>(VideoMixin) {
             })
             .then((res: any) => {
               if (res.data.result) {
-                console.log('photoアップロードが完了');
+                alert('アップロードが完了しました');
               } else {
                 alert('photoアップロードに失敗しました');
               }
@@ -315,8 +315,6 @@ export default class ManagementUpload extends Mixins<VideoMixin>(VideoMixin) {
             .catch((err) => {
               alert(err);
             });
-
-            alert('アップロードが完了しました');
 
             const parent = $(target).closest('.edit-photo-wrap');
             const uploadArea = $(parent).children('.upload-wrap');

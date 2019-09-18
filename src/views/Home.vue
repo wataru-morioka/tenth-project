@@ -1,7 +1,9 @@
 <template lang='pug'>
 div#home
-  video(id='home-video' autoplay muted playsinline)
+  video(id='home-video', autoplay muted playsinline)
+    //- source(src='' type='application/x-mpegURL')
     source(src='../assets/jagermeister.mp4' type='video/mp4')
+    //- source(src='../assets/hls/index.m3u8', type='application/x-mpegURL')
   MainNav
 </template>
 
@@ -9,13 +11,31 @@ div#home
 import { Component, Vue } from 'vue-property-decorator';
 import MainNav from '@/components/MainNav.vue';
 import BackImage from '@/components/BackImage.vue';
+import Hls from 'hls.js';
 
 @Component({
   components: {
     MainNav,
   },
 })
-export default class Home extends Vue {}
+export default class Home extends Vue {
+  private mounted() {
+    const video = document.querySelector('video')!;
+    if (Hls.isSupported()) {
+      const hls = new Hls();
+      hls.loadSource('https://express.management/hls/jagermeister/index.m3u8');
+      hls.attachMedia(video);
+      hls.on(Hls.Events.MANIFEST_PARSED, () => {
+        video.play();
+      });
+    } else if (video.canPlayType('application/vnd.apple.mpegurl')) {
+      video.src = 'https://express.management/hls/jagermeister/index.m3u8';
+      video.addEventListener('loadedmetadata', () => {
+          video.play();
+      });
+    }
+  }
+}
 </script>
 
 <style scoped lang='scss'>

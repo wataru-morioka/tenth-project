@@ -3,6 +3,7 @@ import Vue from 'vue';
 import { Component, Mixin, Mixins } from 'vue-mixin-decorator';
 import jQuery from 'jQuery';
 import axios from 'axios';
+import Hls from 'hls.js';
 
 class VideoInfo {
   public mimetype: string;
@@ -84,41 +85,85 @@ export default class VideoMixin extends Vue {
         const video = document.querySelector('video')!;
         let result = false;
 
-        await this.getVideo(id).then((videoInfo) => {
-            result = true;
-            const buffer = Buffer.from(videoInfo.data);
-            const blob = new Blob([buffer], {type: videoInfo.mimetype});
-            const blobURL = window.URL.createObjectURL(blob);
-            video.src = blobURL;
-            video.load();
-            video.play();
-        }).catch((err) => {
-            alert('videoがアップロードされていません');
-            ($('#loading-modal') as any).modal('hide');
-        });
+        if (Hls.isSupported()) {
+            const hls = new Hls();
+            hls.loadSource(`https://express.management/hls/video-${id}/index.m3u8`);
+            hls.attachMedia(video);
+            hls.on(Hls.Events.MANIFEST_PARSED, () => {
+                result = true;
+                // video.load();
+                video.play();
 
-        // ($('#loading-modal') as any).modal('hide');
-        ($('.modal') as any).modal('hide');
+                this.$store.commit('setIsDisplay', {
+                    isVideoDisplay: true,
+                });
+                this.$store.commit('setIsPlaying', {
+                    isVideoPlaying: true,
+                });
 
-        if (!result) {
-            return;
+                ($('.modal') as any).modal('hide');
+
+                $('.content, #sub-menu').css({
+                    opacity: 0,
+                });
+
+                $('video').css({
+                    'opacity': 1,
+                    'z-index': 10,
+                });
+            });
+
+            hls.on(Hls.Events.ERROR, (event, data) => {
+                ($('.modal') as any).modal('hide');
+                console.log(data);
+                if (data.details === 'manifestLoadError') {
+                    alert('videoがアップロードされていません');
+                }
+            });
+        } else if (video.canPlayType('application/vnd.apple.mpegurl')) {
+            video.src = `https://express.management/hls/video-${id}/index.m3u8`;
+            video.addEventListener('loadedmetadata', () => {
+                ($('.modal') as any).modal('hide');
+                // video.load();
+                video.play();
+            });
         }
 
-        this.$store.commit('setIsDisplay', {
-            isVideoDisplay: true,
-        });
-        this.$store.commit('setIsPlaying', {
-            isVideoPlaying: true,
-        });
+        // await this.getVideo(id).then((videoInfo) => {
+        //     result = true;
+        //     const buffer = Buffer.from(videoInfo.data);
+        //     const blob = new Blob([buffer], {type: videoInfo.mimetype});
+        //     const blobURL = window.URL.createObjectURL(blob);
+        //     video.src = blobURL;
+        //     video.load();
+        //     video.play();
+        // }).catch((err) => {
+        //     alert('videoがアップロードされていません');
+        //     ($('#loading-modal') as any).modal('hide');
+        // });
 
-        $('.content, #sub-menu').css({
-            opacity: 0,
-        });
+        // ($('#loading-modal') as any).modal('hide');
+        // ($('.modal') as any).modal('hide');
 
-        $('video').css({
-            'opacity': 1,
-            'z-index': 10,
-        });
+        // if (!result) {
+        //     return;
+        // }
+
+        // this.$store.commit('setIsDisplay', {
+        //     isVideoDisplay: true,
+        // });
+        // this.$store.commit('setIsPlaying', {
+        //     isVideoPlaying: true,
+        // });
+
+        // $('.content, #sub-menu').css({
+        //     opacity: 0,
+        // });
+
+        // $('video').css({
+        //     'opacity': 1,
+        //     'z-index': 10,
+        // });
     }
 }
 </script>

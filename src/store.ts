@@ -137,8 +137,12 @@ export default new Vuex.Store({
     },
 
     setPhotoMutiArray(state, payload) {
-      state.photoMultiArray = payload.photoMultiArray;
+      // state.photoMultiArray = payload.photoMultiArray;
+      state.photoMultiArray = [];
+      state.photoMultiArray = state.photoMultiArray.concat(payload.photoMultiArray);
       state.projectTitleMap = payload.projectTitleMap;
+      // state.projectTitleMap = new Map<number, string>();
+      // Object.assign(state.projectTitleMap, payload.projectTitleMap);
     },
 
     setInitVideoFlag(state, payload) {
@@ -189,7 +193,9 @@ export default new Vuex.Store({
     },
 
     async login({ commit, state, rootState }) {
+      console.log('test');
       const provider = new firebase.auth.GoogleAuthProvider();
+      console.log(provider);
       await firebase.auth().signInWithPopup(provider)
       .then(async (result) => {
         console.log('google認証');
@@ -211,6 +217,7 @@ export default new Vuex.Store({
           console.log('サーバのログイン処理に失敗しました');
         });
       }).catch((error) => {
+        console.log(error);
         console.log('ログインに失敗しました');
       });
     },
@@ -275,7 +282,9 @@ export default new Vuex.Store({
       if (currentUser == null) {
         return;
       }
-      const token = await currentUser.getIdToken(true);
+      const token = await currentUser.getIdToken(true).catch((err) => {
+        console.log(err);
+      });
       this.commit('setUserInfo', {
         isLogin: isLoginAuth,
         isAnonymous: isAnonymousAuth,
@@ -287,7 +296,9 @@ export default new Vuex.Store({
       if (currentUser == null) {
         return;
       }
-      const token = await currentUser.getIdToken(true);
+      const token = await currentUser.getIdToken(true).catch((err) => {
+        console.log(err);
+      });
       const header = {
         Authorization: `Bearer ${token}`,
       };

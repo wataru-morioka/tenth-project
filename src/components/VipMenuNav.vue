@@ -12,7 +12,7 @@
           p(style='transition-delay: 0.06s')
             span E
       div.rotate-menu
-        a(href='#', @click.stop.prevent='toMANAGEMENT')
+        a(href='#', @click.stop.prevent='toManagement')
           p(style='transition-delay: 0s')
             span M
           p(style='transition-delay: 0.02s')
@@ -34,7 +34,7 @@
           p(style='transition-delay: 0.18s')
             span T
       div.rotate-menu
-        a(href='#', @click.stop.prevent='toSERVICE')
+        a(href='#', @click.stop.prevent='toService')
           p(style='transition-delay: 0s')
             span S
           p(style='transition-delay: 0.02s')
@@ -50,7 +50,7 @@
           p(style='transition-delay: 0.12s')
             span E
       div.rotate-menu
-        a(href='#', @click.stop.prevent='toWEBRTC')
+        a(href='#', @click.stop.prevent='toWebrtc')
           p(style='transition-delay: 0s')
             span W
           p(style='transition-delay: 0.02s')

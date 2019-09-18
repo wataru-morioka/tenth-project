@@ -320,11 +320,16 @@ export default class SubMenu extends Mixins<VideoMixin>(VideoMixin) {
     });
   }
 
-  private mounted() {
+  // private async beforeCreate() {
+  //   await this.$store.dispatch('checkLoginStatus');
+  //   this.projectTitleMap = this.$store.getters.getProjectTitleMap;
+  // }
+
+  private async mounted() {
     this.fadein();
   }
 
-  private created() {
+  private async created() {
     this.projectTitleMap = this.$store.getters.getProjectTitleMap;
   }
 
