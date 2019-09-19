@@ -137,9 +137,9 @@ export default new Vuex.Store({
     },
 
     setPhotoMutiArray(state, payload) {
-      // state.photoMultiArray = payload.photoMultiArray;
-      state.photoMultiArray = [];
-      state.photoMultiArray = state.photoMultiArray.concat(payload.photoMultiArray);
+      state.photoMultiArray = payload.photoMultiArray;
+      // state.photoMultiArray = [];
+      // state.photoMultiArray = state.photoMultiArray.concat(payload.photoMultiArray);
       state.projectTitleMap = payload.projectTitleMap;
       // state.projectTitleMap = new Map<number, string>();
       // Object.assign(state.projectTitleMap, payload.projectTitleMap);
@@ -181,8 +181,8 @@ export default new Vuex.Store({
       });
     },
 
-    getPhotos({ commit, state, rootState }) {
-      getPhotoList().then((result) => {
+    async getPhotos({ commit, state, rootState }) {
+      await getPhotoList().then((result) => {
         this.commit('setPhotoMutiArray', {
           photoMultiArray: result.photoMultiArray,
           projectTitleMap: result.projectTitleMap,

@@ -298,7 +298,7 @@ export default class ContactContent extends Vue {
       console.log(err);
       console.log('送信に失敗しました');
     });
-    ($('#loading-modal') as any).modal('hide');
+    ($('.modal') as any).modal('hide');
   }
 }
 </script>

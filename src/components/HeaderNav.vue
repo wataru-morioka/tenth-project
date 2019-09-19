@@ -136,7 +136,7 @@ export default class HeaderNav extends Vue {
 
 <!-- Add 'scoped' attribute to limit CSS to this component only -->
 <style scoped lang='scss'>
-$menu-color: #ffffff77;
+$menu-color: #ffffffdf;
 
 #header {
   display: flex;

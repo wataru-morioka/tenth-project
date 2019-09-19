@@ -1,7 +1,8 @@
 <template lang='pug'>
   div#jagermeister
-    video(id='jagermeister-video' autoplay muted playsinline)
-      source(src='../assets/jager.mp4' type='video/mp4')
+    video#jager-video(muted playsinline)
+      //- source(src='../assets/jager.mp4' type='video/mp4')
+      //- source(src='' type='video/mp4')
     MainNav
 </template>
 
@@ -17,7 +18,7 @@ import Hls from 'hls.js';
 })
 export default class Jagermeister extends Vue {
   private mounted() {
-    const video = document.querySelector('video')!;
+    const video = document.getElementById('jager-video') as HTMLVideoElement;
     if (Hls.isSupported()) {
       const hls = new Hls();
       hls.loadSource('https://express.management/hls/jager/index.m3u8');
@@ -46,7 +47,7 @@ export default class Jagermeister extends Vue {
   animation-duration: 4s;
 }
  
-#jagermeister-video {
+#jager-video {
   position: absolute;
   top: 0;
   left: 0;

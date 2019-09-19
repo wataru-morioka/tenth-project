@@ -1,5 +1,6 @@
 <template lang='pug'>
   div.content(class="ui two column divided grid", @click='stop')
+    Modal
     div.row(style='margin-top: 70px;')
       div.column.left(style='transition-delay: 2s;')
         div.content-box.box-left#video-1(@click='play($event)')
@@ -413,11 +414,12 @@
 
 <script lang='ts'>
 import { Component, Vue } from 'vue-property-decorator';
+import Modal from '@/components/Modal.vue';
 import jQuery from 'jQuery';
 
 @Component({
   components: {
-    // SubMenu,
+    Modal,
   },
 })
 export default class ProjectContent extends Vue {
@@ -465,18 +467,58 @@ export default class ProjectContent extends Vue {
       return;
     }
 
-    document.querySelector('video')!.play();
-    this.isDisplay = true;
-    this.isPlaying = true;
+    ($('#loading-modal') as any).modal({
+      closable: false,
+    }).modal('show');
 
-    $('.content, #sub-menu').css({
-      opacity: 0,
-    });
+    setTimeout(() => {
+      const video = document.getElementById('project-video') as HTMLVideoElement;
+      ($('.modal') as any).modal('hide');
+      // video.src = '../assets/jager.mp4';
+      // video.load();
+      video.play();
+      this.isDisplay = true;
+      this.isPlaying = true;
 
-    $('video').css({
-      'opacity': 1,
-      'z-index': 10,
-    });
+      this.$store.commit('setIsDisplay', {
+        isVideoDisplay: true,
+      });
+      this.$store.commit('setIsPlaying', {
+        isVideoPlaying: true,
+      });
+
+      $('.content, #sub-menu').css({
+        opacity: 0,
+      });
+
+      $('#project-video').css({
+        'opacity': 1,
+        'z-index': 10,
+      });
+    }, 1000);
+
+    // const video = document.getElementById('project-video') as HTMLVideoElement;
+    // // video.src = '../assets/jager.mp4';
+    // // video.load();
+    // video.play();
+    // this.isDisplay = true;
+    // this.isPlaying = true;
+
+    // this.$store.commit('setIsDisplay', {
+    //   isVideoDisplay: true,
+    // });
+    // this.$store.commit('setIsPlaying', {
+    //   isVideoPlaying: true,
+    // });
+
+    // $('.content, #sub-menu').css({
+    //   opacity: 0,
+    // });
+
+    // $('#project-video').css({
+    //   'opacity': 1,
+    //   'z-index': 10,
+    // });
   }
 
   private stop(): void {
@@ -485,14 +527,22 @@ export default class ProjectContent extends Vue {
       return;
     }
 
-    document.querySelector('video')!.pause();
+    this.$store.commit('setIsPlaying', {
+      isVideoPlaying: false,
+    });
+
+    this.$store.commit('setIsDisplay', {
+      isVideoDisplay: false,
+    });
+
+    (document.getElementById('project-video') as HTMLVideoElement).pause();
     this.isDisplay = false;
 
     $('.content, #sub-menu').css({
       opacity: 1,
     });
 
-    $('video').css({
+    $('#project-video').css({
       'opacity': 0,
       'z-index': -10,
     });

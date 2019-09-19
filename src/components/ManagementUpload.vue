@@ -4,7 +4,7 @@ div
   ConfirmModal(:confirmMessage='confirmMessage')
   div#sub-menu-wrap
     SubMenu
-  video(src='', controls playsinline)
+  video#project-video(controls playsinline)
   div#add-image
     button(type=button class='ui inverted red button', @click='addPhoto($event)') add
     input#add-input(type='file', @change='onChangeAddPhoto($event)')
@@ -621,7 +621,7 @@ video {
   bottom: 0;
   margin: auto;
   width: 40%;
-  transition: 0.2s;
+  transition: 1s;
   z-index: -10;
 }
 
@@ -657,7 +657,7 @@ img {
   // height: 100%;
   opacity: 0;
   transform: translate(0px, 30px) translate3d(0, 0, 0);
-  transition: 2s;
+  transition: 1s;
   will-change: transform;
   -ms-filter: blur(30px);
   filter: blur(30px);

@@ -1,7 +1,8 @@
 <template lang='pug'>
   div#sauza
-    video(id='sauza-video' autoplay muted playsinline)
-      source(src='../assets/sauza.mp4' type='video/mp4')
+    video#sauza-video(muted playsinline)
+      //- source(src='../assets/sauza.mp4' type='video/mp4')
+      //- source(src='' type='video/mp4')
     MainNav
 </template>
 
@@ -17,7 +18,7 @@ import Hls from 'hls.js';
 })
 export default class Sauza extends Vue {
   private mounted() {
-    const video = document.querySelector('video')!;
+    const video = document.getElementById('sauza-video') as HTMLVideoElement;
     if (Hls.isSupported()) {
       const hls = new Hls();
       hls.loadSource('https://express.management/hls/sauza/index.m3u8');

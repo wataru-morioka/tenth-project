@@ -23,11 +23,11 @@ export default class VideoMixin extends Vue {
             return;
         }
 
+        (document.getElementById('project-video') as HTMLVideoElement).pause();
+
         this.$store.commit('setIsPlaying', {
             isVideoPlaying: false,
         });
-
-        document.querySelector('video')!.pause();
         this.$store.commit('setIsDisplay', {
             isVideoDisplay: false,
         });
@@ -35,8 +35,7 @@ export default class VideoMixin extends Vue {
         $('.content, #sub-menu').css({
             opacity: 1,
         });
-
-        $('video').css({
+        $('#project-video').css({
             'opacity': 0,
             'z-index': -10,
         });
@@ -82,52 +81,101 @@ export default class VideoMixin extends Vue {
             closable: false,
         }).modal('show');
 
-        const video = document.querySelector('video')!;
-        let result = false;
+        setTimeout(() => {
+            const video = document.getElementById('project-video') as HTMLVideoElement;
+            let result = false;
 
-        if (Hls.isSupported()) {
-            const hls = new Hls();
-            hls.loadSource(`https://express.management/hls/video-${id}/index.m3u8`);
-            hls.attachMedia(video);
-            hls.on(Hls.Events.MANIFEST_PARSED, () => {
-                result = true;
-                // video.load();
-                video.play();
+            if (Hls.isSupported()) {
+                const hls = new Hls();
+                hls.loadSource(`https://express.management/hls/video-${id}/index.m3u8`);
+                hls.attachMedia(video);
+                hls.on(Hls.Events.MANIFEST_PARSED, () => {
+                    result = true;
+                    // video.load();
+                    video.play();
 
-                this.$store.commit('setIsDisplay', {
-                    isVideoDisplay: true,
+                    this.$store.commit('setIsDisplay', {
+                        isVideoDisplay: true,
+                    });
+                    this.$store.commit('setIsPlaying', {
+                        isVideoPlaying: true,
+                    });
+
+                    ($('.modal') as any).modal('hide');
+
+                    $('.content, #sub-menu').css({
+                        opacity: 0,
+                    });
+
+                    $('#project-video').css({
+                        'opacity': 1,
+                        'z-index': 10,
+                    });
                 });
-                this.$store.commit('setIsPlaying', {
-                    isVideoPlaying: true,
+
+                hls.on(Hls.Events.ERROR, (event, data) => {
+                    ($('.modal') as any).modal('hide');
+                    console.log(data);
+                    if (data.details === 'manifestLoadError') {
+                        alert('videoがアップロードされていません');
+                    }
                 });
-
-                ($('.modal') as any).modal('hide');
-
-                $('.content, #sub-menu').css({
-                    opacity: 0,
+            } else if (video.canPlayType('application/vnd.apple.mpegurl')) {
+                video.src = `https://express.management/hls/video-${id}/index.m3u8`;
+                video.addEventListener('loadedmetadata', () => {
+                    ($('.modal') as any).modal('hide');
+                    // video.load();
+                    video.play();
                 });
+            }
+        }, 1000);
 
-                $('video').css({
-                    'opacity': 1,
-                    'z-index': 10,
-                });
-            });
+        // const video = document.getElementById('project-video') as HTMLVideoElement;
+        // let result = false;
 
-            hls.on(Hls.Events.ERROR, (event, data) => {
-                ($('.modal') as any).modal('hide');
-                console.log(data);
-                if (data.details === 'manifestLoadError') {
-                    alert('videoがアップロードされていません');
-                }
-            });
-        } else if (video.canPlayType('application/vnd.apple.mpegurl')) {
-            video.src = `https://express.management/hls/video-${id}/index.m3u8`;
-            video.addEventListener('loadedmetadata', () => {
-                ($('.modal') as any).modal('hide');
-                // video.load();
-                video.play();
-            });
-        }
+        // if (Hls.isSupported()) {
+        //     const hls = new Hls();
+        //     hls.loadSource(`https://express.management/hls/video-${id}/index.m3u8`);
+        //     hls.attachMedia(video);
+        //     hls.on(Hls.Events.MANIFEST_PARSED, () => {
+        //         result = true;
+        //         // video.load();
+        //         video.play();
+
+        //         this.$store.commit('setIsDisplay', {
+        //             isVideoDisplay: true,
+        //         });
+        //         this.$store.commit('setIsPlaying', {
+        //             isVideoPlaying: true,
+        //         });
+
+        //         ($('.modal') as any).modal('hide');
+
+        //         $('.content, #sub-menu').css({
+        //             opacity: 0,
+        //         });
+
+        //         $('#project-video').css({
+        //             'opacity': 1,
+        //             'z-index': 10,
+        //         });
+        //     });
+
+        //     hls.on(Hls.Events.ERROR, (event, data) => {
+        //         ($('.modal') as any).modal('hide');
+        //         console.log(data);
+        //         if (data.details === 'manifestLoadError') {
+        //             alert('videoがアップロードされていません');
+        //         }
+        //     });
+        // } else if (video.canPlayType('application/vnd.apple.mpegurl')) {
+        //     video.src = `https://express.management/hls/video-${id}/index.m3u8`;
+        //     video.addEventListener('loadedmetadata', () => {
+        //         ($('.modal') as any).modal('hide');
+        //         // video.load();
+        //         video.play();
+        //     });
+        // }
 
         // await this.getVideo(id).then((videoInfo) => {
         //     result = true;

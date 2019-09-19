@@ -19,7 +19,7 @@
         span T
     div#sub-menu-wrap
       SubMenu
-    video(controls playsinline)
+    video#project-video(controls playsinline)
       source(src='../assets/jager.mp4' type='video/mp4')
     ProjectContent
 </template>

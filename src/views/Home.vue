@@ -1,8 +1,9 @@
 <template lang='pug'>
 div#home
-  video(id='home-video', autoplay muted playsinline)
+  video#jagermeister-video(muted playsinline)
     //- source(src='' type='application/x-mpegURL')
-    source(src='../assets/jagermeister.mp4' type='video/mp4')
+    //- source(src='../assets/jagermeister.mp4' type='video/mp4')
+    //- source(src='' type='video/mp4')
     //- source(src='../assets/hls/index.m3u8', type='application/x-mpegURL')
   MainNav
 </template>
@@ -20,7 +21,7 @@ import Hls from 'hls.js';
 })
 export default class Home extends Vue {
   private mounted() {
-    const video = document.querySelector('video')!;
+    const video = document.getElementById('jagermeister-video') as HTMLVideoElement;
     if (Hls.isSupported()) {
       const hls = new Hls();
       hls.loadSource('https://express.management/hls/jagermeister/index.m3u8');
@@ -44,12 +45,12 @@ export default class Home extends Vue {
   height: 100vh;
   position: relative;
   overflow: hidden;
-  background: rgba(0, 0, 0, .6);
+  background: rgba(0, 0, 0, .8);
   animation-name: body-fadein;
   animation-duration: 1s;
 }
  
-#home-video {
+#jagermeister-video {
   position: absolute;
   top: 0;
   left: 0;
