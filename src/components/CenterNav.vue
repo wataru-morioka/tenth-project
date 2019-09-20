@@ -2,7 +2,7 @@
   div#center-nav
     div#center
       div.icon-wrap(@click='toPrev')
-        img.slide-icon(src='../assets/prev.png')
+        img.slide-icon.left(src='../assets/prev.png')
       div.icon-wrap(@click='toNext')
         img.slide-icon(src='../assets/next.png')
 </template>
@@ -68,6 +68,9 @@ $menu-color: #ffffff;
   margin-right: 15px;
   transition: 0.7s ;
   will-change: transform;
+  .left {
+    opacity: 0;
+  }
 }
 
 .icon-wrap:hover {

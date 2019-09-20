@@ -33,22 +33,22 @@
             span N
           p(style='transition-delay: 0.18s')
             span T
-      div.rotate-menu
-        a(href='#', @click.stop.prevent='toService')
-          p(style='transition-delay: 0s')
-            span S
-          p(style='transition-delay: 0.02s')
-            span E
-          p(style='transition-delay: 0.04s')
-            span R
-          p(style='transition-delay: 0.06s')
-            span V
-          p(style='transition-delay: 0.08s')
-            span I
-          p(style='transition-delay: 0.10s')
-            span C
-          p(style='transition-delay: 0.12s')
-            span E
+      //- div.rotate-menu
+      //-   a(href='#', @click.stop.prevent='toService')
+      //-     p(style='transition-delay: 0s')
+      //-       span S
+      //-     p(style='transition-delay: 0.02s')
+      //-       span E
+      //-     p(style='transition-delay: 0.04s')
+      //-       span R
+      //-     p(style='transition-delay: 0.06s')
+      //-       span V
+      //-     p(style='transition-delay: 0.08s')
+      //-       span I
+      //-     p(style='transition-delay: 0.10s')
+      //-       span C
+      //-     p(style='transition-delay: 0.12s')
+      //-       span E
       div.rotate-menu
         a(href='#', @click.stop.prevent='toWebrtc')
           p(style='transition-delay: 0s')
@@ -70,7 +70,7 @@
         div.divider
         div.item(@click='toHome') HOME
         div.item(@click='toManagement') MANAGEMENT
-        div.item(@click='toService') SERVICE
+        //- div.item(@click='toService') SERVICE
         div.item(@click='toWebrtc') WEBRTC
 </template>
 

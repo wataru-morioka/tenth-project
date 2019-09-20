@@ -136,7 +136,7 @@ export default class HeaderNav extends Vue {
 
 <!-- Add 'scoped' attribute to limit CSS to this component only -->
 <style scoped lang='scss'>
-$menu-color: #ffffffdf;
+$menu-color: #ffffffbf;
 
 #header {
   display: flex;
@@ -161,7 +161,7 @@ $menu-color: #ffffffdf;
 }
 
 a {
-  font-size: 11px;
+  font-size: 9px;
   color: $menu-color;
   p {
     color: $menu-color;
@@ -215,7 +215,7 @@ a {
 a {
   p {
     display: inline-block;
-    transition: 0.7s;
+    transition: 0.5s;
     will-change: transform;
   }
 } 

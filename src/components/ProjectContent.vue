@@ -441,7 +441,7 @@ export default class ProjectContent extends Vue {
   }
 
   private fadein(): void {
-    const offset = 30;
+    const offset = 200;
     const effectPos = $(window).height()! - offset;
     $('.column').each( function() {
       const thisPos = $(this).offset()!.top;
@@ -601,7 +601,7 @@ img {
   width: 100%;
   // height: 100%;
   opacity: 0;
-  transform: translate(0px, 30px) translate3d(0, 0, 0);
+  transform: translate(0px, 80px) translate3d(0, 0, 0);
   transition: 1s;
   will-change: transform;
   -ms-filter: blur(30px);

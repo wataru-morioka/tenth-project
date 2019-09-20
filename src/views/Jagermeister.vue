@@ -43,8 +43,8 @@ export default class Jagermeister extends Vue {
   position: relative;
   overflow: hidden;
   background: rgba(0, 0, 0, .8);
-  animation-name: body-fadein;
-  animation-duration: 4s;
+  // animation-name: body-fadein;
+  animation-duration: 1s;
 }
  
 #jager-video {

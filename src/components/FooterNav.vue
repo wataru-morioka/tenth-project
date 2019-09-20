@@ -38,21 +38,21 @@
           span N
         p(style='transition-delay: 0.18s')
           span T
-      a.extension(href='#', v-if='isLogin', @click.stop.prevent='toService')
-        p(style='transition-delay: 0s')
-          span S
-        p(style='transition-delay: 0.02s')
-          span E
-        p(style='transition-delay: 0.04s')
-          span R
-        p(style='transition-delay: 0.06s')
-          span V
-        p(style='transition-delay: 0.08s')
-          span I
-        p(style='transition-delay: 0.10s')
-          span C
-        p(style='transition-delay: 0.12s')
-          span E
+      //- a.extension(href='#', v-if='isLogin', @click.stop.prevent='toService')
+      //-   p(style='transition-delay: 0s')
+      //-     span S
+      //-   p(style='transition-delay: 0.02s')
+      //-     span E
+      //-   p(style='transition-delay: 0.04s')
+      //-     span R
+      //-   p(style='transition-delay: 0.06s')
+      //-     span V
+      //-   p(style='transition-delay: 0.08s')
+      //-     span I
+      //-   p(style='transition-delay: 0.10s')
+      //-     span C
+      //-   p(style='transition-delay: 0.12s')
+      //-     span E
       a.extension(href='#', v-if='isLogin', @click.stop.prevent='toWebrtc')
         p(style='transition-delay: 0s')
           span W
@@ -152,10 +152,9 @@ a {
 }
 
 .extension {
-  margin: 30px;
+  margin-left: 60px;
+  margin-right: 60px;
   color: $mes-color;
-  // font-weight: bold;
-  // font-size: 9px;
 
   p {
     display: inline-block;
