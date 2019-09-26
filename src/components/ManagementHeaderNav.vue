@@ -1,15 +1,19 @@
 <template lang='pug'>
   div#header-nav
+    div#management-sidebar(class="ui left sidebar inverted vertical menu")
+      a.item(@click='toAccount') ACCOUNT
+      a.item(@click='toUpload') UPLOAD
+      a.item(@click='toContact') CONTACT
     div#header
       div#management-dropdown(class="ui pointing link icon dropdown")
-        img.icon#header-logo(src='../assets/jager-logo.png')
-        i(class="dropdown icon")
-        div.menu
-          div.header CONTROLLER
-          div.divider
-          div.item(@click='toAccount') ACCOUNT
-          div.item(@click='toUpload') UPLOAD
-          div.item(@click='toContact') CONTACT
+        img.icon#header-logo(src='../assets/jager-logo.png', @click='openSidebar')
+        //- i(class="dropdown icon")
+        //- div.menu
+        //-   div.header CONTROLLER
+        //-   div.divider
+        //-   div.item(@click='toAccount') ACCOUNT
+        //-   div.item(@click='toUpload') UPLOAD
+        //-   div.item(@click='toContact') CONTACT
       VipMenuNav
 </template>
 
@@ -28,6 +32,7 @@ const fs = require('fs');
 })
 export default class ManagementHeaderNav extends Vue {
   private isDroped: boolean = false;
+  private isOpen: boolean = false;
 
   private mounted() {
     ($('#management-dropdown') as any).dropdown({
@@ -39,18 +44,36 @@ export default class ManagementHeaderNav extends Vue {
         $('.content').css('z-index', '0');
       },
     });
+
+    ($('#management-sidebar') as any).sidebar({
+      onShow: () => {
+        this.isOpen = true;
+      },
+      onHide: () => {
+        this.isOpen = false;
+      },
+    })
+    .sidebar('setting', 'transition', 'push')
+    .sidebar('toggle');
+  }
+
+  private openSidebar(): void {
+    ($('#management-sidebar') as any).sidebar('show');
   }
 
   private toAccount(): void {
     this.$router.push({ name: 'management-account' });
+    ($('#management-sidebar') as any).sidebar('hide');
   }
 
   private toUpload(): void {
     this.$router.push({ name: 'management-upload' });
+    ($('#management-sidebar') as any).sidebar('hide');
   }
 
   private toContact(): void {
     this.$router.push({ name: 'management-contact' });
+    ($('#management-sidebar') as any).sidebar('hide');
   }
 }
 </script>
@@ -71,6 +94,12 @@ $menu-color: #ffffff77;
   height: 50px;
   cursor: pointer;
   opacity: .8;
+}
+
+#management-sidebar {
+  .item {
+    color: #ffffff77;
+  }
 }
 
 .menu {
