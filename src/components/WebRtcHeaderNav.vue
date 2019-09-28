@@ -1,14 +1,17 @@
 <template lang='pug'>
   div#header-nav
+    div#webrtc-sidebar(class="ui left sidebar inverted vertical menu")
+      a.item(@click='toChat') CHAT
+      a.item(@click='toAccount') ACCOUNT
     div#header
       div#webrtc-dropdown(class="ui pointing link icon dropdown")
-        img.icon#header-logo(src='../assets/jager-logo.png')
-        i(class="dropdown icon")
-        div.menu
-          div.header CONTROLLER
-          div.divider
-          div.item(@click='toChat') CHAT
-          div.item(@click='toTransfer') TRANSFER
+        img.icon#header-logo(src='../assets/jager-logo.png', @click='openSidebar')
+        //- i(class="dropdown icon")
+        //- div.menu
+        //-   div.header CONTROLLER
+        //-   div.divider
+        //-   div.item(@click='toChat') CHAT
+        //-   div.item(@click='toTransfer') TRANSFER
       VipMenuNav
 </template>
 
@@ -27,6 +30,7 @@ const fs = require('fs');
 })
 export default class WebRtcHeaderNav extends Vue {
   private isDroped: boolean = false;
+  private isOpen: boolean = false;
 
   private mounted() {
     ($('#webrtc-dropdown') as any).dropdown({
@@ -38,14 +42,31 @@ export default class WebRtcHeaderNav extends Vue {
         $('.content').css('z-index', '0');
       },
     });
+
+    ($('#webrtc-sidebar') as any).sidebar({
+      onShow: () => {
+        this.isOpen = true;
+      },
+      onHide: () => {
+        this.isOpen = false;
+      },
+    })
+    .sidebar('setting', 'transition', 'push')
+    .sidebar('toggle');
+  }
+
+  private openSidebar(): void {
+    ($('#webrtc-sidebar') as any).sidebar('show');
   }
 
   private toChat(): void {
     this.$router.push({ name: 'webrtc-chat' });
+    ($('#webrtc-sidebar') as any).sidebar('hide');
   }
 
-  private toTransfer(): void {
-    this.$router.push({ name: 'webrtc-transfer' });
+  private toAccount(): void {
+    this.$router.push({ name: 'webrtc-account' });
+    ($('#webrtc-sidebar') as any).sidebar('hide');
   }
 }
 </script>
@@ -58,6 +79,12 @@ $menu-color: #ffffff77;
   display: flex;
   justify-content:space-between;
   -webkit-box-pack:justify;
+}
+
+#webrtc-sidebar {
+  .item {
+    color: #ffffff77;
+  }
 }
 
 #header-logo {

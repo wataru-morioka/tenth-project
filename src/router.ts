@@ -12,13 +12,8 @@ import Management from './views/Management.vue';
 import ManagementAccount from './components/ManagementAccount.vue';
 import ManagementUpload from './components/ManagementUpload.vue';
 import ManagementContact from './components/ManagementContact.vue';
-import ServiceAsk from './components/ServiceAsk.vue';
-import ServiceOwn from './components/ServiceOwn.vue';
-import ServiceOthers from './components/ServiceOthers.vue';
-import ServiceAccount from './components/ServiceAccount.vue';
 import WebrtcChat from './components/WebrtcChat.vue';
-import WebrtcTransfer from './components/WebrtcTransfer.vue';
-import Service from './views/Service.vue';
+import WebrtcAccount from './components/WebrtcAccount.vue';
 import Webrtc from './views/Webrtc.vue';
 import store from './store';
 declare let gtag: Function;
@@ -91,32 +86,6 @@ const router = new Router({
       ],
     },
     {
-      path: '/service',
-      component: Service,
-      children: [
-        {
-          path: 'ask',
-          name: 'service-ask',
-          component: ServiceAsk,
-        },
-        {
-          path: 'own',
-          name: 'service-own',
-          component: ServiceOwn,
-        },
-        {
-          path: 'others',
-          name: 'service-others',
-          component: ServiceOthers,
-        },
-        {
-          path: 'account',
-          name: 'service-account',
-          component: ServiceAccount,
-        },
-      ],
-    },
-    {
       path: '/webrtc',
       component: Webrtc,
       children: [
@@ -126,9 +95,9 @@ const router = new Router({
           component: WebrtcChat,
         },
         {
-          path: 'transfer',
-          name: 'webrtc-transfer',
-          component: WebrtcTransfer,
+          path: 'account',
+          name: 'webrtc-account',
+          component: WebrtcAccount,
         },
       ],
     },

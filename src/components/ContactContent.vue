@@ -196,10 +196,10 @@ export default class ContactContent extends Vue {
 
   get validateState(): boolean {
     if (this.selectedState.length > 0) {
-      this.typeValid = true;
+      this.stateValid = true;
       return true;
     }
-    this.typeValid = false;
+    this.stateValid = false;
     return false;
   }
 
@@ -259,7 +259,7 @@ export default class ContactContent extends Vue {
 
   private async onSubmit(): Promise<void> {
     if (!this.lastNameValid || !this.firstNameValid || !this.emailValid
-     || !this.messageValid || !this.selectedType || !this.selectedState) {
+     || !this.messageValid || !this.typeValid || !this.stateValid) {
       alert('無効な項目があります');
       return;
     }

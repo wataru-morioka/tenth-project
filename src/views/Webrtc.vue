@@ -1,5 +1,5 @@
 <template lang='pug'>
-  div#service
+  div#webrtc
     BackImage
     div.subject
       p(style='animation-delay: 1s')
@@ -40,10 +40,8 @@ export default class WebRtc extends Vue {
 </script>
 
 <style scoped lang='scss'>
-#service {
+#webrtc {
   position: relative;
-  width: 100%;
-  height: 100vh;
   animation-name: body-fadein;
   animation-duration: 2s;
 }

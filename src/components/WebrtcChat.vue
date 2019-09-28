@@ -1,6 +1,6 @@
 <template lang='pug'>
   div.content
-    div#upload-list
+    div
 
 </template>
 
@@ -9,7 +9,7 @@ import { Component, Vue } from 'vue-property-decorator';
 import jQuery from 'jQuery';
 
 @Component
-export default class ManagementUpload extends Vue {
+export default class WebrtcChat extends Vue {
 }
 </script>
 
@@ -27,13 +27,6 @@ export default class ManagementUpload extends Vue {
   animation-name: content-fadein;
   animation-duration: 2s;
   z-index: -1;
-}
-
-#upload-list {
-  width: auto;
-  height: 80%;
-  overflow-y: scroll;
-  -webkit-overflow-scrolling: touch;
 }
 
 @media screen and (max-width: 768px){

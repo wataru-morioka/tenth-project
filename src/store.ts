@@ -111,6 +111,8 @@ export default new Vuex.Store({
     idToken: '',
     email: '',
     displayName: '',
+    state: '',
+    thumbnail: new ArrayBuffer(0),
     currentViewIndex: 0,
     photoMultiArray: new Array<PhotoInfo[]>(),
     projectTitleMap: new Map<number, string>(),
@@ -130,6 +132,8 @@ export default new Vuex.Store({
     setUserInfo(state, payload) {
       state.isLogin = payload.isLogin;
       state.isAnonymous = payload.isAnonymous;
+      state.thumbnail = payload.thumbnail;
+      state.state = payload.state;
     },
 
     setViewIndex(state, payload) {
@@ -157,6 +161,7 @@ export default new Vuex.Store({
     setIsPlaying(state, payload) {
       state.isVideoPlaying = payload.isVideoPlaying;
     },
+
     setHeader(state, payload) {
       state.authHeader = payload.authHeader;
       state.displayName = payload.displayName;
@@ -247,16 +252,25 @@ export default new Vuex.Store({
             .then((res) => {
               if (!res.data.result) {
                 console.log('サーバのログイン処理に失敗しました');
+                return;
               }
               console.log('ログイン');
+              const thumbnailBase64 = res.data.thumbnail;
+              const bin = atob(thumbnailBase64.replace(/^.*,/, ''));
+              const buffer = new Uint8Array(bin.length);
+              for (let i = 0; i < bin.length; i++) {
+                  buffer[i] = bin.charCodeAt(i);
+              }
+
+              this.dispatch('setUserInfo', {
+                isLoginAuth: true,
+                isAnonymousAuth: false,
+                thumbnailData: buffer,
+                region: res.data.state,
+              });
             })
             .catch((err) => {
               console.log('サーバのログイン処理に失敗しました');
-            });
-
-            this.dispatch('setUserInfo', {
-              isLoginAuth: true,
-              isAnonymousAuth: false,
             });
             return;
           }
@@ -273,11 +287,13 @@ export default new Vuex.Store({
         this.dispatch('setUserInfo', {
           isLoginAuth: false,
           isAnonymousAuth: true,
+          thumbnailData: null,
+          state: '',
         });
       });
     },
 
-    async setUserInfo({ commit, state, rootState }, { isLoginAuth, isAnonymousAuth } ) {
+    async setUserInfo({ commit, state, rootState }, { isLoginAuth, isAnonymousAuth, thumbnailData, region } ) {
       const currentUser = firebase.auth().currentUser;
       if (currentUser == null) {
         return;
@@ -288,6 +304,8 @@ export default new Vuex.Store({
       this.commit('setUserInfo', {
         isLogin: isLoginAuth,
         isAnonymous: isAnonymousAuth,
+        thumbnail: thumbnailData,
+        state: region
       });
     },
 

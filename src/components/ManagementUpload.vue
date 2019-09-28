@@ -7,7 +7,7 @@ div
   video#project-video(controls playsinline)
   div#add-image
     button(type=button class='ui inverted red button', @click='addPhoto($event)') add
-    input#add-input(type='file', @change='onChangeAddPhoto($event)')
+    input#add-input(type='file', accept='video/mp4', @change='onChangeAddPhoto($event)')
   div.content(class='ui two column divided grid', @click='stop')
     div.row(v-for='(photoArray, index) in photoMultiArray', :key='index', :style='firstChildRow(index)')
       div.column.left(:style='transitionDelay(0.2, index * 2)')
@@ -16,9 +16,9 @@ div
             button(type=button class='ui inverted primary button', @click='editPhoto($event)') edit
             div.upload-wrap
               button(type=button class='ui inverted orange button', @click='uploadThumbnail($event)') thumbnail
-              input.edit-thumbnail(type='file', @change='onChangeThumbnail($event, photoArray[0].id)')
+              input.edit-thumbnail(type='file', accept='image/png,image/jpeg,image/gif', @change='onChangeThumbnail($event, photoArray[0].id)')
               button(type=button class='ui inverted orange button', @click='uploadVideo($event)') video
-              input.edit-video(type='file', @change='onChangeVideo($event, photoArray[0].id)')
+              input.edit-video(type='file', accept='video/mp4', @change='onChangeVideo($event, photoArray[0].id)')
           div.image(@click='play(photoArray[0].id)')
             i.huge.play.icon
             img(:src='setPhoto(index, 0)')
@@ -37,9 +37,9 @@ div
             button(type=button class='ui inverted primary button', @click='editPhoto($event)') edit
             div.upload-wrap
               button(type=button class='ui inverted orange button', @click='uploadThumbnail($event)') thumbnail
-              input.edit-thumbnail(type='file', @change='onChangeThumbnail($event, photoArray[1].id)')
+              input.edit-thumbnail(type='file', accept='image/png,image/jpeg,image/gif', @change='onChangeThumbnail($event, photoArray[1].id)')
               button(type=button class='ui inverted orange button', @click='uploadVideo($event)') video
-              input.edit-video(type='file', @change='onChangeVideo($event, photoArray[1].id)')
+              input.edit-video(type='file', accept='video/mp4', @change='onChangeVideo($event, photoArray[1].id)')
           div.image(@click='play(photoArray[1].id)')
             i.huge.play.icon
             img(:src='setPhoto(index, 1)')

@@ -108,12 +108,8 @@ export default class FooterNav extends Vue {
     this.$router.push({ name: 'management-account', params: { user: 'admin' } });
   }
 
-  private toService(): void {
-    this.$router.push({ name: 'service' });
-  }
-
   private toWebrtc(): void {
-    this.$router.push({ name: 'webrtc' });
+    this.$router.push({ name: 'webrtc-chat' });
   }
 }
 </script>

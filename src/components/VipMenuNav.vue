@@ -98,6 +98,7 @@ export default class VipMenuNav extends Vue {
   }
 
   private toHome(): void {
+    $('body').removeClass('pushable');
     this.$store.commit('setViewIndex', {
       index: 0,
     });
@@ -108,12 +109,8 @@ export default class VipMenuNav extends Vue {
     this.$router.push({ name: 'management-account' });
   }
 
-  private toService(): void {
-    this.$router.push({ name: 'service' });
-  }
-
   private toWebrtc(): void {
-    this.$router.push({ name: 'webrtc' });
+    this.$router.push({ name: 'webrtc-chat' });
   }
 }
 </script>
