@@ -52,17 +52,19 @@
       div.rotate-menu
         a(href='#', @click.stop.prevent='toWebrtc')
           p(style='transition-delay: 0s')
-            span W
+            span A
           p(style='transition-delay: 0.02s')
-            span E
-          p(style='transition-delay: 0.04s')
-            span B
-          p(style='transition-delay: 0.06s')
-            span R
-          p(style='transition-delay: 0.08s')
-            span T
-          p(style='transition-delay: 0.10s')
             span C
+          p(style='transition-delay: 0.04s')
+            span C
+          p(style='transition-delay: 0.06s')
+            span O
+          p(style='transition-delay: 0.08s')
+            span U
+          p(style='transition-delay: 0.10s')
+            span N
+          p(style='transition-delay: 0.12s')
+            span T
     div#menu-dropdown(class="ui pointing link icon dropdown")
       i(class="large bars icon")
       div.menu
@@ -110,7 +112,7 @@ export default class VipMenuNav extends Vue {
   }
 
   private toWebrtc(): void {
-    this.$router.push({ name: 'webrtc-chat' });
+    this.$router.push({ name: 'webrtc-account' });
   }
 }
 </script>

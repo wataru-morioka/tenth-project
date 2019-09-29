@@ -268,7 +268,7 @@ export default class ContactContent extends Vue {
       closable: false,
     }).modal('show');
 
-    const data = {
+    const body = {
       name: this.lastName + ' ' + this.firstName,
       organization: this.selectedType,
       state: this.selectedState,
@@ -277,7 +277,7 @@ export default class ContactContent extends Vue {
       message: this.message,
     };
 
-    await axios.post('https://flask.site:443/contact', data, {
+    await axios.post('https://flask.site:443/contact', body, {
       headers: this.$store.state.authHeader,
     })
     .then((res) => {

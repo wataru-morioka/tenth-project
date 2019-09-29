@@ -12,7 +12,7 @@ import Management from './views/Management.vue';
 import ManagementAccount from './components/ManagementAccount.vue';
 import ManagementUpload from './components/ManagementUpload.vue';
 import ManagementContact from './components/ManagementContact.vue';
-import WebrtcChat from './components/WebrtcChat.vue';
+import WebrtcArticle from './components/WebrtcArticle.vue';
 import WebrtcAccount from './components/WebrtcAccount.vue';
 import Webrtc from './views/Webrtc.vue';
 import store from './store';
@@ -90,9 +90,9 @@ const router = new Router({
       component: Webrtc,
       children: [
         {
-          path: 'chat',
-          name: 'webrtc-chat',
-          component: WebrtcChat,
+          path: 'article',
+          name: 'webrtc-article',
+          component: WebrtcArticle,
         },
         {
           path: 'account',

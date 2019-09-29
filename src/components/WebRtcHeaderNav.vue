@@ -1,7 +1,7 @@
 <template lang='pug'>
   div#header-nav
     div#webrtc-sidebar(class="ui left sidebar inverted vertical menu")
-      a.item(@click='toChat') CHAT
+      a.item(@click='toArticle') ARTICLE
       a.item(@click='toAccount') ACCOUNT
     div#header
       div#webrtc-dropdown(class="ui pointing link icon dropdown")
@@ -59,8 +59,8 @@ export default class WebRtcHeaderNav extends Vue {
     ($('#webrtc-sidebar') as any).sidebar('show');
   }
 
-  private toChat(): void {
-    this.$router.push({ name: 'webrtc-chat' });
+  private toArticle(): void {
+    this.$router.push({ name: 'webrtc-article' });
     ($('#webrtc-sidebar') as any).sidebar('hide');
   }
 

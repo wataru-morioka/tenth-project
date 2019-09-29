@@ -28,6 +28,25 @@ class PhotoInfo {
   }
 }
 
+class ArticleInfo {
+  public id: number;
+  public contributorName: string;
+  public body: string;
+  public thumbnail: Uint8Array;
+  public createdDatetime: string;
+  public modifiedDatetime: string;
+
+  constructor(id: number, contributorName: string, body: string, thumbnail: Uint8Array,
+              createdDatetime: string, modifiedDatetime: string) {
+    this.id = id;
+    this.contributorName = contributorName;
+    this.body = body;
+    this.thumbnail = thumbnail;
+    this.createdDatetime = createdDatetime;
+    this.modifiedDatetime = modifiedDatetime;
+  }
+}
+
 class Result {
   public photoMultiArray: PhotoInfo[][];
   public projectTitleMap: Map<number, string>;
@@ -37,6 +56,57 @@ class Result {
     this.projectTitleMap = new Map<number, string>();
   }
 }
+
+const getArticleList = () => {
+  return new Promise<ArticleInfo[]>(async (resolve, reject) => {
+    const articleArray: ArticleInfo[] = [];
+    const currentUser = firebase.auth().currentUser!;
+    const token = await currentUser.getIdToken(true);
+    const header = {
+      Authorization: `Bearer ${token}`,
+    };
+
+    await axios.get('https://django.service/api/service/article', {
+        headers: header,
+    })
+    .then((res) => {
+      if (!res.data.result) {
+        console.log('articleリスト取得に失敗しました');
+        reject();
+        return;
+      }
+      console.log('articleリスト取得');
+      const resArray = res.data.articleList;
+      let article: ArticleInfo;
+      resArray.forEach((el: any) => {
+        const thumbnailBase64 = el.thumbnail;
+        let buffer = new Uint8Array();
+        if (thumbnailBase64 !== null) {
+          const bin = atob(thumbnailBase64.replace(/^.*,/, ''));
+          buffer = new Uint8Array(bin.length);
+          for (let i = 0; i < bin.length; i++) {
+              buffer[i] = bin.charCodeAt(i);
+          }
+        }
+        article = new ArticleInfo(
+          el.id,
+          el.contributor_name,
+          el.body,
+          buffer,
+          el.created_datetime,
+          el.modified_datetime,
+        );
+        articleArray.push(article);
+      });
+
+      resolve(articleArray);
+    })
+    .catch((err) => {
+      console.log('articleリスト取得に失敗しました');
+      reject();
+    });
+  });
+};
 
 const getPhotoList = () => {
   return new Promise<Result>(async (resolve, reject) => {
@@ -116,6 +186,7 @@ export default new Vuex.Store({
     currentViewIndex: 0,
     photoMultiArray: new Array<PhotoInfo[]>(),
     projectTitleMap: new Map<number, string>(),
+    articleArray: [],
     isVideoDisplay: false,
     isVideoPlaying: false,
     authHeader: {},
@@ -169,6 +240,9 @@ export default new Vuex.Store({
       state.uid = payload.uid;
       state.email = payload.email;
     },
+    setArticleArray(state, payload) {
+      state.articleArray = payload.articleArray;
+    },
   },
   actions: {
     async test({ commit, state, rootState }) {
@@ -191,6 +265,17 @@ export default new Vuex.Store({
         this.commit('setPhotoMutiArray', {
           photoMultiArray: result.photoMultiArray,
           projectTitleMap: result.projectTitleMap,
+        });
+      }).catch((err) => {
+        alert('err');
+      });
+    },
+
+    async getArticles({ commit, state, rootState }) {
+      await getArticleList().then((articleList) => {
+        console.log(articleList);
+        this.commit('setArticleArray', {
+          articleArray: articleList,
         });
       }).catch((err) => {
         alert('err');
@@ -241,6 +326,7 @@ export default new Vuex.Store({
       firebase.auth().onAuthStateChanged( async (user) => {
         if (user) {
           this.dispatch('getPhotos');
+          this.dispatch('getArticles');
           await this.dispatch('getHeader');
 
           if (user.email != null && user.email.length > 0) {
@@ -256,10 +342,13 @@ export default new Vuex.Store({
               }
               console.log('ログイン');
               const thumbnailBase64 = res.data.thumbnail;
-              const bin = atob(thumbnailBase64.replace(/^.*,/, ''));
-              const buffer = new Uint8Array(bin.length);
-              for (let i = 0; i < bin.length; i++) {
-                  buffer[i] = bin.charCodeAt(i);
+              let buffer = null;
+              if (thumbnailBase64 !== null) {
+                const bin = atob(thumbnailBase64.replace(/^.*,/, ''));
+                buffer = new Uint8Array(bin.length);
+                for (let i = 0; i < bin.length; i++) {
+                    buffer[i] = bin.charCodeAt(i);
+                }
               }
 
               this.dispatch('setUserInfo', {
@@ -305,7 +394,7 @@ export default new Vuex.Store({
         isLogin: isLoginAuth,
         isAnonymous: isAnonymousAuth,
         thumbnail: thumbnailData,
-        state: region
+        state: region,
       });
     },
 
@@ -320,6 +409,7 @@ export default new Vuex.Store({
       const header = {
         Authorization: `Bearer ${token}`,
       };
+
       this.commit('setHeader', {
         authHeader: header,
         displayName: currentUser.displayName,

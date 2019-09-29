@@ -20,12 +20,12 @@
             p(v-show='!validateState') ※必須です
         div.field.thumbnail
           label thumbnail
-          button.thumbnail(class='ui yellow basic button', type='button', @click='selectThumbnail($event)') thumnail
+          button.thumbnail(class='ui inverted yellow button', type=button, @click='selectThumbnail($event)') thumnail
           input#thumbnail-input(type='file', accept='image/png,image/jpeg,image/gif', @change='onChangeThumbnail($event)')
           br
           img#thumbnail(:src='setThumbnail()')
           p(v-show='!thumbnailValid') ※必須です
-        button.submit(class='ui green basic button' type='submit') Register
+        button.submit(class='ui inverted green button' type='submit') Register
 </template>
 
 <script lang='ts'>
@@ -109,7 +109,7 @@ export default class WebrtcAccount extends Vue {
       this.thumbnailValid = true;
     }
 
-    if (this.$store.state.state.length > 0) {
+    if (this.$store.state.state != null) {
       this.selectedState = this.$store.state.state;
     }
   }
@@ -246,6 +246,7 @@ export default class WebrtcAccount extends Vue {
 
   .no-change {
     background: #545454;
+    color: #ffffff;
   }
 
   label {
