@@ -28,7 +28,7 @@ class PhotoInfo {
   }
 }
 
-class ArticleInfo {
+class Article {
   public id: number;
   public contributorName: string;
   public body: string;
@@ -47,6 +47,34 @@ class ArticleInfo {
   }
 }
 
+class ArticleInfo {
+  public id: number;
+  public contributorName: string;
+  public body: string;
+  public thumbnail: Uint8Array;
+  public createdDatetime: string;
+  public modifiedDatetime: string;
+  public commentatorName: string;
+  public commentatorThumbnail: Uint8Array;
+  public commentBody: string;
+  public commentCreatedDatetime: string;
+
+  constructor(id: number, contributorName: string, body: string, thumbnail: Uint8Array,
+              createdDatetime: string, modifiedDatetime: string, commentatorName: string,
+              commentatorThumbnail: Uint8Array, commentBody: string, commentCreatedDatetime: string) {
+    this.id = id;
+    this.contributorName = contributorName;
+    this.body = body;
+    this.thumbnail = thumbnail;
+    this.createdDatetime = createdDatetime;
+    this.modifiedDatetime = modifiedDatetime;
+    this.commentatorName = commentatorName;
+    this.commentatorThumbnail = commentatorThumbnail;
+    this.commentBody = commentBody;
+    this.commentCreatedDatetime = commentCreatedDatetime;
+  }
+}
+
 class Result {
   public photoMultiArray: PhotoInfo[][];
   public projectTitleMap: Map<number, string>;
@@ -56,6 +84,23 @@ class Result {
     this.projectTitleMap = new Map<number, string>();
   }
 }
+
+const getDistinctArticleMap = (articleList: ArticleInfo[]): Map<number, Article> => {
+  return new Map<number, Article>(
+    articleList.map((article) => [
+        article.id,
+        new Article(
+          article.id,
+          article.contributorName,
+          article.body,
+          article.thumbnail,
+          article.createdDatetime,
+          article.modifiedDatetime,
+        ),
+      ],
+    ),
+  );
+};
 
 const getArticleList = () => {
   return new Promise<ArticleInfo[]>(async (resolve, reject) => {
@@ -79,15 +124,25 @@ const getArticleList = () => {
       const resArray = res.data.articleList;
       let article: ArticleInfo;
       resArray.forEach((el: any) => {
-        const thumbnailBase64 = el.thumbnail;
+        let thumbnailBase64 = el.thumbnail;
         let buffer = new Uint8Array();
         if (thumbnailBase64 !== null) {
           const bin = atob(thumbnailBase64.replace(/^.*,/, ''));
           buffer = new Uint8Array(bin.length);
           for (let i = 0; i < bin.length; i++) {
-              buffer[i] = bin.charCodeAt(i);
+            buffer[i] = bin.charCodeAt(i);
           }
         }
+        thumbnailBase64 = el.commentator_thumbnail;
+        let commentBuffer = new Uint8Array();
+        if (thumbnailBase64 !== null) {
+          const bin = atob(thumbnailBase64.replace(/^.*,/, ''));
+          commentBuffer = new Uint8Array(bin.length);
+          for (let i = 0; i < bin.length; i++) {
+            commentBuffer[i] = bin.charCodeAt(i);
+          }
+        }
+
         article = new ArticleInfo(
           el.id,
           el.contributor_name,
@@ -95,6 +150,10 @@ const getArticleList = () => {
           buffer,
           el.created_datetime,
           el.modified_datetime,
+          el.commentator_name,
+          commentBuffer,
+          el.comment_body,
+          el.comment_created_datetime,
         );
         articleArray.push(article);
       });
@@ -187,6 +246,7 @@ export default new Vuex.Store({
     photoMultiArray: new Array<PhotoInfo[]>(),
     projectTitleMap: new Map<number, string>(),
     articleArray: [],
+    distinctArticleMap: [],
     isVideoDisplay: false,
     isVideoPlaying: false,
     authHeader: {},
@@ -242,6 +302,7 @@ export default new Vuex.Store({
     },
     setArticleArray(state, payload) {
       state.articleArray = payload.articleArray;
+      state.distinctArticleMap = payload.distinctArticleMap;
     },
   },
   actions: {
@@ -273,9 +334,11 @@ export default new Vuex.Store({
 
     async getArticles({ commit, state, rootState }) {
       await getArticleList().then((articleList) => {
-        console.log(articleList);
+        const distinctArticleMaps = getDistinctArticleMap(articleList);
+        console.log(distinctArticleMaps);
         this.commit('setArticleArray', {
           articleArray: articleList,
+          distinctArticleMap: distinctArticleMaps,
         });
       }).catch((err) => {
         alert('err');

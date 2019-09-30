@@ -17,20 +17,20 @@
             div#toolbar-container
             div#editor
               p Write an article.
-            button(class='ui inverted orange button', @click='saveAricle()') Save
-    div.article-list(class='ui comments', v-for='(article, index) in articleArray', :key='article.id')
-      input(type='hidden', :value='setArticleId(article.id)')
+            button(class='ui inverted orange button', @click='saveAricle($event)') Save
+    div.article-list(class='ui comments', v-for='([key, value], index) in Array.from(distinctArticleMap)', :key='key')
+      input(type='hidden', :value='setArticleId(key)')
       div.comment
         a.avatar
-          img.avatar(:src='setThumbnail(article.id)')
+          img.avatar(:src='setThumbnail(key)')
         div.content
-          a.author {{ article.contributorName }}
+          a.author {{ value.contributorName }}
           div.metadata
-            span.date {{ article.createdDatetime }}
+            span.date {{ value.createdDatetime }}
           div.article.history
             div.toolbar-container
             div.editor
-            button(class='ui inverted orange button', @click='saveAricle($event, article.id)') Save
+            button(class='ui inverted orange button', @click='saveAricle($event, key)') Save
           hr.comment-border
           div.input-comment-wrap
             div.comment-icon(@click='showInputComment($event)')
@@ -39,8 +39,40 @@
             form(class='ui reply form')
               div.field
                 textarea.comment-text
-              button(class='ui inverted primary button', type='button', @click='sendComment($event, article.id)') Send a Comment
+              button(class='ui inverted primary button', type='button', @click='sendComment($event, key)') Send a Comment
+            div(class='ui comments')
+              div.comment.history(v-for='(comment, index) in commentArray(key)', :key='index')
+                a.avatar
+                  img.avatar(:src='setCommentThumbnail(comment.thumbnail)')
+                div.content
+                  a.author {{ comment.name }}
+                  div.metadata
+                    span.date {{ comment.createdDatetime }}
+                  p {{ comment.body }}
             div(style='height: 150px;')
+    //- div.article-list(class='ui comments', v-for='(article, index) in articleArray', :key='article.id')
+    //-   input(type='hidden', :value='setArticleId(article.id)')
+    //-   div.comment
+    //-     a.avatar
+    //-       img.avatar(:src='setThumbnail(article.id)')
+    //-     div.content
+    //-       a.author {{ article.contributorName }}
+    //-       div.metadata
+    //-         span.date {{ article.createdDatetime }}
+    //-       div.article.history
+    //-         div.toolbar-container
+    //-         div.editor
+    //-         button(class='ui inverted orange button', @click='saveAricle($event, article.id)') Save
+    //-       hr.comment-border
+    //-       div.input-comment-wrap
+    //-         div.comment-icon(@click='showInputComment($event)')
+    //-           i(class='pencil alternate icon') 
+    //-             span comment
+    //-         form(class='ui reply form')
+    //-           div.field
+    //-             textarea.comment-text
+    //-           button(class='ui inverted primary button', type='button', @click='sendComment($event, article.id)') Send a Comment
+    //-         div(style='height: 150px;')
 </template>
 
 <script lang='ts'>
@@ -51,6 +83,20 @@ import jQuery from 'jQuery';
 import axios from 'axios';
 // tslint:disable-next-line:no-var-requires
 const DecoupledEditor = require('@ckeditor/ckeditor5-build-decoupled-document');
+
+class Comment {
+  public name: string;
+  public body: string;
+  public thumbnail: Uint8Array;
+  public createdDatetime: string;
+
+  constructor(name: string, body: string, thumbnail: Uint8Array, createdDatetime: string) {
+    this.name = name;
+    this.body = body;
+    this.thumbnail = thumbnail;
+    this.createdDatetime = createdDatetime;
+  }
+}
 
 @Component({
   components: {
@@ -63,6 +109,7 @@ export default class WebrtcArticle extends Vue {
   private inputPostDisplay: boolean = false;
   private editors: Map<string, any> = new Map<string, any>();
   private articleArray = [];
+  private distinctArticleMap = null;
 
   private fadein(): void {
     const offset = 60;
@@ -87,6 +134,7 @@ export default class WebrtcArticle extends Vue {
 
   private created() {
     this.articleArray = this.$store.state.articleArray;
+    this.distinctArticleMap = this.$store.state.distinctArticleMap;
   }
 
   private mounted() {
@@ -100,6 +148,22 @@ export default class WebrtcArticle extends Vue {
   private updated() {
     this.fadein();
     this.resetEditor();
+  }
+
+  private commentArray(articleId: number): Comment[] {
+    const targetArray = this.articleArray.filter((article: any) => {
+      return article.id === articleId && article.commentatorName != null;
+    });
+    const commentArray = targetArray.map((article: any) => {
+      return new Comment(
+        article.commentatorName,
+        article.commentBody,
+        article.commentatorThumbnail,
+        article.commentCreatedDatetime,
+      );
+    });
+    console.log(commentArray);
+    return commentArray;
   }
 
   private async sendComment(event: any, id: number): Promise<void> {
@@ -144,6 +208,7 @@ export default class WebrtcArticle extends Vue {
 
                 await this.$store.dispatch('getArticles').then(() => {
                   this.articleArray = this.$store.state.articleArray;
+                  this.distinctArticleMap = this.$store.state.distinctArticleMap;
                 });
                 alert('送信しました');
               })
@@ -287,6 +352,8 @@ export default class WebrtcArticle extends Vue {
       closable: false,
     }).modal('show');
 
+    let result: boolean = false;
+
     setTimeout(async () => {
       if (articleId === 0) {
         const body = {
@@ -300,7 +367,7 @@ export default class WebrtcArticle extends Vue {
             alert('保存に失敗しました');
             return;
           }
-          alert('保存しました');
+          result = true;
           this.showPostInputArea();
         })
         .catch((err) => {
@@ -325,18 +392,30 @@ export default class WebrtcArticle extends Vue {
             alert('保存に失敗しました');
             return;
           }
-          await this.$store.dispatch('getArticles').then(() => {
-            this.articleArray = this.$store.state.articleArray;
-          });
-          alert('保存しました');
+          result = true;
         })
         .catch((err) => {
           console.log(err);
           alert('保存に失敗しました');
         });
       }
+
+      if (result) {
+        await this.$store.dispatch('getArticles').then(() => {
+          this.articleArray = this.$store.state.articleArray;
+          this.distinctArticleMap = this.$store.state.distinctArticleMap;
+        });
+        alert('保存しました');
+      }
       ($('.modal') as any).modal('hide');
     }, 500);
+  }
+
+  private setCommentThumbnail(thumbnail: Uint8Array): string {
+    const buffer = Buffer.from(thumbnail);
+    const blob = new Blob([buffer], {type: (thumbnail as any).mimetype});
+    const blobURL = window.URL.createObjectURL(blob);
+    return blobURL;
   }
 
   private setThumbnail(articleId: number = 0): string {
@@ -396,6 +475,10 @@ export default class WebrtcArticle extends Vue {
   cursor: pointer;
 }
 
+#post-new {
+  margin-bottom: 50px;
+}
+
 #plus-post {
   margin-top: 10px;
 
@@ -410,7 +493,6 @@ export default class WebrtcArticle extends Vue {
 }
 
 .article-list {
-  margin-bottom: 50px;
   width: 50%;
   max-width: 100% !important;
   opacity: 0;
@@ -468,7 +550,10 @@ export default class WebrtcArticle extends Vue {
     .input-comment-wrap {
       .comment-icon {
         margin: 10px;
-        text-align: center;
+        // text-align: center;
+        span {
+          margin-left: 10px;
+        }
       }
 
       .comment-icon:hover {
@@ -486,6 +571,10 @@ export default class WebrtcArticle extends Vue {
           font-size: 10px;
         }
       }
+    }
+
+    .comment.history {
+      margin-bottom: 20px;
     }
   }
 }
