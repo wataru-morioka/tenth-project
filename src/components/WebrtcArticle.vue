@@ -243,31 +243,30 @@ export default class WebrtcArticle extends Vue {
       console.error( err.stack );
     });
 
-    // $('.article.history').each((index, element) => {
-    //   const toolbarElement = $(element).children('.toolbar-container')[0];
-    //   const editorElement = $(element).children('.editor')[0];
-    //   const inputElement = $(element).parents('.article-list').children('input')[0];
-    //   const articleId: string = $(inputElement).val() as string;
-    //   DecoupledEditor
-    //   .create( editorElement, {
-    //     ckfinder: {
-    //       uploadUrl: 'https://django.service/api/service/image',
-    //     },
-    //   })
-    //   .then( (editor: any) => {
-    //     this.editors.set(articleId, editor);
-    //     const toolbarContainer = toolbarElement;
-    //     toolbarContainer.appendChild( editor.ui.view.toolbar.element );
+    $('.article.history').each((index, element) => {
+      const toolbarElement = $(element).children('.toolbar-container')[0];
+      const editorElement = $(element).children('.editor')[0];
+      const inputElement = $(element).parents('.article-list').children('input')[0];
+      const articleId: string = $(inputElement).val() as string;
+      DecoupledEditor
+      .create( editorElement, {
+        ckfinder: {
+          uploadUrl: 'https://django.service/api/service/image',
+        },
+      })
+      .then( (editor: any) => {
+        this.editors.set(articleId, editor);
+        editor.isReadOnly = true;
 
-    //     const target: any = this.articleArray.filter((x) => {
-    //       return (x as any).id === Number(articleId);
-    //     });
-    //     editor.setData(target[0].body);
-    //   })
-    //   .catch( (err: any) => {
-    //     console.error( err.stack );
-    //   });
-    // });
+        const target: any = this.articleArray.filter((x) => {
+          return (x as any).id === Number(articleId);
+        });
+        editor.setData(target[0].body);
+      })
+      .catch( (err: any) => {
+        console.error( err.stack );
+      });
+    });
   }
 
   private resetEditor(): void {
@@ -287,50 +286,50 @@ export default class WebrtcArticle extends Vue {
       console.error( err.stack );
     });
 
-    // $('.article.history').each((index, element) => {
-    //   const toolbarElement = $(element).children('.toolbar-container')[0];
-    //   const editorElement = $(element).children('.editor')[0];
-    //   const inputElement = $(element).parents('.article-list').children('input')[0];
-    //   const articleId: string = $(inputElement).val() as string;
-    //   const target: any = this.articleArray.filter((x) => {
-    //     return (x as any).id === Number(articleId);
-    //   });
+    $('.article.history').each((index, element) => {
+      const toolbarElement = $(element).children('.toolbar-container')[0];
+      const editorElement = $(element).children('.editor')[0];
+      const inputElement = $(element).parents('.article-list').children('input')[0];
+      const articleId: string = $(inputElement).val() as string;
+      const target: any = this.articleArray.filter((x) => {
+        return (x as any).id === Number(articleId);
+      });
 
-    //   if (this.editors.get(articleId)) {
-    //     this.editors.get(articleId).destroy();
-    //     DecoupledEditor
-    //     .create( editorElement, {
-    //       ckfinder: {
-    //         uploadUrl: 'https://django.service/api/service/image',
-    //       },
-    //     })
-    //     .then(async (editor: any) => {
-    //       this.editors.set(articleId, editor);
-    //       await editor.setData(target[0].body);
-    //     })
-    //     .catch( (err: any) => {
-    //       console.log(err);
-    //       console.error( err.stack );
-    //     });
-    //   } else {
-    //     DecoupledEditor
-    //     .create( editorElement, {
-    //       ckfinder: {
-    //         uploadUrl: 'https://django.service/api/service/image',
-    //       },
-    //     })
-    //     .then(async (editor: any) => {
-    //       this.editors.set(articleId, editor);
-    //       const toolbarContainer = toolbarElement;
-    //       toolbarContainer.appendChild( editor.ui.view.toolbar.element );
-    //       await editor.setData(target[0].body);
-    //     })
-    //     .catch( (err: any) => {
-    //       console.log(err);
-    //       console.error( err.stack );
-    //     });
-    //   }
-    // });
+      if (this.editors.get(articleId)) {
+        this.editors.get(articleId).destroy();
+        DecoupledEditor
+        .create( editorElement, {
+          ckfinder: {
+            uploadUrl: 'https://django.service/api/service/image',
+          },
+        })
+        .then(async (editor: any) => {
+          editor.isReadOnly = true;
+          this.editors.set(articleId, editor);
+          await editor.setData(target[0].body);
+        })
+        .catch( (err: any) => {
+          console.log(err);
+          console.error( err.stack );
+        });
+      } else {
+        DecoupledEditor
+        .create( editorElement, {
+          ckfinder: {
+            uploadUrl: 'https://django.service/api/service/image',
+          },
+        })
+        .then(async (editor: any) => {
+          editor.isReadOnly = true;
+          this.editors.set(articleId, editor);
+          await editor.setData(target[0].body);
+        })
+        .catch( (err: any) => {
+          console.log(err);
+          console.error( err.stack );
+        });
+      }
+    });
   }
 
   private editAricle(event: any, articleId: number = 0): void {
@@ -340,6 +339,7 @@ export default class WebrtcArticle extends Vue {
     const toolbarElement = $(parent).children('.toolbar-container')[0];
     const editorElement = $(parent).children('.editor')[0];
     const span = $(editorElement).children('span')[0];
+    const editor = this.editors.get(String(articleId));
 
     if ($(target).hasClass('secondary')) {
       this.isEditing = false;
@@ -352,10 +352,9 @@ export default class WebrtcArticle extends Vue {
 
       // ckeditor解除
       $(span).css('display', 'block');
-      if (this.editors.get(String(articleId))) {
-        this.editors.get(String(articleId)).destroy();
-        $(toolbarElement).empty();
-      }
+      // this.editors.get(String(articleId)).destroy();
+      editor.isReadOnly = true;
+      $(toolbarElement).empty();
       return;
     }
 
@@ -368,29 +367,41 @@ export default class WebrtcArticle extends Vue {
     $(target).addClass('loading');
 
     // ckeditorセット
-    DecoupledEditor
-    .create( editorElement, {
-      ckfinder: {
-        uploadUrl: 'https://django.service/api/service/image',
-      },
-    })
-    .then( (editor: any) => {
-      this.editors.set(String(articleId), editor);
-      const toolbarContainer = toolbarElement;
-      toolbarContainer.appendChild( editor.ui.view.toolbar.element );
-      editor.setData((this.distinctArticleMap! as any).get(articleId).body);
+    const toolbarContainer = toolbarElement;
+    toolbarContainer.appendChild( editor.ui.view.toolbar.element );
+    editor.isReadOnly = false;
+    // editor.setData((this.distinctArticleMap! as any).get(articleId).body);
 
-      $(span).css('display', 'none');
-      $(target).removeClass('loading');
-      $(target).removeClass('primary');
-      $(target).addClass('secondary');
-      $(saveButton).removeClass('secondary');
-      $(saveButton).addClass('orange');
-      $(target).text('Cancel');
-    })
-    .catch( (err: any) => {
-      console.error( err.stack );
-    });
+    $(span).css('display', 'none');
+    $(target).removeClass('loading');
+    $(target).removeClass('primary');
+    $(target).addClass('secondary');
+    $(saveButton).removeClass('secondary');
+    $(saveButton).addClass('orange');
+    $(target).text('Cancel');
+    // DecoupledEditor
+    // .create( editorElement, {
+    //   ckfinder: {
+    //     uploadUrl: 'https://django.service/api/service/image',
+    //   },
+    // })
+    // .then( (editor: any) => {
+    //   this.editors.set(String(articleId), editor);
+    //   const toolbarContainer = toolbarElement;
+    //   toolbarContainer.appendChild( editor.ui.view.toolbar.element );
+    //   editor.setData((this.distinctArticleMap! as any).get(articleId).body);
+
+    //   $(span).css('display', 'none');
+    //   $(target).removeClass('loading');
+    //   $(target).removeClass('primary');
+    //   $(target).addClass('secondary');
+    //   $(saveButton).removeClass('secondary');
+    //   $(saveButton).addClass('orange');
+    //   $(target).text('Cancel');
+    // })
+    // .catch( (err: any) => {
+    //   console.error( err.stack );
+    // });
   }
 
   private async saveAricle(event: any, articleId: number = 0): Promise<void> {
@@ -433,13 +444,13 @@ export default class WebrtcArticle extends Vue {
           alert('保存に失敗しました');
         });
       } else {
-        const target: any = this.articleArray.filter((x) => {
+        const article: any = this.articleArray.filter((x) => {
           return (x as any).id === articleId;
         });
-        console.log(target);
+        console.log(article);
         const body = {
-          articleId: target[0].id,
-          body: this.editors.get(String(target[0].id)).getData(),
+          articleId: article[0].id,
+          body: this.editors.get(String(article[0].id)).getData(),
         };
         console.log(body);
         await axios.put('https://django.service/api/service/article', body, {
@@ -474,10 +485,9 @@ export default class WebrtcArticle extends Vue {
 
         // ckeditor解除
         $(span).css('display', 'block');
-        if (this.editors.get(String(articleId))) {
-          this.editors.get(String(articleId)).destroy();
-          $(toolbarElement).empty();
-        }
+        const editor = this.editors.get(String(articleId));
+        editor.isReadOnly = true;
+        $(toolbarElement).empty();
 
         alert('保存しました');
       }
@@ -567,7 +577,7 @@ export default class WebrtcArticle extends Vue {
 }
 
 .article-list {
-  width: 50%;
+  width: 60%;
   max-width: 100% !important;
   opacity: 0;
   transform: translate(0px, 60px) translate3d(0, 0, 0);
@@ -659,12 +669,24 @@ export default class WebrtcArticle extends Vue {
       }
     }
   }
-}
 
-@media screen and (max-width: 768px){
-  .content {
-    bottom: 0px;
+  img {
+    max-width: 100% !important;
   }
 }
 
+@media screen and (max-width: 768px){
+  .contents {
+    bottom: 0px;
+  }
+
+  .article-list {
+    width: 98%;
+
+    .avatar {
+      width: 30px !important;
+      height: 30px !important;
+    }
+  }
+}
 </style>

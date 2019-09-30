@@ -5,10 +5,10 @@
     div#account-form
       form(class='ui form' @submit.prevent="onSubmit" action="/" method="POST")
         h5(class='ui dividing header') Your Account
-        div.field
+        div.field.middle
           label name
           input.no-change(type='text', :value='this.$store.state.displayName', readonly)
-        div.field
+        div.field.middle
           label account
           input.no-change(type='text', :value='this.$store.state.email', readonly)
         div.thin(class='two fields')
@@ -20,7 +20,7 @@
             p(v-show='!validateState') ※必須です
         div.field.thumbnail
           label thumbnail
-          button.thumbnail(class='ui inverted yellow button', type=button, @click='selectThumbnail($event)') thumnail
+          button.thumbnail(class='ui inverted yellow button', type='button', @click='selectThumbnail($event)') thumnail
           input#thumbnail-input(type='file', accept='image/png,image/jpeg,image/gif', @change='onChangeThumbnail($event)')
           br
           img#thumbnail(:src='setThumbnail()')
@@ -304,7 +304,11 @@ export default class WebrtcAccount extends Vue {
       }
 
       .thin {
-        width: 50%;
+        width: 40%;
+      }
+
+      .middle {
+        width: 80%;
       }
       
       .button {
