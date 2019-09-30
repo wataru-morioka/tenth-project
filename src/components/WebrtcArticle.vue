@@ -14,10 +14,11 @@
             span POST
             hr
           div#input-post.article
+            div.button-wrap
+              button(class='ui inverted orange button', @click='saveAricle($event)') Save
             div#toolbar-container
             div#editor
               p Write an article.
-            button(class='ui inverted orange button', @click='saveAricle($event)') Save
     div.article-list(class='ui comments', v-for='([key, value], index) in Array.from(distinctArticleMap)', :key='key')
       input(type='hidden', :value='setArticleId(key)')
       div.comment
@@ -28,9 +29,12 @@
           div.metadata
             span.date {{ value.createdDatetime }}
           div.article.history
+            div.button-wrap
+              button(class='ui inverted primary button', @click='editAricle($event, key)') Edit
+              button(class='ui inverted secondary button', @click='saveAricle($event, key)') Save
             div.toolbar-container
             div.editor
-            button(class='ui inverted orange button', @click='saveAricle($event, key)') Save
+              span(v-html='setBody(value.body)')
           hr.comment-border
           div.input-comment-wrap
             div.comment-icon(@click='showInputComment($event)')
@@ -38,8 +42,8 @@
                 span comment
             form(class='ui reply form')
               div.field
-                textarea.comment-text
-              button(class='ui inverted primary button', type='button', @click='sendComment($event, key)') Send a Comment
+                textarea.comment-text(v-model='commentMessage')
+              button(class='ui inverted green button', type='button', @click='sendComment($event, key)') Send a Comment
             div(class='ui comments')
               div.comment.history(v-for='(comment, index) in commentArray(key)', :key='index')
                 a.avatar
@@ -50,29 +54,6 @@
                     span.date {{ comment.createdDatetime }}
                   p {{ comment.body }}
             div(style='height: 150px;')
-    //- div.article-list(class='ui comments', v-for='(article, index) in articleArray', :key='article.id')
-    //-   input(type='hidden', :value='setArticleId(article.id)')
-    //-   div.comment
-    //-     a.avatar
-    //-       img.avatar(:src='setThumbnail(article.id)')
-    //-     div.content
-    //-       a.author {{ article.contributorName }}
-    //-       div.metadata
-    //-         span.date {{ article.createdDatetime }}
-    //-       div.article.history
-    //-         div.toolbar-container
-    //-         div.editor
-    //-         button(class='ui inverted orange button', @click='saveAricle($event, article.id)') Save
-    //-       hr.comment-border
-    //-       div.input-comment-wrap
-    //-         div.comment-icon(@click='showInputComment($event)')
-    //-           i(class='pencil alternate icon') 
-    //-             span comment
-    //-         form(class='ui reply form')
-    //-           div.field
-    //-             textarea.comment-text
-    //-           button(class='ui inverted primary button', type='button', @click='sendComment($event, article.id)') Send a Comment
-    //-         div(style='height: 150px;')
 </template>
 
 <script lang='ts'>
@@ -110,6 +91,8 @@ export default class WebrtcArticle extends Vue {
   private editors: Map<string, any> = new Map<string, any>();
   private articleArray = [];
   private distinctArticleMap = null;
+  private isEditing: boolean = false;
+  private commentMessage: string = '';
 
   private fadein(): void {
     const offset = 60;
@@ -150,6 +133,10 @@ export default class WebrtcArticle extends Vue {
     this.resetEditor();
   }
 
+  private setBody(body: string): string {
+    return body;
+  }
+
   private commentArray(articleId: number): Comment[] {
     const targetArray = this.articleArray.filter((article: any) => {
       return article.id === articleId && article.commentatorName != null;
@@ -168,8 +155,7 @@ export default class WebrtcArticle extends Vue {
 
   private async sendComment(event: any, id: number): Promise<void> {
     const form = $(event.currentTarget).parents('form')[0];
-    const textArea = $(form).find('textarea')[0];
-    const comment: string = $(textArea).val() as string;
+    const comment = this.commentMessage.replace(/^\s+/, '').replace(/\s+$/, '');
 
     if (comment.length === 0) {
       alert('コメントを入力してください');
@@ -203,7 +189,7 @@ export default class WebrtcArticle extends Vue {
                   return;
                 }
 
-                $(textArea).val('');
+                this.commentMessage = '';
                 $(form).hide(300);
 
                 await this.$store.dispatch('getArticles').then(() => {
@@ -257,31 +243,31 @@ export default class WebrtcArticle extends Vue {
       console.error( err.stack );
     });
 
-    $('.article.history').each((index, element) => {
-      const toolbarElement = $(element).children('.toolbar-container')[0];
-      const editorElement = $(element).children('.editor')[0];
-      const inputElement = $(element).parents('.article-list').children('input')[0];
-      const articleId: string = $(inputElement).val() as string;
-      DecoupledEditor
-      .create( editorElement, {
-        ckfinder: {
-          uploadUrl: 'https://django.service/api/service/image',
-        },
-      })
-      .then( (editor: any) => {
-        this.editors.set(articleId, editor);
-        const toolbarContainer = toolbarElement;
-        toolbarContainer.appendChild( editor.ui.view.toolbar.element );
+    // $('.article.history').each((index, element) => {
+    //   const toolbarElement = $(element).children('.toolbar-container')[0];
+    //   const editorElement = $(element).children('.editor')[0];
+    //   const inputElement = $(element).parents('.article-list').children('input')[0];
+    //   const articleId: string = $(inputElement).val() as string;
+    //   DecoupledEditor
+    //   .create( editorElement, {
+    //     ckfinder: {
+    //       uploadUrl: 'https://django.service/api/service/image',
+    //     },
+    //   })
+    //   .then( (editor: any) => {
+    //     this.editors.set(articleId, editor);
+    //     const toolbarContainer = toolbarElement;
+    //     toolbarContainer.appendChild( editor.ui.view.toolbar.element );
 
-        const target: any = this.articleArray.filter((x) => {
-          return (x as any).id === Number(articleId);
-        });
-        editor.setData(target[0].body);
-      })
-      .catch( (err: any) => {
-        console.error( err.stack );
-      });
-    });
+    //     const target: any = this.articleArray.filter((x) => {
+    //       return (x as any).id === Number(articleId);
+    //     });
+    //     editor.setData(target[0].body);
+    //   })
+    //   .catch( (err: any) => {
+    //     console.error( err.stack );
+    //   });
+    // });
   }
 
   private resetEditor(): void {
@@ -301,53 +287,125 @@ export default class WebrtcArticle extends Vue {
       console.error( err.stack );
     });
 
-    $('.article.history').each((index, element) => {
-      const toolbarElement = $(element).children('.toolbar-container')[0];
-      const editorElement = $(element).children('.editor')[0];
-      const inputElement = $(element).parents('.article-list').children('input')[0];
-      const articleId: string = $(inputElement).val() as string;
-      const target: any = this.articleArray.filter((x) => {
-        return (x as any).id === Number(articleId);
-      });
+    // $('.article.history').each((index, element) => {
+    //   const toolbarElement = $(element).children('.toolbar-container')[0];
+    //   const editorElement = $(element).children('.editor')[0];
+    //   const inputElement = $(element).parents('.article-list').children('input')[0];
+    //   const articleId: string = $(inputElement).val() as string;
+    //   const target: any = this.articleArray.filter((x) => {
+    //     return (x as any).id === Number(articleId);
+    //   });
 
-      if (this.editors.get(articleId)) {
-        this.editors.get(articleId).destroy();
-        DecoupledEditor
-        .create( editorElement, {
-          ckfinder: {
-            uploadUrl: 'https://django.service/api/service/image',
-          },
-        })
-        .then(async (editor: any) => {
-          this.editors.set(articleId, editor);
-          await editor.setData(target[0].body);
-        })
-        .catch( (err: any) => {
-          console.log(err);
-          console.error( err.stack );
-        });
-      } else {
-        DecoupledEditor
-        .create( editorElement, {
-          ckfinder: {
-            uploadUrl: 'https://django.service/api/service/image',
-          },
-        })
-        .then(async (editor: any) => {
-          this.editors.set(articleId, editor);
-          const toolbarContainer = toolbarElement;
-          toolbarContainer.appendChild( editor.ui.view.toolbar.element );
-          await editor.setData(target[0].body);
-        })
-        .catch( (err: any) => {
-          console.log(err);
-          console.error( err.stack );
-        });
+    //   if (this.editors.get(articleId)) {
+    //     this.editors.get(articleId).destroy();
+    //     DecoupledEditor
+    //     .create( editorElement, {
+    //       ckfinder: {
+    //         uploadUrl: 'https://django.service/api/service/image',
+    //       },
+    //     })
+    //     .then(async (editor: any) => {
+    //       this.editors.set(articleId, editor);
+    //       await editor.setData(target[0].body);
+    //     })
+    //     .catch( (err: any) => {
+    //       console.log(err);
+    //       console.error( err.stack );
+    //     });
+    //   } else {
+    //     DecoupledEditor
+    //     .create( editorElement, {
+    //       ckfinder: {
+    //         uploadUrl: 'https://django.service/api/service/image',
+    //       },
+    //     })
+    //     .then(async (editor: any) => {
+    //       this.editors.set(articleId, editor);
+    //       const toolbarContainer = toolbarElement;
+    //       toolbarContainer.appendChild( editor.ui.view.toolbar.element );
+    //       await editor.setData(target[0].body);
+    //     })
+    //     .catch( (err: any) => {
+    //       console.log(err);
+    //       console.error( err.stack );
+    //     });
+    //   }
+    // });
+  }
+
+  private editAricle(event: any, articleId: number = 0): void {
+    const target = $(event.currentTarget);
+    const saveButton = $(target).next();
+    const parent = $(target).parents('.article.history')[0];
+    const toolbarElement = $(parent).children('.toolbar-container')[0];
+    const editorElement = $(parent).children('.editor')[0];
+    const span = $(editorElement).children('span')[0];
+
+    if ($(target).hasClass('secondary')) {
+      this.isEditing = false;
+
+      $(saveButton).removeClass('orange');
+      $(saveButton).addClass('secondary');
+      $(target).removeClass('secondary');
+      $(target).addClass('primary');
+      $(target).text('Edit');
+
+      // ckeditor解除
+      $(span).css('display', 'block');
+      if (this.editors.get(String(articleId))) {
+        this.editors.get(String(articleId)).destroy();
+        $(toolbarElement).empty();
       }
+      return;
+    }
+
+    if (this.isEditing) {
+      alert('他に編集中の記事があります');
+      return;
+    }
+
+    this.isEditing = true;
+    $(target).addClass('loading');
+
+    // ckeditorセット
+    DecoupledEditor
+    .create( editorElement, {
+      ckfinder: {
+        uploadUrl: 'https://django.service/api/service/image',
+      },
+    })
+    .then( (editor: any) => {
+      this.editors.set(String(articleId), editor);
+      const toolbarContainer = toolbarElement;
+      toolbarContainer.appendChild( editor.ui.view.toolbar.element );
+      editor.setData((this.distinctArticleMap! as any).get(articleId).body);
+
+      $(span).css('display', 'none');
+      $(target).removeClass('loading');
+      $(target).removeClass('primary');
+      $(target).addClass('secondary');
+      $(saveButton).removeClass('secondary');
+      $(saveButton).addClass('orange');
+      $(target).text('Cancel');
+    })
+    .catch( (err: any) => {
+      console.error( err.stack );
     });
   }
 
   private async saveAricle(event: any, articleId: number = 0): Promise<void> {
+    const target = event.currentTarget;
+    const editButton = $(target).prev();
+    const parent = $(target).parents('.article.history')[0];
+    const toolbarElement = $(parent).children('.toolbar-container')[0];
+    const editorElement = $(parent).children('.editor')[0];
+    const span = $(editorElement).children('span')[0];
+
+    if ($(target).hasClass('secondary')) {
+      alert('編集中ではありません');
+      return;
+    }
+
     await ($('#loading-modal') as any).modal({
       closable: false,
     }).modal('show');
@@ -405,6 +463,22 @@ export default class WebrtcArticle extends Vue {
           this.articleArray = this.$store.state.articleArray;
           this.distinctArticleMap = this.$store.state.distinctArticleMap;
         });
+
+        this.isEditing = false;
+
+        $(target).removeClass('orange');
+        $(target).addClass('secondary');
+        $(editButton).removeClass('secondary');
+        $(editButton).addClass('primary');
+        $(editButton).text('Edit');
+
+        // ckeditor解除
+        $(span).css('display', 'block');
+        if (this.editors.get(String(articleId))) {
+          this.editors.get(String(articleId)).destroy();
+          $(toolbarElement).empty();
+        }
+
         alert('保存しました');
       }
       ($('.modal') as any).modal('hide');
@@ -524,20 +598,24 @@ export default class WebrtcArticle extends Vue {
       margin-left: 20px;
     }
 
-    .text {
-      color: #ffffff !important;
-    }
-
     .article {
       margin-top: 10px;
 
-      #editor {
+      #editor, .editor {
         color: #ffffff;
       }
 
-      button {
-        margin-top: 10px;
-        font-size: 12px;
+      .button-wrap {
+        display: flex;
+        flex-direction: row;
+        justify-content: flex-end;
+        align-items: flex-end;
+
+        button {
+          margin-top: 10px;
+          margin-bottom: 10px;
+          font-size: 12px;
+        }
       }
     }
 
@@ -575,6 +653,10 @@ export default class WebrtcArticle extends Vue {
 
     .comment.history {
       margin-bottom: 20px;
+      p {
+        white-space:pre-wrap;
+        color: #ffffff;
+      }
     }
   }
 }

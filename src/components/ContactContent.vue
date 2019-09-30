@@ -274,7 +274,7 @@ export default class ContactContent extends Vue {
       state: this.selectedState,
       email: this.email,
       phone: this.phone,
-      message: this.message,
+      message: this.message.replace(/^\s+/, '').replace(/\s+$/, ''),
     };
 
     await axios.post('https://flask.site:443/contact', body, {
