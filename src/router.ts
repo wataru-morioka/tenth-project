@@ -4,6 +4,7 @@ import Start from './views/Start.vue';
 import Home from './views/Home.vue';
 import About from './views/About.vue';
 import Project from './views/Project.vue';
+import Article from './views/Article.vue';
 import Member from './views/Member.vue';
 import Contact from './views/Contact.vue';
 import Jagermeister from './views/Jagermeister.vue';
@@ -43,6 +44,11 @@ const router = new Router({
       path: '/project',
       name: 'project',
       component: Project,
+    },
+    {
+      path: '/article',
+      name: 'article',
+      component: Article,
     },
     {
       path: '/member',
@@ -111,22 +117,42 @@ router.afterEach((to, from) => {
 });
 
 router.beforeEach((to, from, next) => {
+  console.log(from);
+
   if (!(from.path.match(/home/) || from.path.match(/jagermeister/) || from.path.match(/sauza/)
-   || from.path.match(/about/) || from.path.match(/project/) || from.path.match(/member/) || from.path.match(/contact/)
-   || from.path.match(/management/) || from.path.match(/service/) || from.path.match(/webrtc/))
+   || from.path.match(/about/) || from.path.match(/project/) || from.path.match(/article/)
+   || from.path.match(/member/) || from.path.match(/contact/)
+   || from.path.match(/management/) || from.path.match(/webrtc/))
    && (to.path.match(/home/) || to.path.match(/jagermeister/) || to.path.match(/sauza/))) {
     next({
       path: '/',
     });
   }
 
-  if (to.path.match(/management/) || to.path.match(/service/) || to.path.match(/webrtc/)) {
+  if (to.path.match(/management/)) {
+    if (!store.state.isAdmin) {
+      next({
+        path: '/',
+      });
+    }
+  }
+
+  if (to.path.match(/webrtc/)) {
     if (!store.state.isLogin) {
       next({
         path: '/',
       });
     }
   }
+
+  if (to.path.match(/webrtc-article/)) {
+    if (!store.state.isVip) {
+      next({
+        path: '/',
+      });
+    }
+  }
+
   next();
 });
 

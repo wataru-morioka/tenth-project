@@ -194,6 +194,8 @@ export default class WebrtcAccount extends Vue {
                   isAnonymous: false,
                   thumbnail: buffer,
                   state: res.data.state,
+                  isVip: true,
+                  isAdmin: this.$store.state.isAdmin,
                 });
               } else {
                 alert('photoアップロードに失敗しました');

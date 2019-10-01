@@ -17,7 +17,7 @@
         img#footer-icon(src='../assets/jager-logo.png')
       img#footer-icon2(src='../assets/footer-logo.png')
       br
-      a.extension(href='#', v-if='isLogin', @click.stop.prevent='toManagement')
+      a.extension(v-if='isAdmin', href='#', @click.stop.prevent='toManagement')
         p(style='transition-delay: 0s')
           span M
         p(style='transition-delay: 0.02s')
@@ -38,22 +38,7 @@
           span N
         p(style='transition-delay: 0.18s')
           span T
-      //- a.extension(href='#', v-if='isLogin', @click.stop.prevent='toService')
-      //-   p(style='transition-delay: 0s')
-      //-     span S
-      //-   p(style='transition-delay: 0.02s')
-      //-     span E
-      //-   p(style='transition-delay: 0.04s')
-      //-     span R
-      //-   p(style='transition-delay: 0.06s')
-      //-     span V
-      //-   p(style='transition-delay: 0.08s')
-      //-     span I
-      //-   p(style='transition-delay: 0.10s')
-      //-     span C
-      //-   p(style='transition-delay: 0.12s')
-      //-     span E
-      a.extension(href='#', v-if='isLogin', @click.stop.prevent='toWebrtc')
+      a.extension(v-if='isLogin', href='#', @click.stop.prevent='toWebrtc')
         p(style='transition-delay: 0s')
           span A
         p(style='transition-delay: 0.02s')
@@ -82,14 +67,11 @@ const fs = require('fs');
   computed: mapState({
     isLogin: 'isLogin',
     email: 'email',
+    isAdmin: 'isAdmin',
   }),
 })
 export default class FooterNav extends Vue {
   @Prop() private msg!: string;
-
-  // private mounted() {
-  //   $('.icon.button').popup();
-  // }
 
   private login(): void {
     this.$store.dispatch('login');

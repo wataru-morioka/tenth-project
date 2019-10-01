@@ -7,7 +7,7 @@ div
   video#project-video(controls playsinline)
   div#add-image
     button(type=button class='ui inverted red button', @click='addPhoto($event)') add
-    input#add-input(type='file', accept='video/mp4', @change='onChangeAddPhoto($event)')
+    input#add-input(type='file', accept='image/png,image/jpeg,image/gif', @change='onChangeAddPhoto($event)')
   div.content(class='ui two column divided grid', @click='stop')
     div.row(v-for='(photoArray, index) in photoMultiArray', :key='index', :style='firstChildRow(index)')
       div.column.left(:style='transitionDelay(0.2, index * 2)')
@@ -277,7 +277,6 @@ export default class ManagementUpload extends Mixins<VideoMixin>(VideoMixin) {
 
             await this.$store.dispatch('getPhotos');
             this.photoMultiArray = this.$store.getters.getPhotos;
-            $('#update-menu-bt').click();
 
             ($('.modal') as any).modal('hide');
             $(target).val('');
@@ -431,7 +430,6 @@ export default class ManagementUpload extends Mixins<VideoMixin>(VideoMixin) {
 
     await this.$store.dispatch('getPhotos');
     this.photoMultiArray = this.$store.getters.getPhotos;
-    $('#update-menu-bt').click();
 
     alert('更新が完了しました');
     $(target).prop('disabled', false);
@@ -479,7 +477,6 @@ export default class ManagementUpload extends Mixins<VideoMixin>(VideoMixin) {
 
             await this.$store.dispatch('getPhotos');
             this.photoMultiArray = this.$store.getters.getPhotos;
-            $('#update-menu-bt').click();
 
             ($('.modal') as any).modal('hide');
             $('#add-input').val('');
@@ -522,7 +519,6 @@ export default class ManagementUpload extends Mixins<VideoMixin>(VideoMixin) {
 
             await this.$store.dispatch('getPhotos');
             this.photoMultiArray = this.$store.getters.getPhotos;
-            $('#update-menu-bt').click();
 
             ($('.modal') as any).modal('hide');
           },

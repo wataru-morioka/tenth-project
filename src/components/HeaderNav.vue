@@ -44,7 +44,7 @@
               p(style='transition-delay: 0.12s')
                 span T
           div.rotate-menu
-            a(href='#', @click.stop.prevent='toProject')
+            a(href='#', @click.stop.prevent='toArticle')
               p(style='transition-delay: 0s')
                 span A
               p(style='transition-delay: 0.02s')
@@ -98,7 +98,7 @@
             div.item(@click='toHome') HOME
             div.item(@click='toAbout') ABOUT
             div.item(@click='toProject') PROJECT
-            div.item(@click='toProject') ARTICLE
+            div.item(@click='toArticle') ARTICLE
             div.item(@click='toMember') MEMBER
             div.item(@click='toContact') CONTACT
 </template>
@@ -139,6 +139,10 @@ export default class HeaderNav extends Vue {
 
   private toProject(): void {
     this.$router.push({ name: 'project' });
+  }
+
+  private toArticle(): void {
+    this.$router.push({ name: 'article' });
   }
 
   private toMember(): void {

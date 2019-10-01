@@ -1,18 +1,15 @@
 <template lang='pug'>
   div#nav
     HeaderNav
-    //- FooterNav
 </template>
 
 <script lang='ts'>
 import { Component, Vue } from 'vue-property-decorator';
 import HeaderNav from '@/components/HeaderNav.vue';
-// import FooterNav from '@/components/FooterNav.vue';
 
 @Component({
   components: {
     HeaderNav,
-    // FooterNav,
   },
 })
 export default class SubNav extends Vue {}
@@ -24,7 +21,6 @@ export default class SubNav extends Vue {}
   display: flex;
   flex-direction: column;
   width: 100%;
-  // height: 100vh;
   overflow: hidden;
   min-height: 100%;
   animation-name: fadein;

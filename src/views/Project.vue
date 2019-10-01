@@ -45,8 +45,6 @@ export default class Project extends Vue {}
 <style scoped lang='scss'>
 #project {
   position: relative;
-  animation-name: body-fadein;
-  animation-duration: 2s;
   height: 100vw;
 }
 
@@ -124,15 +122,6 @@ video {
 
   #sub-menu-wrap {
     display: none;
-  }
-}
-
-@keyframes body-fadein {
-  from {
-      opacity: 0;
-  }
-  to {
-      opacity: 1;
   }
 }
 

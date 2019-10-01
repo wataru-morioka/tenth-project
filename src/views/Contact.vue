@@ -1,6 +1,5 @@
 <template lang='pug'>
   div#contact
-    //- HelloWorld
     BackImage
     SubNav
     div.subject
@@ -26,14 +25,12 @@ import { Component, Vue } from 'vue-property-decorator';
 import BackImage from '@/components/BackImage.vue';
 import SubNav from '@/components/SubNav.vue';
 import ContactContent from '@/components/ContactContent.vue';
-// import HelloWorld from '@/components/HelloWorld.vue';
 
 @Component({
   components: {
     BackImage,
     SubNav,
     ContactContent,
-    // HelloWorld,
   },
 })
 export default class Contact extends Vue {}
@@ -42,8 +39,6 @@ export default class Contact extends Vue {}
 <style scoped lang='scss'>
 #contact {
   position: relative;
-  animation-name: body-fadein;
-  animation-duration: 2s;
 }
 
 .subject {
@@ -76,15 +71,6 @@ export default class Contact extends Vue {}
 @media screen and (max-width: 768px){
   .subject {
     font-size: 30px;
-  }
-}
-
-@keyframes body-fadein {
-  from {
-      opacity: 0;
-  }
-  to {
-      opacity: 1;
   }
 }
 

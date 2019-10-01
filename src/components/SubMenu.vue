@@ -1,7 +1,6 @@
 <template lang='pug'>
-  div#sub-menu
-    button#update-menu-bt(@click='updateMenuArray')
-    div.menu-item(v-for='[id, title] in projectTitleMap', :key='id')
+  div#sub-menu(style='transition-delay: 4s')
+    div.menu-item(v-for='[id, title] in this.$store.state.projectTitleMap', :key='id')
       a(href='#', @click.stop.prevent='play(id)')
         p(v-for='(char, charIndex) in Array.from(title)', :key='charIndex', :style='transitionDelay2(0, 0.02, charIndex)')
           span {{ char }}
@@ -311,8 +310,6 @@ import VideoMixin from '@/components/VideoMixin.vue';
 
 @Component
 export default class SubMenu extends Mixins<VideoMixin>(VideoMixin) {
-  private projectTitleMap: Map<number, string> = new Map<number, string>();
-
   private fadein() {
     $('#sub-menu').css({
       opacity: 1,
@@ -320,26 +317,13 @@ export default class SubMenu extends Mixins<VideoMixin>(VideoMixin) {
     });
   }
 
-  // private async beforeCreate() {
-  //   await this.$store.dispatch('checkLoginStatus');
-  //   this.projectTitleMap = this.$store.getters.getProjectTitleMap;
-  // }
-
   private async mounted() {
     this.fadein();
-  }
-
-  private async created() {
-    this.projectTitleMap = this.$store.getters.getProjectTitleMap;
   }
 
   private transitionDelay2(diff: number, rate: number, index: number): string {
     const delay = diff + rate * index;
     return 'transition-delay: ' + delay + 's';
-  }
-
-  private updateMenuArray(): void {
-    this.projectTitleMap = this.$store.getters.getProjectTitleMap;
   }
 }
 </script>
@@ -381,11 +365,5 @@ export default class SubMenu extends Mixins<VideoMixin>(VideoMixin) {
     font-size: 11px;
     color: #ffffff8a;
   }
-}
-
-@media screen and (max-width: 768px){
-  // #sub-menu {
-  //   display: none;
-  // }
 }
 </style>

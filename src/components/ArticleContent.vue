@@ -2,24 +2,7 @@
   div.contents
     Modal
     ConfirmModal(:confirmMessage='confirmMessage')
-    div#post-new.article-list(class='ui comments')
-      div.comment
-        a.avatar
-          img.avatar(:src='setThumbnail()')
-        div.content
-          a.author {{ this.$store.state.displayName }}
-          div.metadata
-          div#plus-post(@click='showPostInputArea()') 
-            i(class='pencil alternate icon') 
-            span POST
-            hr
-          div#input-post.article
-            div.button-wrap
-              button(class='ui inverted orange button', @click='saveAricle($event)') Save
-            div#toolbar-container
-            div#editor
-              p Write an article.
-    div.article-list(class='ui comments', v-for='([key, value], index) in distinctArticleMap', :key='key')
+    div.article-list(class='ui comments', v-for='([key, value], index) in Array.from(distinctArticleMap)', :key='key')
       input(type='hidden', :value='setArticleId(key)')
       div.comment
         a.avatar
@@ -30,14 +13,12 @@
             span.date {{ value.createdDatetime }}
           div.article.history
             div.button-wrap
-              button(class='ui inverted primary button', @click='editAricle($event, key)') Edit
-              button(class='ui inverted secondary button', @click='saveAricle($event, key)') Save
             div.toolbar-container
             div.editor
               span(v-html='setBody(value.body)')
           hr.comment-border
           div.input-comment-wrap
-            div.comment-icon(@click='showInputComment($event)')
+            div.comment-icon(v-if='isVip', @click='showInputComment($event)')
               i(class='pencil alternate icon') 
                 span comment
             form(class='ui reply form')
@@ -57,7 +38,8 @@
 </template>
 
 <script lang='ts'>
-import { Component, Vue, Prop } from 'vue-property-decorator';
+import { Component, Vue } from 'vue-property-decorator';
+import { mapState } from 'vuex';
 import Modal from '@/components/Modal.vue';
 import ConfirmModal from '@/components/ConfirmModal.vue';
 import jQuery from 'jQuery';
@@ -84,8 +66,11 @@ class Comment {
     Modal,
     ConfirmModal,
   },
+  computed: mapState({
+    isVip: 'isVip',
+  }),
 })
-export default class WebrtcArticle extends Vue {
+export default class ArticleContent extends Vue {
   private confirmMessage: string = '';
   private inputPostDisplay: boolean = false;
   private editors: Map<string, any> = new Map<string, any>();
@@ -128,13 +113,18 @@ export default class WebrtcArticle extends Vue {
     });
   }
 
-  private updated() {
-    this.fadein();
-    this.resetEditor();
-  }
-
   private setBody(body: string): string {
     return body;
+  }
+
+  private showInputComment(event: any): void {
+    const parent = $(event.currentTarget).closest('.input-comment-wrap');
+    const form = $(parent).children('form')[0];
+    if ($(form).css('display') === 'none') {
+      $(form).slideToggle(300);
+    } else {
+      $(form).hide(300);
+    }
   }
 
   private commentArray(articleId: number): Comment[] {
@@ -210,38 +200,11 @@ export default class WebrtcArticle extends Vue {
     }).modal('show');
   }
 
-  private showInputComment(event: any): void {
-    const parent = $(event.currentTarget).closest('.input-comment-wrap');
-    const form = $(parent).children('form')[0];
-    if ($(form).css('display') === 'none') {
-      $(form).slideToggle(300);
-    } else {
-      $(form).hide(300);
-    }
-  }
-
   private setArticleId(id: number): number {
     return id;
   }
 
   private setEditor(): void {
-    DecoupledEditor
-    .create( document.querySelector('#editor'), {
-      ckfinder: {
-        uploadUrl: 'https://django.service/api/service/image',
-      },
-    })
-    .then( (editor: any) => {
-      // (window as any).editor = editor;
-      this.editors.set('new', editor);
-      const toolbarContainer = document.querySelector('#toolbar-container')!;
-      toolbarContainer.appendChild( editor.ui.view.toolbar.element );
-    })
-    .catch( (err: any) => {
-      console.log(err);
-      console.error( err.stack );
-    });
-
     $('.article.history').each((index, element) => {
       const toolbarElement = $(element).children('.toolbar-container')[0];
       const editorElement = $(element).children('.editor')[0];
@@ -266,208 +229,6 @@ export default class WebrtcArticle extends Vue {
         console.error( err.stack );
       });
     });
-  }
-
-  private resetEditor(): void {
-    this.editors.get('new').destroy();
-    DecoupledEditor
-    .create( document.querySelector('#editor'), {
-      ckfinder: {
-        uploadUrl: 'https://django.service/api/service/image',
-      },
-    })
-    .then( (editor: any) => {
-      // (window as any).editor = editor;
-      this.editors.set('new', editor);
-      editor.setData('<p>Write an article.</p>');
-    })
-    .catch( (err: any) => {
-      console.error( err.stack );
-    });
-
-    $('.article.history').each((index, element) => {
-      const toolbarElement = $(element).children('.toolbar-container')[0];
-      const editorElement = $(element).children('.editor')[0];
-      const inputElement = $(element).parents('.article-list').children('input')[0];
-      const articleId: string = $(inputElement).val() as string;
-      const target: any = this.articleArray.filter((x) => {
-        return (x as any).id === Number(articleId);
-      });
-
-      if (this.editors.get(articleId)) {
-        this.editors.get(articleId).destroy();
-        DecoupledEditor
-        .create( editorElement, {
-          ckfinder: {
-            uploadUrl: 'https://django.service/api/service/image',
-          },
-        })
-        .then(async (editor: any) => {
-          editor.isReadOnly = true;
-          this.editors.set(articleId, editor);
-          await editor.setData(target[0].body);
-        })
-        .catch( (err: any) => {
-          console.log(err);
-          console.error( err.stack );
-        });
-      } else {
-        DecoupledEditor
-        .create( editorElement, {
-          ckfinder: {
-            uploadUrl: 'https://django.service/api/service/image',
-          },
-        })
-        .then(async (editor: any) => {
-          editor.isReadOnly = true;
-          this.editors.set(articleId, editor);
-          await editor.setData(target[0].body);
-        })
-        .catch( (err: any) => {
-          console.log(err);
-          console.error( err.stack );
-        });
-      }
-    });
-  }
-
-  private editAricle(event: any, articleId: number = 0): void {
-    const target = $(event.currentTarget);
-    const saveButton = $(target).next();
-    const parent = $(target).parents('.article.history')[0];
-    const toolbarElement = $(parent).children('.toolbar-container')[0];
-    const editorElement = $(parent).children('.editor')[0];
-    const span = $(editorElement).children('span')[0];
-    const editor = this.editors.get(String(articleId));
-
-    if ($(target).hasClass('secondary')) {
-      this.isEditing = false;
-
-      $(saveButton).removeClass('orange');
-      $(saveButton).addClass('secondary');
-      $(target).removeClass('secondary');
-      $(target).addClass('primary');
-      $(target).text('Edit');
-
-      // ckeditor解除
-      $(span).css('display', 'block');
-      editor.isReadOnly = true;
-      $(toolbarElement).empty();
-      return;
-    }
-
-    if (this.isEditing) {
-      alert('他に編集中の記事があります');
-      return;
-    }
-
-    this.isEditing = true;
-    $(target).addClass('loading');
-
-    // ckeditorセット
-    const toolbarContainer = toolbarElement;
-    toolbarContainer.appendChild( editor.ui.view.toolbar.element );
-    editor.isReadOnly = false;
-
-    $(span).css('display', 'none');
-    $(target).removeClass('loading');
-    $(target).removeClass('primary');
-    $(target).addClass('secondary');
-    $(saveButton).removeClass('secondary');
-    $(saveButton).addClass('orange');
-    $(target).text('Cancel');
-  }
-
-  private async saveAricle(event: any, articleId: number = 0): Promise<void> {
-    const target = event.currentTarget;
-    const editButton = $(target).prev();
-    const parent = $(target).parents('.article.history')[0];
-    const toolbarElement = $(parent).children('.toolbar-container')[0];
-    const editorElement = $(parent).children('.editor')[0];
-    const span = $(editorElement).children('span')[0];
-
-    if ($(target).hasClass('secondary')) {
-      alert('編集中ではありません');
-      return;
-    }
-
-    await ($('#loading-modal') as any).modal({
-      closable: false,
-    }).modal('show');
-
-    let result: boolean = false;
-
-    setTimeout(async () => {
-      if (articleId === 0) {
-        const body = {
-          body: this.editors.get('new').getData(),
-        };
-        await axios.post('https://django.service/api/service/article', body, {
-          headers: this.$store.state.authHeader,
-        })
-        .then((res) => {
-          if (!res.data.result) {
-            alert('保存に失敗しました');
-            return;
-          }
-          result = true;
-          this.showPostInputArea();
-        })
-        .catch((err) => {
-          console.log(err);
-          alert('保存に失敗しました');
-        });
-      } else {
-        const article: any = this.articleArray.filter((x) => {
-          return (x as any).id === articleId;
-        });
-        console.log(article);
-        const editor = this.editors.get(String(article[0].id));
-        const body = {
-          articleId: article[0].id,
-          body: editor.getData(),
-        };
-        console.log(body);
-        await axios.put('https://django.service/api/service/article', body, {
-          headers: this.$store.state.authHeader,
-        })
-        .then(async (res) => {
-          if (!res.data.result) {
-            alert('保存に失敗しました');
-            return;
-          }
-          result = true;
-          editor.isReadOnly = true;
-        })
-        .catch((err) => {
-          console.log(err);
-          alert('保存に失敗しました');
-        });
-      }
-
-      if (result) {
-        await this.$store.dispatch('getArticles').then(() => {
-          this.articleArray = this.$store.state.articleArray;
-          this.distinctArticleMap = this.$store.state.distinctArticleMap;
-        });
-
-        this.isEditing = false;
-
-        $(target).removeClass('orange');
-        $(target).addClass('secondary');
-        $(editButton).removeClass('secondary');
-        $(editButton).addClass('primary');
-        $(editButton).text('Edit');
-
-        // ckeditor解除
-        $(span).css('display', 'block');
-        const editor = this.editors.get(String(articleId));
-        $(toolbarElement).empty();
-
-        alert('保存しました');
-      }
-      ($('.modal') as any).modal('hide');
-    }, 500);
   }
 
   private setCommentThumbnail(thumbnail: Uint8Array): string {
@@ -498,15 +259,6 @@ export default class WebrtcArticle extends Vue {
     const blobURL2 = window.URL.createObjectURL(blob2);
     return blobURL2;
   }
-
-  private showPostInputArea(): void {
-    if (this.inputPostDisplay) {
-      $('#input-post').hide(300);
-    } else {
-      $('#input-post').slideToggle(300);
-    }
-    this.inputPostDisplay = !this.inputPostDisplay;
-  }
 }
 </script>
 
@@ -520,7 +272,6 @@ export default class WebrtcArticle extends Vue {
   height: auto;
   display: flex;
   flex-direction: column;
-  // justify-content: center;
   align-items: center;
   margin: auto;
 }
@@ -528,27 +279,6 @@ export default class WebrtcArticle extends Vue {
 ::-webkit-scrollbar {
   display: none;
   -webkit-appearance: none;
-}
-
-#plus-post:hover {
-  cursor: pointer;
-}
-
-#post-new {
-  margin-bottom: 50px;
-}
-
-#plus-post {
-  margin-top: 10px;
-
-  i {
-    width: 20px;
-    height: 20px;
-  }
-}
-
-#input-post {
-  display: none;
 }
 
 .article-list {
@@ -559,6 +289,7 @@ export default class WebrtcArticle extends Vue {
   transition: 1.5s;
   -ms-filter: blur(50px);
   filter: blur(50px);
+  transition-delay: 2.3s;
 
   .avatar {
     width: 30px !important;
@@ -651,10 +382,6 @@ export default class WebrtcArticle extends Vue {
 }
 
 @media screen and (max-width: 768px){
-  .contents {
-    bottom: 0px;
-  }
-
   .article-list {
     width: 98%;
 

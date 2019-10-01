@@ -236,6 +236,8 @@ export default new Vuex.Store({
     userName: 'wataru',
     isLogin: false,
     isAnonymous: false,
+    isVip: false,
+    isAdmin: false,
     uid: '',
     idToken: '',
     email: '',
@@ -265,6 +267,8 @@ export default new Vuex.Store({
       state.isAnonymous = payload.isAnonymous;
       state.thumbnail = payload.thumbnail;
       state.state = payload.state;
+      state.isVip = payload.isVip;
+      state.isAdmin = payload.isAdmin;
     },
 
     setViewIndex(state, payload) {
@@ -335,7 +339,6 @@ export default new Vuex.Store({
     async getArticles({ commit, state, rootState }) {
       await getArticleList().then((articleList) => {
         const distinctArticleMaps = getDistinctArticleMap(articleList);
-        console.log(distinctArticleMaps);
         this.commit('setArticleArray', {
           articleArray: articleList,
           distinctArticleMap: distinctArticleMaps,
@@ -414,11 +417,15 @@ export default new Vuex.Store({
                 }
               }
 
+              console.log(res.data);
+
               this.dispatch('setUserInfo', {
                 isLoginAuth: true,
                 isAnonymousAuth: false,
                 thumbnailData: buffer,
                 region: res.data.state,
+                isVipAccount: res.data.isVip,
+                isAdminAccount: res.data.isAdmin,
               });
             })
             .catch((err) => {
@@ -440,12 +447,15 @@ export default new Vuex.Store({
           isLoginAuth: false,
           isAnonymousAuth: true,
           thumbnailData: null,
-          state: '',
+          region: '',
+          isVipAccount: false,
+          isAdminAccount: false,
         });
       });
     },
 
-    async setUserInfo({ commit, state, rootState }, { isLoginAuth, isAnonymousAuth, thumbnailData, region } ) {
+    async setUserInfo({ commit, state, rootState },
+                      { isLoginAuth, isAnonymousAuth, thumbnailData, region, isVipAccount, isAdminAccount } ) {
       const currentUser = firebase.auth().currentUser;
       if (currentUser == null) {
         return;
@@ -458,6 +468,8 @@ export default new Vuex.Store({
         isAnonymous: isAnonymousAuth,
         thumbnail: thumbnailData,
         state: region,
+        isVip: isVipAccount,
+        isAdmin: isAdminAccount,
       });
     },
 

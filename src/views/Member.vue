@@ -37,8 +37,6 @@ export default class Member extends Vue {}
 <style scoped lang='scss'>
 #member {
   position: relative;
-  animation-name: body-fadein;
-  animation-duration: 2s;
 }
 
 .subject {
@@ -71,15 +69,6 @@ export default class Member extends Vue {}
 @media screen and (max-width: 768px){
   .subject {
     font-size: 30px;
-  }
-}
-
-@keyframes body-fadein {
-  from {
-      opacity: 0;
-  }
-  to {
-      opacity: 1;
   }
 }
 

@@ -1,23 +1,18 @@
 <template lang='pug'>
   div#header-nav
     div#webrtc-sidebar(class="ui left sidebar inverted vertical menu")
-      a.item(@click='toArticle') ARTICLE
+      a.item(v-if='isAdmin', @click='toArticle') ARTICLE
       a.item(@click='toAccount') ACCOUNT
     div#header
       div#webrtc-dropdown(class="ui pointing link icon dropdown")
         img.icon#header-logo(src='../assets/jager-logo.png', @click='openSidebar')
-        //- i(class="dropdown icon")
-        //- div.menu
-        //-   div.header CONTROLLER
-        //-   div.divider
-        //-   div.item(@click='toChat') CHAT
-        //-   div.item(@click='toTransfer') TRANSFER
       VipMenuNav
 </template>
 
 <script lang='ts'>
 import { Component, Prop, Vue } from 'vue-property-decorator';
 import VipMenuNav from '@/components/VipMenuNav.vue';
+import { mapState } from 'vuex';
 import axios from 'axios';
 import jQuery from 'jquery';
 // tslint:disable-next-line:no-var-requires
@@ -27,6 +22,9 @@ const fs = require('fs');
   components: {
     VipMenuNav,
   },
+  computed: mapState({
+    isAdmin: 'isAdmin',
+  }),
 })
 export default class WebRtcHeaderNav extends Vue {
   private isDroped: boolean = false;
