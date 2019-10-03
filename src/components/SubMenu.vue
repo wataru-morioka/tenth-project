@@ -2,7 +2,7 @@
   div#sub-menu(style='transition-delay: 4s')
     div.menu-item(v-for='[id, title] in this.$store.state.projectTitleMap', :key='id')
       a(href='#', @click.stop.prevent='play(id)')
-        p(v-for='(char, charIndex) in Array.from(title)', :key='charIndex', :style='transitionDelay2(0, 0.02, charIndex)')
+        p(v-for='(char, charIndex) in Array.from(title)', :key='charIndex', :style='transitionDelay(0, 0.02, charIndex)')
           span {{ char }}
 
     //- div.menu-item(style='transition-delay: 2s;')
@@ -321,7 +321,7 @@ export default class SubMenu extends Mixins<VideoMixin>(VideoMixin) {
     this.fadein();
   }
 
-  private transitionDelay2(diff: number, rate: number, index: number): string {
+  private transitionDelay(diff: number, rate: number, index: number): string {
     const delay = diff + rate * index;
     return 'transition-delay: ' + delay + 's';
   }

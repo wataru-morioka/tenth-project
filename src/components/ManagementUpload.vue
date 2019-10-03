@@ -10,7 +10,7 @@ div
     input#add-input(type='file', accept='image/png,image/jpeg,image/gif', @change='onChangeAddPhoto($event)')
   div.content(class='ui two column divided grid', @click='stop')
     div.row(v-for='(photoArray, index) in photoMultiArray', :key='index', :style='firstChildRow(index)')
-      div.column.left(:style='transitionDelay(0.2, index * 2)')
+      div.column.left(:style='transitionDelay(0, 0.2, index * 2)')
         div.content-box.box-left
           div.edit-photo-wrap
             button(type=button class='ui inverted primary button', @click='editPhoto($event)') edit
@@ -31,7 +31,7 @@ div
             button(type=button class='ui inverted yellow button', @click='minify(photoArray[0].id)') minify
             button(type=button class='ui inverted green button', @click='download(photoArray[0].id)') download
             button(type=button class='ui inverted red button', @click='deletePhoto(photoArray[0].id)') delete
-      div.column(v-if='existsPhoto(photoArray[1])', :style='transitionDelay(0.2, index * 2 + 1)')
+      div.column(v-if='existsPhoto(photoArray[1])', :style='transitionDelay(0, 0.2, index * 2 + 1)')
         div.content-box.box-right
           div.edit-photo-wrap
             button(type=button class='ui inverted primary button', @click='editPhoto($event)') edit
@@ -96,10 +96,9 @@ class PhotoInfo {
 export default class ManagementUpload extends Mixins<VideoMixin>(VideoMixin) {
   private confirmMessage: string = '';
   private photoMultiArray: PhotoInfo[][] = [];
-  private videoSrc: string = '';
 
-  private transitionDelay(rate: number, index: number): string {
-    const delay = rate * index;
+  private transitionDelay(diff: number, rate: number, index: number): string {
+    const delay = diff + rate * index;
     return 'transition-delay: ' + delay + 's';
   }
 

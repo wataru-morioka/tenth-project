@@ -1,21 +1,21 @@
 <template lang='pug'>
-  div.contents
+  div#article-content.contents
     Modal
     ConfirmModal(:confirmMessage='confirmMessage')
-    div.article-list(class='ui comments', v-for='([key, value], index) in Array.from(distinctArticleMap)', :key='key')
-      input(type='hidden', :value='setArticleId(key)')
+    div.article-list(class='ui comments', v-for='([articleId, articleInfo], index) in Array.from(this.$store.state.distinctArticleMap)', :key='articleId')
+      input(type='hidden', :value='setArticleId(articleId)')
       div.comment
         a.avatar
-          img.avatar(:src='setThumbnail(key)')
+          img.avatar(:src='setThumbnail(articleId)')
         div.content
-          a.author {{ value.contributorName }}
+          a.author {{ articleInfo.contributorName }}
           div.metadata
-            span.date {{ value.createdDatetime }}
+            span.date {{ articleInfo.createdDatetime }}
           div.article.history
             div.button-wrap
             div.toolbar-container
             div.editor
-              span(v-html='setBody(value.body)')
+              span(v-html='setBody(articleInfo.body)')
           hr.comment-border
           div.input-comment-wrap
             div.comment-icon(v-if='isVip', @click='showInputComment($event)')
@@ -24,9 +24,9 @@
             form(class='ui reply form')
               div.field
                 textarea.comment-text(v-model='commentMessage')
-              button(class='ui inverted green button', type='button', @click='sendComment($event, key)') Send a Comment
+              button(class='ui inverted green button', type='button', @click='sendComment($event, articleId)') Send a Comment
             div(class='ui comments')
-              div.comment.history(v-for='(comment, index) in commentArray(key)', :key='index')
+              div.comment.history(v-for='(comment, index) in commentArray(articleId)', :key='index')
                 a.avatar
                   img.avatar(:src='setCommentThumbnail(comment.thumbnail)')
                 div.content
@@ -107,9 +107,19 @@ export default class ArticleContent extends Vue {
 
   private mounted() {
     this.setEditor();
-    this.fadein();
+    // this.fadein();
+    setTimeout(() => {
+      this.fadein();
+    }, 2500);
+
     $('.contents').scroll(() => {
       this.fadein();
+      const doch = document.querySelector('#article-content')!.scrollHeight + 130;
+      const winh = $(window).innerHeight()!;
+      const bottom = doch - winh;
+      if (bottom <= $('#article-content').scrollTop()!) {
+        console.log('test');
+      }
     });
   }
 
@@ -128,7 +138,7 @@ export default class ArticleContent extends Vue {
   }
 
   private commentArray(articleId: number): Comment[] {
-    const targetArray = this.articleArray.filter((article: any) => {
+    const targetArray = this.$store.state.articleArray.filter((article: any) => {
       return article.id === articleId && article.commentatorName != null;
     });
     const commentArray = targetArray.map((article: any) => {
@@ -220,7 +230,7 @@ export default class ArticleContent extends Vue {
         this.editors.set(articleId, editor);
         editor.isReadOnly = true;
 
-        const target: any = this.articleArray.filter((x) => {
+        const target: any = this.$store.state.articleArray.filter((x: any) => {
           return (x as any).id === Number(articleId);
         });
         editor.setData(target[0].body);
@@ -250,9 +260,10 @@ export default class ArticleContent extends Vue {
       return blobURL;
     }
 
-    const target: any = this.articleArray.filter((x) => {
-        return (x as any).id === articleId;
-      });
+    const target: any = this.$store.state.articleArray.filter((x: any) => {
+      return (x as any).id === articleId;
+    });
+
     const thumbnail2 = target[0].thumbnail;
     const buffer2 = Buffer.from(thumbnail2);
     const blob2 = new Blob([buffer2], {type: thumbnail2.mimetype});
@@ -289,7 +300,7 @@ export default class ArticleContent extends Vue {
   transition: 1.5s;
   -ms-filter: blur(50px);
   filter: blur(50px);
-  transition-delay: 2.3s;
+  // transition-delay: 2.3s;
 
   .avatar {
     width: 30px !important;

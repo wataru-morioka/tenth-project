@@ -1,443 +1,517 @@
 <template lang='pug'>
   div.content(class="ui two column divided grid", @click='stop')
     Modal
-    div.row(style='margin-top: 70px;')
-      div.column.left(style='transition-delay: 2s;')
-        div.content-box.box-left#video-1(@click='play($event)')
-          div.image
+    div.row(v-for='(photoArray, index) in this.$store.state.photoMultiArray', :key='index', :style='firstChildRow(index)')
+      div.column.left(:style='transitionDelay(0, 0.2, index * 2)')
+        div.content-box.box-left
+          div.image(@click='play(photoArray[0].id)')
             i.huge.play.icon
-            img(src='../assets/6.jpg')
+            img(:src='setPhoto(index, 0)')
           div.subject
-            p 海浜幕張公園
+            p {{ photoArray[0].subTitle }}
             h4 
-              p(style='transition-delay: 0s')
-                span J
-              p(style='transition-delay: 0.02s')
-                span A
-              p(style='transition-delay: 0.04s')
-                span G
-              p(style='transition-delay: 0.06s')
-                span E
-              p(style='transition-delay: 0.08s')
-                span R
-              p(style='transition-delay: 0.10s')
-                span M
-              p(style='transition-delay: 0.12s')
-                span I
-              p(style='transition-delay: 0.14s')
-                span S
-              p(style='transition-delay: 0.16s')
-                span T
-              p(style='transition-delay: 0.18s')
-                span E
-              p(style='transition-delay: 0.20s')
-                span R
-      div.column(style='transition-delay: 2.2s;')
-        div.content-box.box-right(@click='play($event)')
-          div.image
+              p(v-for='(char, charIndex) in Array.from(photoArray[0].title)', :key='charIndex', :style='transitionDelay(0, 0.02, charIndex)')
+                span {{ char }}
+      div.column(v-if='existsPhoto(photoArray[1])', :style='transitionDelay(0, 0.2, index * 2 + 1)')
+        div.content-box.box-right
+          div.image(@click='play(photoArray[1].id)')
             i.huge.play.icon
-            img(src='../assets/12.jpg')
+            img(:src='setPhoto(index, 1)')
           div.subject
-            p お台場臨時特設会場
+            p {{ photoArray[1].subTitle }}
             h4 
-              p(style='transition-delay: 0s')
-                span S
-              p(style='transition-delay: 0.02s')
-                span A
-              p(style='transition-delay: 0.04s')
-                span U
-              p(style='transition-delay: 0.06s')
-                span Z
-              p(style='transition-delay: 0.08s')
-                span A
-    div.row
-      div.column.left(style='transition-delay: 2.4s;')
-        div.content-box.box-left(@click='play($event)')
-          div.image
-            i.huge.play.icon
-            img(src='../assets/1.jpg')
-          div.subject
-            p レインボーブリッジ
-            h4
-              p(style='transition-delay: 0s')
-                span M
-              p(style='transition-delay: 0.02s')
-                span A
-              p(style='transition-delay: 0.04s')
-                span L
-              p(style='transition-delay: 0.06s')
-                span I
-              p(style='transition-delay: 0.08s')
-                span B
-              p(style='transition-delay: 0.10s')
-                span U
-      div.column(style='transition-delay: 2.6s;')
-        div.content-box.box-right(@click='play($event)')
-          div.image
-            i.huge.play.icon
-            img(src='../assets/2.jpg')
-          div.subject
-            p Club
-            h4
-              p(style='transition-delay: 0s')
-                span C
-              p(style='transition-delay: 0.02s')
-                span A
-              p(style='transition-delay: 0.04s')
-                span M
-              p(style='transition-delay: 0.06s')
-                span P
-              p(style='transition-delay: 0.08s')
-                span R
-              p(style='transition-delay: 0.10s')
-                span I
-    div.row
-      div.column.left(style='transition-delay: 2.8s;')
-        div.content-box.box-left(@click='play($event)')
-          div.image
-            i.huge.play.icon
-            img(src='../assets/3.jpg')
-          div.subject
-            p Club
-            h4
-              p(style='transition-delay: 0s')
-                span S
-              p(style='transition-delay: 0.02s')
-                span K
-              p(style='transition-delay: 0.04s')
-                span Y
-              p(style='transition-delay: 0.06s')
-                span Y
-      div.column(style='transition-delay: 3s;')
-        div.content-box.box-right(@click='play($event)')
-          div.image
-            i.huge.play.icon
-            img(src='../assets/4.jpg')
-          div.subject
-            p Club
-            h4
-              p(style='transition-delay: 0s')
-                span B
-              p(style='transition-delay: 0.02s')
-                span E
-              p(style='transition-delay: 0.04s')
-                span E
-              p(style='transition-delay: 0.06s')
-                span F
-              p(style='transition-delay: 0.08s')
-                span E
-              p(style='transition-delay: 0.10s')
-                span A
-              p(style='transition-delay: 0.12s')
-                span T
-              p(style='transition-delay: 0.14s')
-                span E
-              p(style='transition-delay: 0.16s')
-                span R
-    div.row
-      div.column.left(style='transition-delay: 3.2s;')
-        div.content-box.box-left(@click='play($event)')
-          div.image
-            i.huge.play.icon
-            img(src='../assets/5.jpg')
-          div.subject
-            p Club
-            h4
-              p(style='transition-delay: 0s')
-                span M
-              p(style='transition-delay: 0.02s')
-                span I
-              p(style='transition-delay: 0.04s')
-                span D
-              p(style='transition-delay: 0.06s')
-                span O
-              p(style='transition-delay: 0.08s')
-                span R
-              p(style='transition-delay: 0.10s')
-                span I
-      div.column(style='transition-delay: 3.4s;')
-        div.content-box.box-right(@click='play($event)')
-          div.image
-            i.huge.play.icon
-            img(src='../assets/6.jpg')
-          div.subject
-            p Club
-            h4
-              p(style='transition-delay: 0s')
-                span S
-              p(style='transition-delay: 0.02s')
-                span K
-              p(style='transition-delay: 0.04s')
-                span Y
-              p(style='transition-delay: 0.06s')
-                span Y
-              p(style='transition-delay: 0.08s')
-                span &nbsp;
-              p(style='transition-delay: 0.10s')
-                span B
-              p(style='transition-delay: 0.12s')
-                span L
-              p(style='transition-delay: 0.14s')
-                span U
-              p(style='transition-delay: 0.16s')
-                span E
-    div.row
-      div.column.left
-        div.content-box.box-left(@click='play($event)')
-          div.image
-            i.huge.play.icon
-            img(src='../assets/7.jpg')
-          div.subject
-            p Club
-            h4 
-              p(style='transition-delay: 0s')
-                span M
-              p(style='transition-delay: 0.02s')
-                span A
-              p(style='transition-delay: 0.04s')
-                span C
-              p(style='transition-delay: 0.06s')
-                span A
-              p(style='transition-delay: 0.08s')
-                span L
-              p(style='transition-delay: 0.10s')
-                span L
-              p(style='transition-delay: 0.12s')
-                span A
-              p(style='transition-delay: 0.14s')
-                span N
-      div.column
-        div.content-box.box-right(@click='play($event)')
-          div.image
-            i.huge.play.icon
-            img(src='../assets/9.jpg')
-          div.subject
-            p Club
-            h4
-              p(style='transition-delay: 0s')
-                span J
-              p(style='transition-delay: 0.02s')
-                span I
-              p(style='transition-delay: 0.04s')
-                span M
-              p(style='transition-delay: 0.06s')
-                span &nbsp;
-              p(style='transition-delay: 0.08s')
-                span B
-              p(style='transition-delay: 0.10s')
-                span E
-              p(style='transition-delay: 0.12s')
-                span A
-              p(style='transition-delay: 0.14s')
-                span M
-    div.row
-      div.column.left
-        div.content-box.box-left(@click='play($event)')
-          div.image
-            i.huge.play.icon
-            img(src='../assets/10.jpg')
-          div.subject
-            p Club
-            h4
-              p(style='transition-delay: 0s')
-                span L
-              p(style='transition-delay: 0.02s')
-                span A
-              p(style='transition-delay: 0.04s')
-                span P
-              p(style='transition-delay: 0.06s')
-                span H
-              p(style='transition-delay: 0.08s')
-                span R
-              p(style='transition-delay: 0.10s')
-                span O
-              p(style='transition-delay: 0.12s')
-                span A
-              p(style='transition-delay: 0.14s')
-                span I
-              p(style='transition-delay: 0.16s')
-                span G
-      div.column
-        div.content-box.box-right(@click='play($event)')
-          div.image
-            i.huge.play.icon
-            img(src='../assets/11.jpg')
-          div.subject
-            p Club
-            h4
-              p(style='transition-delay: 0s')
-                span C
-              p(style='transition-delay: 0.02s')
-                span A
-              p(style='transition-delay: 0.04s')
-                span M
-              p(style='transition-delay: 0.06s')
-                span P
-              p(style='transition-delay: 0.08s')
-                span R
-              p(style='transition-delay: 0.10s')
-                span I
-    div.row(style='margin-top: 70px;')
-      div.column.left(style='transition-delay: 2s;')
-        div.content-box.box-left(@click='play($event)')
-          div.image
-            i.huge.play.icon
-            img(src='../assets/12.jpg')
-          div.subject
-            p 海浜幕張公園
-            h4 
-              p(style='transition-delay: 0s')
-                span J
-              p(style='transition-delay: 0.02s')
-                span A
-              p(style='transition-delay: 0.04s')
-                span G
-              p(style='transition-delay: 0.06s')
-                span E
-              p(style='transition-delay: 0.08s')
-                span R
-              p(style='transition-delay: 0.10s')
-                span M
-              p(style='transition-delay: 0.12s')
-                span I
-              p(style='transition-delay: 0.14s')
-                span S
-              p(style='transition-delay: 0.16s')
-                span T
-              p(style='transition-delay: 0.18s')
-                span E
-              p(style='transition-delay: 0.20s')
-                span R
-      div.column(style='transition-delay: 2.2s;')
-        div.content-box.box-right(@click='play($event)')
-          div.image
-            i.huge.play.icon
-            img(src='../assets/13.jpg')
-          div.subject
-            p お台場臨時特設会場
-            h4 
-              p(style='transition-delay: 0s')
-                span S
-              p(style='transition-delay: 0.02s')
-                span A
-              p(style='transition-delay: 0.04s')
-                span U
-              p(style='transition-delay: 0.06s')
-                span Z
-              p(style='transition-delay: 0.08s')
-                span A
-    div.row
-      div.column.left(style='transition-delay: 2.4s;')
-        div.content-box.box-left(@click='play($event)')
-          div.image
-            i.huge.play.icon
-            img(src='../assets/14.jpg')
-          div.subject
-            p レインボーブリッジ
-            h4
-              p(style='transition-delay: 0s')
-                span M
-              p(style='transition-delay: 0.02s')
-                span A
-              p(style='transition-delay: 0.04s')
-                span L
-              p(style='transition-delay: 0.06s')
-                span I
-              p(style='transition-delay: 0.08s')
-                span B
-              p(style='transition-delay: 0.10s')
-                span U
-      div.column(style='transition-delay: 2.6s;')
-        div.content-box.box-right(@click='play($event)')
-          div.image
-            i.huge.play.icon
-            img(src='../assets/15.jpg')
-          div.subject
-            p Club
-            h4
-              p(style='transition-delay: 0s')
-                span C
-              p(style='transition-delay: 0.02s')
-                span A
-              p(style='transition-delay: 0.04s')
-                span M
-              p(style='transition-delay: 0.06s')
-                span P
-              p(style='transition-delay: 0.08s')
-                span R
-              p(style='transition-delay: 0.10s')
-                span I
-    div.row
-      div.column.left(style='transition-delay: 2.8s;')
-        div.content-box.box-left(@click='play($event)')
-          div.image
-            i.huge.play.icon
-            img(src='../assets/16.jpg')
-          div.subject
-            p Club
-            h4
-              p(style='transition-delay: 0s')
-                span S
-              p(style='transition-delay: 0.02s')
-                span K
-              p(style='transition-delay: 0.04s')
-                span Y
-              p(style='transition-delay: 0.06s')
-                span Y
-      div.column(style='transition-delay: 3s;')
-        div.content-box.box-right(@click='play($event)')
-          div.image
-            i.huge.play.icon
-            img(src='../assets/17.jpg')
-          div.subject
-            p Club
-            h4
-              p(style='transition-delay: 0s')
-                span B
-              p(style='transition-delay: 0.02s')
-                span E
-              p(style='transition-delay: 0.04s')
-                span E
-              p(style='transition-delay: 0.06s')
-                span F
-              p(style='transition-delay: 0.08s')
-                span E
-              p(style='transition-delay: 0.10s')
-                span A
-              p(style='transition-delay: 0.12s')
-                span T
-              p(style='transition-delay: 0.14s')
-                span E
-              p(style='transition-delay: 0.16s')
-                span R
+              p(v-for='(char, charIndex) in Array.from(photoArray[1].title)', :key='charIndex', :style='transitionDelay(0, 0.02, charIndex)')
+                span {{ char }}
+
+    //- div.row(style='margin-top: 70px;')
+    //-   div.column.left(style='transition-delay: 2s;')
+    //-     div.content-box.box-left#video-1(@click='play($event)')
+    //-       div.image
+    //-         i.huge.play.icon
+    //-         img(src='../assets/6.jpg')
+    //-       div.subject
+    //-         p 海浜幕張公園
+    //-         h4 
+    //-           p(style='transition-delay: 0s')
+    //-             span J
+    //-           p(style='transition-delay: 0.02s')
+    //-             span A
+    //-           p(style='transition-delay: 0.04s')
+    //-             span G
+    //-           p(style='transition-delay: 0.06s')
+    //-             span E
+    //-           p(style='transition-delay: 0.08s')
+    //-             span R
+    //-           p(style='transition-delay: 0.10s')
+    //-             span M
+    //-           p(style='transition-delay: 0.12s')
+    //-             span I
+    //-           p(style='transition-delay: 0.14s')
+    //-             span S
+    //-           p(style='transition-delay: 0.16s')
+    //-             span T
+    //-           p(style='transition-delay: 0.18s')
+    //-             span E
+    //-           p(style='transition-delay: 0.20s')
+    //-             span R
+    //-   div.column(style='transition-delay: 2.2s;')
+    //-     div.content-box.box-right(@click='play($event)')
+    //-       div.image
+    //-         i.huge.play.icon
+    //-         img(src='../assets/12.jpg')
+    //-       div.subject
+    //-         p お台場臨時特設会場
+    //-         h4 
+    //-           p(style='transition-delay: 0s')
+    //-             span S
+    //-           p(style='transition-delay: 0.02s')
+    //-             span A
+    //-           p(style='transition-delay: 0.04s')
+    //-             span U
+    //-           p(style='transition-delay: 0.06s')
+    //-             span Z
+    //-           p(style='transition-delay: 0.08s')
+    //-             span A
+    //- div.row
+    //-   div.column.left(style='transition-delay: 2.4s;')
+    //-     div.content-box.box-left(@click='play($event)')
+    //-       div.image
+    //-         i.huge.play.icon
+    //-         img(src='../assets/1.jpg')
+    //-       div.subject
+    //-         p レインボーブリッジ
+    //-         h4
+    //-           p(style='transition-delay: 0s')
+    //-             span M
+    //-           p(style='transition-delay: 0.02s')
+    //-             span A
+    //-           p(style='transition-delay: 0.04s')
+    //-             span L
+    //-           p(style='transition-delay: 0.06s')
+    //-             span I
+    //-           p(style='transition-delay: 0.08s')
+    //-             span B
+    //-           p(style='transition-delay: 0.10s')
+    //-             span U
+    //-   div.column(style='transition-delay: 2.6s;')
+    //-     div.content-box.box-right(@click='play($event)')
+    //-       div.image
+    //-         i.huge.play.icon
+    //-         img(src='../assets/2.jpg')
+    //-       div.subject
+    //-         p Club
+    //-         h4
+    //-           p(style='transition-delay: 0s')
+    //-             span C
+    //-           p(style='transition-delay: 0.02s')
+    //-             span A
+    //-           p(style='transition-delay: 0.04s')
+    //-             span M
+    //-           p(style='transition-delay: 0.06s')
+    //-             span P
+    //-           p(style='transition-delay: 0.08s')
+    //-             span R
+    //-           p(style='transition-delay: 0.10s')
+    //-             span I
+    //- div.row
+    //-   div.column.left(style='transition-delay: 2.8s;')
+    //-     div.content-box.box-left(@click='play($event)')
+    //-       div.image
+    //-         i.huge.play.icon
+    //-         img(src='../assets/3.jpg')
+    //-       div.subject
+    //-         p Club
+    //-         h4
+    //-           p(style='transition-delay: 0s')
+    //-             span S
+    //-           p(style='transition-delay: 0.02s')
+    //-             span K
+    //-           p(style='transition-delay: 0.04s')
+    //-             span Y
+    //-           p(style='transition-delay: 0.06s')
+    //-             span Y
+    //-   div.column(style='transition-delay: 3s;')
+    //-     div.content-box.box-right(@click='play($event)')
+    //-       div.image
+    //-         i.huge.play.icon
+    //-         img(src='../assets/4.jpg')
+    //-       div.subject
+    //-         p Club
+    //-         h4
+    //-           p(style='transition-delay: 0s')
+    //-             span B
+    //-           p(style='transition-delay: 0.02s')
+    //-             span E
+    //-           p(style='transition-delay: 0.04s')
+    //-             span E
+    //-           p(style='transition-delay: 0.06s')
+    //-             span F
+    //-           p(style='transition-delay: 0.08s')
+    //-             span E
+    //-           p(style='transition-delay: 0.10s')
+    //-             span A
+    //-           p(style='transition-delay: 0.12s')
+    //-             span T
+    //-           p(style='transition-delay: 0.14s')
+    //-             span E
+    //-           p(style='transition-delay: 0.16s')
+    //-             span R
+    //- div.row
+    //-   div.column.left(style='transition-delay: 3.2s;')
+    //-     div.content-box.box-left(@click='play($event)')
+    //-       div.image
+    //-         i.huge.play.icon
+    //-         img(src='../assets/5.jpg')
+    //-       div.subject
+    //-         p Club
+    //-         h4
+    //-           p(style='transition-delay: 0s')
+    //-             span M
+    //-           p(style='transition-delay: 0.02s')
+    //-             span I
+    //-           p(style='transition-delay: 0.04s')
+    //-             span D
+    //-           p(style='transition-delay: 0.06s')
+    //-             span O
+    //-           p(style='transition-delay: 0.08s')
+    //-             span R
+    //-           p(style='transition-delay: 0.10s')
+    //-             span I
+    //-   div.column(style='transition-delay: 3.4s;')
+    //-     div.content-box.box-right(@click='play($event)')
+    //-       div.image
+    //-         i.huge.play.icon
+    //-         img(src='../assets/6.jpg')
+    //-       div.subject
+    //-         p Club
+    //-         h4
+    //-           p(style='transition-delay: 0s')
+    //-             span S
+    //-           p(style='transition-delay: 0.02s')
+    //-             span K
+    //-           p(style='transition-delay: 0.04s')
+    //-             span Y
+    //-           p(style='transition-delay: 0.06s')
+    //-             span Y
+    //-           p(style='transition-delay: 0.08s')
+    //-             span &nbsp;
+    //-           p(style='transition-delay: 0.10s')
+    //-             span B
+    //-           p(style='transition-delay: 0.12s')
+    //-             span L
+    //-           p(style='transition-delay: 0.14s')
+    //-             span U
+    //-           p(style='transition-delay: 0.16s')
+    //-             span E
+    //- div.row
+    //-   div.column.left
+    //-     div.content-box.box-left(@click='play($event)')
+    //-       div.image
+    //-         i.huge.play.icon
+    //-         img(src='../assets/7.jpg')
+    //-       div.subject
+    //-         p Club
+    //-         h4 
+    //-           p(style='transition-delay: 0s')
+    //-             span M
+    //-           p(style='transition-delay: 0.02s')
+    //-             span A
+    //-           p(style='transition-delay: 0.04s')
+    //-             span C
+    //-           p(style='transition-delay: 0.06s')
+    //-             span A
+    //-           p(style='transition-delay: 0.08s')
+    //-             span L
+    //-           p(style='transition-delay: 0.10s')
+    //-             span L
+    //-           p(style='transition-delay: 0.12s')
+    //-             span A
+    //-           p(style='transition-delay: 0.14s')
+    //-             span N
+    //-   div.column
+    //-     div.content-box.box-right(@click='play($event)')
+    //-       div.image
+    //-         i.huge.play.icon
+    //-         img(src='../assets/9.jpg')
+    //-       div.subject
+    //-         p Club
+    //-         h4
+    //-           p(style='transition-delay: 0s')
+    //-             span J
+    //-           p(style='transition-delay: 0.02s')
+    //-             span I
+    //-           p(style='transition-delay: 0.04s')
+    //-             span M
+    //-           p(style='transition-delay: 0.06s')
+    //-             span &nbsp;
+    //-           p(style='transition-delay: 0.08s')
+    //-             span B
+    //-           p(style='transition-delay: 0.10s')
+    //-             span E
+    //-           p(style='transition-delay: 0.12s')
+    //-             span A
+    //-           p(style='transition-delay: 0.14s')
+    //-             span M
+    //- div.row
+    //-   div.column.left
+    //-     div.content-box.box-left(@click='play($event)')
+    //-       div.image
+    //-         i.huge.play.icon
+    //-         img(src='../assets/10.jpg')
+    //-       div.subject
+    //-         p Club
+    //-         h4
+    //-           p(style='transition-delay: 0s')
+    //-             span L
+    //-           p(style='transition-delay: 0.02s')
+    //-             span A
+    //-           p(style='transition-delay: 0.04s')
+    //-             span P
+    //-           p(style='transition-delay: 0.06s')
+    //-             span H
+    //-           p(style='transition-delay: 0.08s')
+    //-             span R
+    //-           p(style='transition-delay: 0.10s')
+    //-             span O
+    //-           p(style='transition-delay: 0.12s')
+    //-             span A
+    //-           p(style='transition-delay: 0.14s')
+    //-             span I
+    //-           p(style='transition-delay: 0.16s')
+    //-             span G
+    //-   div.column
+    //-     div.content-box.box-right(@click='play($event)')
+    //-       div.image
+    //-         i.huge.play.icon
+    //-         img(src='../assets/11.jpg')
+    //-       div.subject
+    //-         p Club
+    //-         h4
+    //-           p(style='transition-delay: 0s')
+    //-             span C
+    //-           p(style='transition-delay: 0.02s')
+    //-             span A
+    //-           p(style='transition-delay: 0.04s')
+    //-             span M
+    //-           p(style='transition-delay: 0.06s')
+    //-             span P
+    //-           p(style='transition-delay: 0.08s')
+    //-             span R
+    //-           p(style='transition-delay: 0.10s')
+    //-             span I
+    //- div.row(style='margin-top: 70px;')
+    //-   div.column.left(style='transition-delay: 2s;')
+    //-     div.content-box.box-left(@click='play($event)')
+    //-       div.image
+    //-         i.huge.play.icon
+    //-         img(src='../assets/12.jpg')
+    //-       div.subject
+    //-         p 海浜幕張公園
+    //-         h4 
+    //-           p(style='transition-delay: 0s')
+    //-             span J
+    //-           p(style='transition-delay: 0.02s')
+    //-             span A
+    //-           p(style='transition-delay: 0.04s')
+    //-             span G
+    //-           p(style='transition-delay: 0.06s')
+    //-             span E
+    //-           p(style='transition-delay: 0.08s')
+    //-             span R
+    //-           p(style='transition-delay: 0.10s')
+    //-             span M
+    //-           p(style='transition-delay: 0.12s')
+    //-             span I
+    //-           p(style='transition-delay: 0.14s')
+    //-             span S
+    //-           p(style='transition-delay: 0.16s')
+    //-             span T
+    //-           p(style='transition-delay: 0.18s')
+    //-             span E
+    //-           p(style='transition-delay: 0.20s')
+    //-             span R
+    //-   div.column(style='transition-delay: 2.2s;')
+    //-     div.content-box.box-right(@click='play($event)')
+    //-       div.image
+    //-         i.huge.play.icon
+    //-         img(src='../assets/13.jpg')
+    //-       div.subject
+    //-         p お台場臨時特設会場
+    //-         h4 
+    //-           p(style='transition-delay: 0s')
+    //-             span S
+    //-           p(style='transition-delay: 0.02s')
+    //-             span A
+    //-           p(style='transition-delay: 0.04s')
+    //-             span U
+    //-           p(style='transition-delay: 0.06s')
+    //-             span Z
+    //-           p(style='transition-delay: 0.08s')
+    //-             span A
+    //- div.row
+    //-   div.column.left(style='transition-delay: 2.4s;')
+    //-     div.content-box.box-left(@click='play($event)')
+    //-       div.image
+    //-         i.huge.play.icon
+    //-         img(src='../assets/14.jpg')
+    //-       div.subject
+    //-         p レインボーブリッジ
+    //-         h4
+    //-           p(style='transition-delay: 0s')
+    //-             span M
+    //-           p(style='transition-delay: 0.02s')
+    //-             span A
+    //-           p(style='transition-delay: 0.04s')
+    //-             span L
+    //-           p(style='transition-delay: 0.06s')
+    //-             span I
+    //-           p(style='transition-delay: 0.08s')
+    //-             span B
+    //-           p(style='transition-delay: 0.10s')
+    //-             span U
+    //-   div.column(style='transition-delay: 2.6s;')
+    //-     div.content-box.box-right(@click='play($event)')
+    //-       div.image
+    //-         i.huge.play.icon
+    //-         img(src='../assets/15.jpg')
+    //-       div.subject
+    //-         p Club
+    //-         h4
+    //-           p(style='transition-delay: 0s')
+    //-             span C
+    //-           p(style='transition-delay: 0.02s')
+    //-             span A
+    //-           p(style='transition-delay: 0.04s')
+    //-             span M
+    //-           p(style='transition-delay: 0.06s')
+    //-             span P
+    //-           p(style='transition-delay: 0.08s')
+    //-             span R
+    //-           p(style='transition-delay: 0.10s')
+    //-             span I
+    //- div.row
+    //-   div.column.left(style='transition-delay: 2.8s;')
+    //-     div.content-box.box-left(@click='play($event)')
+    //-       div.image
+    //-         i.huge.play.icon
+    //-         img(src='../assets/16.jpg')
+    //-       div.subject
+    //-         p Club
+    //-         h4
+    //-           p(style='transition-delay: 0s')
+    //-             span S
+    //-           p(style='transition-delay: 0.02s')
+    //-             span K
+    //-           p(style='transition-delay: 0.04s')
+    //-             span Y
+    //-           p(style='transition-delay: 0.06s')
+    //-             span Y
+    //-   div.column(style='transition-delay: 3s;')
+    //-     div.content-box.box-right(@click='play($event)')
+    //-       div.image
+    //-         i.huge.play.icon
+    //-         img(src='../assets/17.jpg')
+    //-       div.subject
+    //-         p Club
+    //-         h4
+    //-           p(style='transition-delay: 0s')
+    //-             span B
+    //-           p(style='transition-delay: 0.02s')
+    //-             span E
+    //-           p(style='transition-delay: 0.04s')
+    //-             span E
+    //-           p(style='transition-delay: 0.06s')
+    //-             span F
+    //-           p(style='transition-delay: 0.08s')
+    //-             span E
+    //-           p(style='transition-delay: 0.10s')
+    //-             span A
+    //-           p(style='transition-delay: 0.12s')
+    //-             span T
+    //-           p(style='transition-delay: 0.14s')
+    //-             span E
+    //-           p(style='transition-delay: 0.16s')
+    //-             span R
 </template>
 
 <script lang='ts'>
-import { Component, Vue } from 'vue-property-decorator';
+// import { Component, Vue } from 'vue-property-decorator';
+import Vue from 'vue';
+import { Component, Mixin, Mixins } from 'vue-mixin-decorator';
 import Modal from '@/components/Modal.vue';
+import VideoMixin from '@/components/VideoMixin.vue';
+import axios from 'axios';
 import jQuery from 'jQuery';
+
+class PhotoInfo {
+  public id: number;
+  public subTitle: string;
+  public title: string;
+  public mimetype: string;
+  public data: Buffer;
+  public createdDatetime: string;
+
+  constructor(id: number, subTitle: string, title: string, mimetype: string, fileName: string,
+              size: number, data: Buffer, createdDatetime: string, modifiedDatetime: string) {
+    this.id = id;
+    this.subTitle = subTitle;
+    this.title = title;
+    this.mimetype = mimetype;
+    this.data = data;
+    this.createdDatetime = createdDatetime;
+  }
+}
 
 @Component({
   components: {
     Modal,
   },
 })
-export default class ProjectContent extends Vue {
-  private isDisplay: boolean = false;
-  private isPlaying: boolean = false;
+export default class ProjectContent extends Mixins<VideoMixin>(VideoMixin) {
+  // private isDisplay: boolean = false;
+  // private isPlaying: boolean = false;
+
+  private firstChildRow(index: number): string {
+    if (index === 0) {
+      return 'margin-top: 70px;';
+    }
+    return 'margin-top: auto;';
+  }
+
+  private existsPhoto(photo: any): boolean {
+    if (photo === undefined) {
+      return false;
+    }
+    return true;
+  }
+
+  private setPhoto(indexX: number, indexY: number): string {
+    const buffer = Buffer.from(this.$store.state.photoMultiArray[indexX][indexY].data);
+    const blob = new Blob([buffer], {type: this.$store.state.photoMultiArray[indexX][indexY].mimetype});
+    const blobURL = window.URL.createObjectURL(blob);
+    return blobURL;
+  }
 
   private created() {
     setTimeout(() => {
       $('.content').css('top', '60px');
     }, 1000);
+    this.$store.commit('setInitVideoFlag');
   }
 
   private mounted() {
-    this.fadein();
+    setTimeout(() => {
+      this.fadein();
+    }, 2500);
     $('.content').scroll(() => {
       this.fadein();
-      this.stop();
+      (this as any).stop();
     });
+  }
+
+  private transitionDelay(diff: number, rate: number, index: number): string {
+    const delay = diff + rate * index;
+    return 'transition-delay: ' + delay + 's';
   }
 
   private fadein(): void {
@@ -461,99 +535,99 @@ export default class ProjectContent extends Vue {
     });
   }
 
-  private play(event: any): void {
-    if ( this.isDisplay ) {
-      this.stop();
-      return;
-    }
+  // private play(event: any): void {
+  //   if ( this.isDisplay ) {
+  //     this.stop();
+  //     return;
+  //   }
 
-    ($('#loading-modal') as any).modal({
-      closable: false,
-    }).modal('show');
+  //   ($('#loading-modal') as any).modal({
+  //     closable: false,
+  //   }).modal('show');
 
-    setTimeout(() => {
-      const video = document.getElementById('project-video') as HTMLVideoElement;
-      ($('.modal') as any).modal('hide');
-      // video.src = '../assets/jager.mp4';
-      // video.load();
-      video.play();
-      this.isDisplay = true;
-      this.isPlaying = true;
+  //   setTimeout(() => {
+  //     const video = document.getElementById('project-video') as HTMLVideoElement;
+  //     ($('.modal') as any).modal('hide');
+  //     // video.src = '../assets/jager.mp4';
+  //     // video.load();
+  //     video.play();
+  //     this.isDisplay = true;
+  //     this.isPlaying = true;
 
-      this.$store.commit('setIsDisplay', {
-        isVideoDisplay: true,
-      });
-      this.$store.commit('setIsPlaying', {
-        isVideoPlaying: true,
-      });
+  //     this.$store.commit('setIsDisplay', {
+  //       isVideoDisplay: true,
+  //     });
+  //     this.$store.commit('setIsPlaying', {
+  //       isVideoPlaying: true,
+  //     });
 
-      $('.content, #sub-menu').css({
-        opacity: 0,
-      });
+  //     $('.content, #sub-menu').css({
+  //       opacity: 0,
+  //     });
 
-      $('#project-video').css({
-        'opacity': 1,
-        'z-index': 10,
-      });
-    }, 1000);
+  //     $('#project-video').css({
+  //       'opacity': 1,
+  //       'z-index': 10,
+  //     });
+  //   }, 1000);
 
-    // const video = document.getElementById('project-video') as HTMLVideoElement;
-    // // video.src = '../assets/jager.mp4';
-    // // video.load();
-    // video.play();
-    // this.isDisplay = true;
-    // this.isPlaying = true;
+  //   // const video = document.getElementById('project-video') as HTMLVideoElement;
+  //   // // video.src = '../assets/jager.mp4';
+  //   // // video.load();
+  //   // video.play();
+  //   // this.isDisplay = true;
+  //   // this.isPlaying = true;
 
-    // this.$store.commit('setIsDisplay', {
-    //   isVideoDisplay: true,
-    // });
-    // this.$store.commit('setIsPlaying', {
-    //   isVideoPlaying: true,
-    // });
+  //   // this.$store.commit('setIsDisplay', {
+  //   //   isVideoDisplay: true,
+  //   // });
+  //   // this.$store.commit('setIsPlaying', {
+  //   //   isVideoPlaying: true,
+  //   // });
 
-    // $('.content, #sub-menu').css({
-    //   opacity: 0,
-    // });
+  //   // $('.content, #sub-menu').css({
+  //   //   opacity: 0,
+  //   // });
 
-    // $('#project-video').css({
-    //   'opacity': 1,
-    //   'z-index': 10,
-    // });
-  }
+  //   // $('#project-video').css({
+  //   //   'opacity': 1,
+  //   //   'z-index': 10,
+  //   // });
+  // }
 
-  private stop(): void {
-    if (this.isPlaying) {
-      this.isPlaying = false;
-      return;
-    }
+  // private stop(): void {
+  //   if (this.isPlaying) {
+  //     this.isPlaying = false;
+  //     return;
+  //   }
 
-    this.$store.commit('setIsPlaying', {
-      isVideoPlaying: false,
-    });
+  //   this.$store.commit('setIsPlaying', {
+  //     isVideoPlaying: false,
+  //   });
 
-    this.$store.commit('setIsDisplay', {
-      isVideoDisplay: false,
-    });
+  //   this.$store.commit('setIsDisplay', {
+  //     isVideoDisplay: false,
+  //   });
 
-    (document.getElementById('project-video') as HTMLVideoElement).pause();
-    this.isDisplay = false;
+  //   (document.getElementById('project-video') as HTMLVideoElement).pause();
+  //   this.isDisplay = false;
 
-    $('.content, #sub-menu').css({
-      opacity: 1,
-    });
+  //   $('.content, #sub-menu').css({
+  //     opacity: 1,
+  //   });
 
-    $('#project-video').css({
-      'opacity': 0,
-      'z-index': -10,
-    });
-  }
+  //   $('#project-video').css({
+  //     'opacity': 0,
+  //     'z-index': -10,
+  //   });
+  // }
 }
 </script>
 
 <style scoped lang='scss'>
 .content {
   position: fixed;
-  top: 54px; right: 0; bottom: 0; left: 0;
+  top: 60px; right: 0; bottom: 0; left: 0;
   overflow-y: scroll;
   -webkit-overflow-scrolling: touch;
   height: auto;
@@ -580,6 +654,10 @@ export default class ProjectContent extends Vue {
 img {
   width: 100%;
 }
+  
+.row {
+  margin-top: -30px;
+}
 
 .box-left {
   margin-left: auto;
@@ -592,16 +670,12 @@ img {
   margin-bottom: 30px;
 }
   
-.row {
-  margin-top: -30px;
-}
-
 .column {
   min-width: 50%;
   width: 100%;
   // height: 100%;
   opacity: 0;
-  transform: translate(0px, 80px) translate3d(0, 0, 0);
+  transform: translate(0px, 30px) translate3d(0, 0, 0);
   transition: 1s;
   will-change: transform;
   -ms-filter: blur(30px);

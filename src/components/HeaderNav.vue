@@ -118,10 +118,10 @@ export default class HeaderNav extends Vue {
     ($('#menu-dropdown') as any).dropdown({
       on: 'hover',
       onShow: () => {
-        $('.content').css('z-index', '-3');
+        $('.content, .contents').css('z-index', '-3');
       },
       onHide: () => {
-        $('.content').css('z-index', '0');
+        $('.content, .contents').css('z-index', '0');
       },
     });
   }

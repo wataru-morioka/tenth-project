@@ -248,7 +248,7 @@ export default new Vuex.Store({
     photoMultiArray: new Array<PhotoInfo[]>(),
     projectTitleMap: new Map<number, string>(),
     articleArray: [],
-    distinctArticleMap: [],
+    distinctArticleMap: new Map<number, Article>(),
     isVideoDisplay: false,
     isVideoPlaying: false,
     authHeader: {},
