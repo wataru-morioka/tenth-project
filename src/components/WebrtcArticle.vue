@@ -1,5 +1,5 @@
 <template lang='pug'>
-  div.contents
+  div.contents#edit-article-content
     Modal
     ConfirmModal(:confirmMessage='confirmMessage')
     div#post-new.article-list(class='ui comments')
@@ -19,7 +19,7 @@
             div#toolbar-container
             div#editor
               p Write an article.
-    div.article-list(class='ui comments', v-for='([key, value], index) in distinctArticleMap', :key='key')
+    div.article-list(class='ui comments', v-for='([key, value], index) in Array.from(this.$store.state.distinctArticleMap)', :key='key')
       input(type='hidden', :value='setArticleId(key)')
       div.comment
         a.avatar
@@ -123,8 +123,24 @@ export default class WebrtcArticle extends Vue {
   private mounted() {
     this.setEditor();
     this.fadein();
-    $('.contents').scroll(() => {
+    $('.contents').scroll( async () => {
       this.fadein();
+      const doch = document.querySelector('#edit-article-content')!.scrollHeight + 130;
+      const winh = $(window).innerHeight()!;
+      const bottom = doch - winh;
+      if (bottom <= $('#edit-article-content').scrollTop()!) {
+        await ($('#loading-modal') as any).modal({
+          closable: false,
+          onVisible: async () => {
+            await this.$store.dispatch('getArticles', {
+              additional: true,
+            });
+            await ($('.modal') as any).modal({
+              closable: false,
+            }).modal('hide');
+          },
+        }).modal('show');
+      }
     });
   }
 
@@ -138,7 +154,7 @@ export default class WebrtcArticle extends Vue {
   }
 
   private commentArray(articleId: number): Comment[] {
-    const targetArray = this.articleArray.filter((article: any) => {
+    const targetArray = this.$store.state.articleArray.filter((article: any) => {
       return article.id === articleId && article.commentatorName != null;
     });
     const commentArray = targetArray.map((article: any) => {
@@ -191,7 +207,9 @@ export default class WebrtcArticle extends Vue {
                 this.commentMessage = '';
                 $(form).hide(300);
 
-                await this.$store.dispatch('getArticles').then(() => {
+                await this.$store.dispatch('getArticles', {
+                  additional: false,
+                }).then(() => {
                   this.articleArray = this.$store.state.articleArray;
                   this.distinctArticleMap = this.$store.state.distinctArticleMap;
                 });
@@ -257,7 +275,7 @@ export default class WebrtcArticle extends Vue {
         this.editors.set(articleId, editor);
         editor.isReadOnly = true;
 
-        const target: any = this.articleArray.filter((x) => {
+        const target: any = this.$store.state.articleArray.filter((x: any) => {
           return (x as any).id === Number(articleId);
         });
         editor.setData(target[0].body);
@@ -290,7 +308,7 @@ export default class WebrtcArticle extends Vue {
       const editorElement = $(element).children('.editor')[0];
       const inputElement = $(element).parents('.article-list').children('input')[0];
       const articleId: string = $(inputElement).val() as string;
-      const target: any = this.articleArray.filter((x) => {
+      const target: any = this.$store.state.articleArray.filter((x: any) => {
         return (x as any).id === Number(articleId);
       });
 
@@ -418,7 +436,7 @@ export default class WebrtcArticle extends Vue {
           alert('保存に失敗しました');
         });
       } else {
-        const article: any = this.articleArray.filter((x) => {
+        const article: any = this.$store.state.articleArray.filter((x: any) => {
           return (x as any).id === articleId;
         });
         console.log(article);
@@ -446,7 +464,9 @@ export default class WebrtcArticle extends Vue {
       }
 
       if (result) {
-        await this.$store.dispatch('getArticles').then(() => {
+        await this.$store.dispatch('getArticles', {
+            additional: false,
+          }).then(() => {
           this.articleArray = this.$store.state.articleArray;
           this.distinctArticleMap = this.$store.state.distinctArticleMap;
         });
@@ -489,7 +509,7 @@ export default class WebrtcArticle extends Vue {
       return blobURL;
     }
 
-    const target: any = this.articleArray.filter((x) => {
+    const target: any = this.$store.state.articleArray.filter((x: any) => {
         return (x as any).id === articleId;
       });
     const thumbnail2 = target[0].thumbnail;

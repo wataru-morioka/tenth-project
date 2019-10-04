@@ -110,15 +110,26 @@ export default class ArticleContent extends Vue {
     // this.fadein();
     setTimeout(() => {
       this.fadein();
+      console.log(this.$store.state.distinctArticleMap);
     }, 2500);
 
-    $('.contents').scroll(() => {
+    $('.contents').scroll(async () => {
       this.fadein();
       const doch = document.querySelector('#article-content')!.scrollHeight + 130;
       const winh = $(window).innerHeight()!;
       const bottom = doch - winh;
       if (bottom <= $('#article-content').scrollTop()!) {
-        console.log('test');
+        await ($('#loading-modal') as any).modal({
+          closable: false,
+          onVisible: async () => {
+            await this.$store.dispatch('getArticles', {
+              additional: true,
+            });
+            await ($('.modal') as any).modal({
+              closable: false,
+            }).modal('hide');
+          },
+        }).modal('show');
       }
     });
   }
@@ -191,7 +202,9 @@ export default class ArticleContent extends Vue {
                 this.commentMessage = '';
                 $(form).hide(300);
 
-                await this.$store.dispatch('getArticles').then(() => {
+                await this.$store.dispatch('getArticles', {
+                  additional: false,
+                }).then(() => {
                   this.articleArray = this.$store.state.articleArray;
                   this.distinctArticleMap = this.$store.state.distinctArticleMap;
                 });

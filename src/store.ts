@@ -1,6 +1,7 @@
 import Vue from 'vue';
 import Vuex from 'vuex';
 import axios from 'axios';
+import jQuery from 'jQuery';
 import firebase from 'firebase/app';
 // tslint:disable-next-line:no-var-requires
 const fs = require('fs');
@@ -102,7 +103,7 @@ const getDistinctArticleMap = (articleList: ArticleInfo[]): Map<number, Article>
   );
 };
 
-const getArticleList = () => {
+const getArticleList = (currentArticleId: number, additional: boolean) => {
   return new Promise<ArticleInfo[]>(async (resolve, reject) => {
     const articleArray: ArticleInfo[] = [];
     const currentUser = firebase.auth().currentUser!;
@@ -113,6 +114,10 @@ const getArticleList = () => {
 
     await axios.get('https://django.service/api/service/article', {
         headers: header,
+        params: {
+          current_article_id: currentArticleId,
+          additional_flag: additional,
+        },
     })
     .then((res) => {
       if (!res.data.result) {
@@ -122,6 +127,7 @@ const getArticleList = () => {
       }
       console.log('articleリスト取得');
       const resArray = res.data.articleList;
+      console.log(resArray);
       let article: ArticleInfo;
       resArray.forEach((el: any) => {
         let thumbnailBase64 = el.thumbnail;
@@ -247,8 +253,9 @@ export default new Vuex.Store({
     currentViewIndex: 0,
     photoMultiArray: new Array<PhotoInfo[]>(),
     projectTitleMap: new Map<number, string>(),
-    articleArray: [],
+    articleArray: new Array<ArticleInfo>(),
     distinctArticleMap: new Map<number, Article>(),
+    currentArticleId: 0,
     isVideoDisplay: false,
     isVideoPlaying: false,
     authHeader: {},
@@ -277,11 +284,7 @@ export default new Vuex.Store({
 
     setPhotoMutiArray(state, payload) {
       state.photoMultiArray = payload.photoMultiArray;
-      // state.photoMultiArray = [];
-      // state.photoMultiArray = state.photoMultiArray.concat(payload.photoMultiArray);
       state.projectTitleMap = payload.projectTitleMap;
-      // state.projectTitleMap = new Map<number, string>();
-      // Object.assign(state.projectTitleMap, payload.projectTitleMap);
     },
 
     setInitVideoFlag(state, payload) {
@@ -305,8 +308,21 @@ export default new Vuex.Store({
       state.email = payload.email;
     },
     setArticleArray(state, payload) {
-      state.articleArray = payload.articleArray;
-      state.distinctArticleMap = payload.distinctArticleMap;
+      if (state.currentArticleId === 0 || !payload.additionalFlag) {
+        state.distinctArticleMap = payload.distinctArticleMap;
+      } else {
+        Array.from(payload.distinctArticleMap as Map<number, ArticleInfo>).map(([key, value]) => {
+          state.distinctArticleMap.set(key, value);
+        });
+      }
+
+      if (!payload.additionalFlag) {
+        state.articleArray = payload.articleArray;
+      } else {
+        state.articleArray = state.articleArray.concat(payload.articleArray);
+      }
+
+      state.currentArticleId = payload.currentArticleId;
     },
   },
   actions: {
@@ -336,10 +352,23 @@ export default new Vuex.Store({
       });
     },
 
-    async getArticles({ commit, state, rootState }) {
-      await getArticleList().then((articleList) => {
+    async getArticles({ commit, state, rootState }, { additional }) {
+      await getArticleList(state.currentArticleId, additional).then((articleList) => {
+        if (articleList.length === 0) {
+          alert('これ以上記事はありません');
+          return;
+        }
         const distinctArticleMaps = getDistinctArticleMap(articleList);
+        const maxIdArticle = articleList.reduce((a, b) => {
+          return a.id > b.id ? b : a;
+        });
+        console.log(additional);
+        console.log(distinctArticleMaps);
+        console.log(articleList);
+        console.log(maxIdArticle.id);
         this.commit('setArticleArray', {
+          additionalFlag: additional,
+          currentArticleId: maxIdArticle.id,
           articleArray: articleList,
           distinctArticleMap: distinctArticleMaps,
         });
@@ -349,7 +378,6 @@ export default new Vuex.Store({
     },
 
     async login({ commit, state, rootState }) {
-      console.log('test');
       const provider = new firebase.auth.GoogleAuthProvider();
       console.log(provider);
       await firebase.auth().signInWithPopup(provider)
@@ -392,7 +420,9 @@ export default new Vuex.Store({
       firebase.auth().onAuthStateChanged( async (user) => {
         if (user) {
           this.dispatch('getPhotos');
-          this.dispatch('getArticles');
+          this.dispatch('getArticles', {
+            additional: false,
+          });
           await this.dispatch('getHeader');
 
           if (user.email != null && user.email.length > 0) {
