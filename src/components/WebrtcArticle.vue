@@ -125,7 +125,7 @@ export default class WebrtcArticle extends Vue {
     this.fadein();
     $('.contents').scroll( async () => {
       this.fadein();
-      const doch = document.querySelector('#edit-article-content')!.scrollHeight + 130;
+      const doch = document.querySelector('#edit-article-content')!.scrollHeight + 120;
       const winh = $(window).innerHeight()!;
       const bottom = doch - winh;
       if (bottom <= $('#edit-article-content').scrollTop()!) {
@@ -628,6 +628,8 @@ export default class WebrtcArticle extends Vue {
       height: 1px;
       background-color: #ffffff77;
       border: none;
+      margin-top: 10px;
+      margin-bottom: 5px;
     }
 
     .input-comment-wrap {

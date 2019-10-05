@@ -127,7 +127,6 @@ const getArticleList = (currentArticleId: number, additional: boolean) => {
       }
       console.log('articleリスト取得');
       const resArray = res.data.articleList;
-      console.log(resArray);
       let article: ArticleInfo;
       resArray.forEach((el: any) => {
         let thumbnailBase64 = el.thumbnail;
@@ -362,10 +361,6 @@ export default new Vuex.Store({
         const maxIdArticle = articleList.reduce((a, b) => {
           return a.id > b.id ? b : a;
         });
-        console.log(additional);
-        console.log(distinctArticleMaps);
-        console.log(articleList);
-        console.log(maxIdArticle.id);
         this.commit('setArticleArray', {
           additionalFlag: additional,
           currentArticleId: maxIdArticle.id,

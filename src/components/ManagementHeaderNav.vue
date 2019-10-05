@@ -7,13 +7,6 @@
     div#header
       div#management-dropdown(class="ui pointing link icon dropdown")
         img.icon#header-logo(src='../assets/jager-logo.png', @click='openSidebar')
-        //- i(class="dropdown icon")
-        //- div.menu
-        //-   div.header CONTROLLER
-        //-   div.divider
-        //-   div.item(@click='toAccount') ACCOUNT
-        //-   div.item(@click='toUpload') UPLOAD
-        //-   div.item(@click='toContact') CONTACT
       VipMenuNav
 </template>
 

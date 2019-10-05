@@ -6,11 +6,6 @@
         div.filter(class='ui search')
           div(class='ui icon input', :class='{ loading: isLoading }')
             input(class='prompt' type='text' placeholder='fullTextSearch...', maxlength=20, v-model='searchString')
-        //- div.filter(class='ui search')
-        //-   div(class='ui icon input', :class='{ loading: isLoading }')
-        //-     input.date-picker(class='prompt' type='text' placeholder='from...', maxlength=20, v-model='from')
-        //- div
-        //-   span 〜
         div.filter(class='ui search')
           div(class='ui icon input', :class='{ loading: isLoading }')
             input.date-picker(class='prompt' type='text' placeholder='created to...', maxlength=20, v-model='to')
@@ -35,7 +30,6 @@
             th.message message
         tbody
           div.row-wrap(v-for='contact in contactList', :key='contact.id')
-            //- i.accordion-icon.accordion-body(class='angle down icon')
             tr.overview(@click='showDetail($event)')
               i.accordion-icon.accordion-body(class='angle down icon')
               td.created  {{ contact.createdDatetime }}

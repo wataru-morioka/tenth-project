@@ -1,4 +1,3 @@
-
 <template lang='pug'>
   div#start
     button#to-home-bt(@click='toHome')
@@ -10,16 +9,10 @@
 <script lang='ts'>
 import { Component, Vue } from 'vue-property-decorator';
 import jQuery from 'jquery';
-// declare var jQuery: any;
 
-// history.pushState(null, 'null');
-// window.addEventListener('popstate', (e) => {
-//   window.location.reload();
-// });
-
-interface JQuery {
-  progress(n: string): JQuery;
-}
+// interface JQuery {
+//   progress(n: string): JQuery;
+// }
 
 window.onload = () => {
   const $progress = $('.ui.progress') as any;
