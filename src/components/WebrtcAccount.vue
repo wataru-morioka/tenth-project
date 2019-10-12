@@ -183,6 +183,7 @@ export default class WebrtcAccount extends Vue {
             .then((res: any) => {
               if (res.data.result) {
                 alert('アップロードが完了しました');
+                console.log(res.data);
                 const thumbnailBase64 = res.data.thumbnail;
                 const bin = atob(thumbnailBase64.replace(/^.*,/, ''));
                 const buffer = new Uint8Array(bin.length);

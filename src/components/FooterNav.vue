@@ -16,7 +16,7 @@
       a(href='https://www.jagermeister.com/en')
         img#footer-icon(src='../assets/jager-logo.png')
       img#footer-icon2(src='../assets/footer-logo.png')
-      br
+      //- br
       a.extension(v-if='isAdmin', href='#', @click.stop.prevent='toManagement')
         p(style='transition-delay: 0s')
           span M
@@ -129,6 +129,7 @@ a {
 
 #footer-icon2 {
   width: 160px;
+  display: none;
 }
 
 .extension {

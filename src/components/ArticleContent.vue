@@ -23,7 +23,7 @@
                 span comment
             form(class='ui reply form')
               div.field
-                textarea.comment-text(v-model='commentMessage')
+                textarea.comment-text
               button(class='ui inverted green button', type='button', @click='sendComment($event, articleId)') Send a Comment
             div(class='ui comments')
               div.comment.history(v-for='(comment, index) in commentArray(articleId)', :key='index')
@@ -77,7 +77,7 @@ export default class ArticleContent extends Vue {
   private articleArray = [];
   private distinctArticleMap = null;
   private isEditing: boolean = false;
-  private commentMessage: string = '';
+  // private commentMessage: string = '';
 
   private fadein(): void {
     const offset = 60;
@@ -165,7 +165,9 @@ export default class ArticleContent extends Vue {
 
   private async sendComment(event: any, id: number): Promise<void> {
     const form = $(event.currentTarget).parents('form')[0];
-    const comment = this.commentMessage.replace(/^\s+/, '').replace(/\s+$/, '');
+    const commnetArea = $(form).find('textarea')[0];
+    let comment = $(commnetArea).val() as string;
+    comment = comment.replace(/^\s+/, '').replace(/\s+$/, '');
 
     if (comment.length === 0) {
       alert('コメントを入力してください');
@@ -199,7 +201,8 @@ export default class ArticleContent extends Vue {
                   return;
                 }
 
-                this.commentMessage = '';
+                // this.commentMessage = '';
+                $(commnetArea).val('');
                 $(form).hide(300);
 
                 await this.$store.dispatch('getArticles', {

@@ -200,14 +200,10 @@ export default class ManagementUpload extends Mixins<VideoMixin>(VideoMixin) {
               },
             })
             .then((res: any) => {
-              if (res.data.result) {
-                alert('圧縮が完了しました');
-              } else {
-                alert('圧縮に失敗しました');
-              }
+              alert('圧縮が完了しました');
             })
             .catch((err) => {
-              alert(err);
+              alert('圧縮に失敗しました');
             });
 
             await this.$store.dispatch('getPhotos');
@@ -253,17 +249,11 @@ export default class ManagementUpload extends Mixins<VideoMixin>(VideoMixin) {
               headers: this.$store.state.authHeader,
             })
             .then((res: any) => {
-              if (res.data.result) {
-                console.log('photoアップロードが完了');
-              } else {
-                alert('photoアップロードに失敗しました');
-              }
+              alert('アップロードが完了しました');
             })
             .catch((err) => {
-              alert(err);
+              alert('アップロードに失敗しました');
             });
-
-            alert('アップロードが完了しました');
 
             const parent = $(target).closest('.edit-photo-wrap');
             const uploadArea = $(parent).children('.upload-wrap');
@@ -298,6 +288,17 @@ export default class ManagementUpload extends Mixins<VideoMixin>(VideoMixin) {
           closable: false,
           onVisible: async () => {
             const body = new FormData();
+            const file = event.target.files[0];
+
+            if (file.size > 100000000) {
+              alert('アップロード最大サイズは「100MB」です');
+              $(target).val('');
+              setTimeout(() => {
+                ($('.modal') as any).modal('hide');
+              }, 1);
+              return;
+            }
+
             body.append('file', event.target.files[0]);
             body.append('photoId', String(id));
             await axios.put('https://express.management/video', body, {
@@ -372,27 +373,21 @@ export default class ManagementUpload extends Mixins<VideoMixin>(VideoMixin) {
     await axios.put('https://express.management/photographs', body, {
       headers: this.$store.state.authHeader,
     })
-    .then((res: any) => {
-      if (res.data.result) {
-        console.log('photo更新が完了');
-      } else {
-        alert('更新に失敗しました');
-      }
+    .then(async (res: any) => {
+      await this.$store.dispatch('getPhotos');
+      this.photoMultiArray = this.$store.getters.getPhotos;
+      $(input).prop('readonly', true);
+      $(target).removeClass('orange');
+      $(target).addClass('primary');
+      $(target).text('edit');
+      alert('更新に成功しました');
     })
     .catch((err) => {
-      alert(err);
+      alert('更新に失敗しました');
     });
 
-    await this.$store.dispatch('getPhotos');
-    this.photoMultiArray = this.$store.getters.getPhotos;
-
-    alert('更新が完了しました');
     $(target).prop('disabled', false);
-    $(input).prop('readonly', true);
-    $(target).removeClass('orange');
     $(target).removeClass('loading');
-    $(target).addClass('primary');
-    $(target).text('edit');
   }
 
   private async editTitle(event: any, id: number): Promise<void> {
@@ -416,27 +411,21 @@ export default class ManagementUpload extends Mixins<VideoMixin>(VideoMixin) {
     await axios.put('https://express.management/photographs', body, {
       headers: this.$store.state.authHeader,
     })
-    .then((res: any) => {
-      if (res.data.result) {
-        console.log('photo更新が完了');
-      } else {
-        alert('更新に失敗しました');
-      }
+    .then(async (res: any) => {
+      await this.$store.dispatch('getPhotos');
+      this.photoMultiArray = this.$store.getters.getPhotos;
+      $(input).prop('readonly', true);
+      $(target).removeClass('orange');
+      $(target).addClass('primary');
+      $(target).text('edit');
+      alert('更新に成功しました');
     })
     .catch((err) => {
-      alert(err);
+      alert('更新に失敗しました');
     });
 
-    await this.$store.dispatch('getPhotos');
-    this.photoMultiArray = this.$store.getters.getPhotos;
-
-    alert('更新が完了しました');
-    $(target).prop('disabled', false);
-    $(input).prop('readonly', true);
     $(target).removeClass('loading');
-    $(target).removeClass('orange');
-    $(target).addClass('primary');
-    $(target).text('edit');
+    $(target).prop('disabled', false);
   }
 
   private existsPhoto(photo: any): boolean {
@@ -467,19 +456,17 @@ export default class ManagementUpload extends Mixins<VideoMixin>(VideoMixin) {
             await axios.post('https://express.management/photographs', body, {
               headers: this.$store.state.authHeader,
             })
-            .then((res) => {
-              console.log('photoアップロードが完了');
+            .then(async (res) => {
+              await this.$store.dispatch('getPhotos');
+              this.photoMultiArray = this.$store.getters.getPhotos;
+              alert('アップロードが完了しました');
             })
             .catch((err) => {
-              alert(err);
+              alert('アップロードに失敗しました');
             });
-
-            await this.$store.dispatch('getPhotos');
-            this.photoMultiArray = this.$store.getters.getPhotos;
 
             ($('.modal') as any).modal('hide');
             $('#add-input').val('');
-            alert('アップロードが完了しました');
           },
         }).modal('show');
       },
@@ -503,21 +490,14 @@ export default class ManagementUpload extends Mixins<VideoMixin>(VideoMixin) {
                 photoId: id,
               },
             })
-            .then((res: any) => {
-              console.log(res.data.result);
-              if (res.data.result) {
-                alert('削除が完了しました');
-              } else {
-                alert('削除に失敗しました');
-              }
+            .then(async (res: any) => {
+              await this.$store.dispatch('getPhotos');
+              this.photoMultiArray = this.$store.getters.getPhotos;
+              alert('削除が完了しました');
             })
             .catch((err) => {
-              alert(err);
-              return;
+              alert('削除に失敗しました');
             });
-
-            await this.$store.dispatch('getPhotos');
-            this.photoMultiArray = this.$store.getters.getPhotos;
 
             ($('.modal') as any).modal('hide');
           },
