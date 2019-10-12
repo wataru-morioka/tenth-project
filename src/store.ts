@@ -3,78 +3,14 @@ import Vuex from 'vuex';
 import axios from 'axios';
 import jQuery from 'jQuery';
 import firebase from 'firebase/app';
+import { PhotoInfo, Article, ArticleInfo } from './model/models';
+
 // tslint:disable-next-line:no-var-requires
 const fs = require('fs');
 // tslint:disable-next-line:no-var-requires
 const https = require('https');
 
 Vue.use(Vuex);
-
-class PhotoInfo {
-  public id: number;
-  public subTitle: string;
-  public title: string;
-  public mimetype: string;
-  public data: Buffer;
-  public createdDatetime: string;
-
-  constructor(id: number, subTitle: string, title: string, mimetype: string, fileName: string,
-              size: number, data: Buffer, createdDatetime: string, modifiedDatetime: string) {
-    this.id = id;
-    this.subTitle = subTitle;
-    this.title = title;
-    this.mimetype = mimetype;
-    this.data = data;
-    this.createdDatetime = createdDatetime;
-  }
-}
-
-class Article {
-  public id: number;
-  public contributorName: string;
-  public body: string;
-  public thumbnail: Uint8Array;
-  public createdDatetime: string;
-  public modifiedDatetime: string;
-
-  constructor(id: number, contributorName: string, body: string, thumbnail: Uint8Array,
-              createdDatetime: string, modifiedDatetime: string) {
-    this.id = id;
-    this.contributorName = contributorName;
-    this.body = body;
-    this.thumbnail = thumbnail;
-    this.createdDatetime = createdDatetime;
-    this.modifiedDatetime = modifiedDatetime;
-  }
-}
-
-class ArticleInfo {
-  public id: number;
-  public contributorName: string;
-  public body: string;
-  public thumbnail: Uint8Array;
-  public createdDatetime: string;
-  public modifiedDatetime: string;
-  public commentatorName: string;
-  public commentatorThumbnail: Uint8Array;
-  public commentBody: string;
-  public commentCreatedDatetime: string;
-
-  constructor(id: number, contributorName: string, body: string, thumbnail: Uint8Array,
-              createdDatetime: string, modifiedDatetime: string, commentatorName: string,
-              commentatorThumbnail: Uint8Array, commentBody: string, commentCreatedDatetime: string) {
-    this.id = id;
-    this.contributorName = contributorName;
-    this.body = body;
-    this.thumbnail = thumbnail;
-    this.createdDatetime = createdDatetime;
-    this.modifiedDatetime = modifiedDatetime;
-    this.commentatorName = commentatorName;
-    this.commentatorThumbnail = commentatorThumbnail;
-    this.commentBody = commentBody;
-    this.commentCreatedDatetime = commentCreatedDatetime;
-  }
-}
 
 class Result {
   public photoMultiArray: PhotoInfo[][];
@@ -259,6 +195,7 @@ export default new Vuex.Store({
     isVideoPlaying: false,
     authHeader: {},
   },
+
   mutations: {
     setUser(state, payload) {
       state.userName = payload.name;
@@ -324,22 +261,8 @@ export default new Vuex.Store({
       state.currentArticleId = payload.currentArticleId;
     },
   },
-  actions: {
-    async test({ commit, state, rootState }) {
-      await axios.get('https://flask.site:443/user',
-      // , {
-      //     httpsAgent: new https.Agent({
-      //       // keepAlive: true,
-      //     }),
-      //   }
-      )
-      .then((res) => {
-        commit('setUser', {
-          name: res.data.name,
-        });
-      });
-    },
 
+  actions: {
     async getPhotos({ commit, state, rootState }) {
       await getPhotoList().then((result) => {
         this.commit('setPhotoMutiArray', {
@@ -519,6 +442,7 @@ export default new Vuex.Store({
       });
     },
   },
+
   getters: {
     getName: (state, getters) => {
       return state.userName;

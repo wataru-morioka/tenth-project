@@ -31,25 +31,7 @@ import Modal from '@/components/Modal.vue';
 import VideoMixin from '@/components/VideoMixin.vue';
 import axios from 'axios';
 import jQuery from 'jQuery';
-
-class PhotoInfo {
-  public id: number;
-  public subTitle: string;
-  public title: string;
-  public mimetype: string;
-  public data: Buffer;
-  public createdDatetime: string;
-
-  constructor(id: number, subTitle: string, title: string, mimetype: string, fileName: string,
-              size: number, data: Buffer, createdDatetime: string, modifiedDatetime: string) {
-    this.id = id;
-    this.subTitle = subTitle;
-    this.title = title;
-    this.mimetype = mimetype;
-    this.data = data;
-    this.createdDatetime = createdDatetime;
-  }
-}
+import { PhotoInfo } from '../model/models';
 
 @Component({
   components: {
@@ -120,93 +102,6 @@ export default class ProjectContent extends Mixins<VideoMixin>(VideoMixin) {
       }
     });
   }
-
-  // private play(event: any): void {
-  //   if ( this.isDisplay ) {
-  //     this.stop();
-  //     return;
-  //   }
-
-  //   ($('#loading-modal') as any).modal({
-  //     closable: false,
-  //   }).modal('show');
-
-  //   setTimeout(() => {
-  //     const video = document.getElementById('project-video') as HTMLVideoElement;
-  //     ($('.modal') as any).modal('hide');
-  //     // video.src = '../assets/jager.mp4';
-  //     // video.load();
-  //     video.play();
-  //     this.isDisplay = true;
-  //     this.isPlaying = true;
-
-  //     this.$store.commit('setIsDisplay', {
-  //       isVideoDisplay: true,
-  //     });
-  //     this.$store.commit('setIsPlaying', {
-  //       isVideoPlaying: true,
-  //     });
-
-  //     $('.content, #sub-menu').css({
-  //       opacity: 0,
-  //     });
-
-  //     $('#project-video').css({
-  //       'opacity': 1,
-  //       'z-index': 10,
-  //     });
-  //   }, 1000);
-
-  //   // const video = document.getElementById('project-video') as HTMLVideoElement;
-  //   // // video.src = '../assets/jager.mp4';
-  //   // // video.load();
-  //   // video.play();
-  //   // this.isDisplay = true;
-  //   // this.isPlaying = true;
-
-  //   // this.$store.commit('setIsDisplay', {
-  //   //   isVideoDisplay: true,
-  //   // });
-  //   // this.$store.commit('setIsPlaying', {
-  //   //   isVideoPlaying: true,
-  //   // });
-
-  //   // $('.content, #sub-menu').css({
-  //   //   opacity: 0,
-  //   // });
-
-  //   // $('#project-video').css({
-  //   //   'opacity': 1,
-  //   //   'z-index': 10,
-  //   // });
-  // }
-
-  // private stop(): void {
-  //   if (this.isPlaying) {
-  //     this.isPlaying = false;
-  //     return;
-  //   }
-
-  //   this.$store.commit('setIsPlaying', {
-  //     isVideoPlaying: false,
-  //   });
-
-  //   this.$store.commit('setIsDisplay', {
-  //     isVideoDisplay: false,
-  //   });
-
-  //   (document.getElementById('project-video') as HTMLVideoElement).pause();
-  //   this.isDisplay = false;
-
-  //   $('.content, #sub-menu').css({
-  //     opacity: 1,
-  //   });
-
-  //   $('#project-video').css({
-  //     'opacity': 0,
-  //     'z-index': -10,
-  //   });
-  // }
 }
 </script>
 
@@ -259,7 +154,6 @@ img {
 .column {
   min-width: 50%;
   width: 100%;
-  // height: 100%;
   opacity: 0;
   transform: translate(0px, 30px) translate3d(0, 0, 0);
   transition: 1s;

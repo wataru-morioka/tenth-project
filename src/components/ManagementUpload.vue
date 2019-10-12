@@ -66,25 +66,7 @@ import VideoMixin from '@/components/VideoMixin.vue';
 import axios from 'axios';
 import jQuery from 'jQuery';
 import firebase from 'firebase/app';
-
-class PhotoInfo {
-  public id: number;
-  public subTitle: string;
-  public title: string;
-  public mimetype: string;
-  public data: Buffer;
-  public createdDatetime: string;
-
-  constructor(id: number, subTitle: string, title: string, mimetype: string, fileName: string,
-              size: number, data: Buffer, createdDatetime: string, modifiedDatetime: string) {
-    this.id = id;
-    this.subTitle = subTitle;
-    this.title = title;
-    this.mimetype = mimetype;
-    this.data = data;
-    this.createdDatetime = createdDatetime;
-  }
-}
+import { PhotoInfo } from '../model/models';
 
 @Component({
   components: {

@@ -62,41 +62,12 @@ import { Component, Vue, Prop } from 'vue-property-decorator';
 import jQuery from 'jQuery';
 import axios from 'axios';
 import firebase from 'firebase/app';
+import { AccountInfo } from '../model/models';
 
 enum OrderEnum {
   LoginCount = 0,
   LatestLogin,
   Modified,
-}
-
-class AccountInfo {
-  public uid: string;
-  public deleteFlag: boolean;
-  public webrtcFlag: boolean;
-  public adminFlag: boolean;
-  public account: string;
-  public name: string;
-  public state: string;
-  public loginCount: number;
-  public latestLogin: string;
-  public createdDatetime: string;
-  public modifiedDatetime: string;
-
-  constructor(uid: string, deleteFlag: boolean, webrtcFlag: boolean, adminFlag: boolean, account: string,
-              name: string, state: string, loginCount: number, latestLogin: string,
-              createdDatetime: string, modifiedDatetime: string) {
-    this.uid = uid;
-    this.deleteFlag = deleteFlag;
-    this.webrtcFlag = webrtcFlag;
-    this.adminFlag = adminFlag;
-    this.account = account;
-    this.name = name;
-    this.state = state;
-    this.loginCount = loginCount;
-    this.latestLogin = latestLogin;
-    this.createdDatetime = createdDatetime;
-    this.modifiedDatetime = modifiedDatetime;
-  }
 }
 
 class Result {
@@ -179,9 +150,6 @@ export default class ManagementAccount extends Vue {
       console.log(err);
     });
   }
-
-  // private mounted() {
-  // }
 
   private resetFlag(): void {
     this.isDescLoginCount = false;
@@ -390,7 +358,6 @@ export default class ManagementAccount extends Vue {
   bottom: 50px;
 
   h5 {
-    // text-align: left;
     font-size: 10px;
     color: #ffffff;
   }
@@ -505,7 +472,6 @@ export default class ManagementAccount extends Vue {
     padding-top: 0px;
 
     #account-list-wrap {
-      // width: 90%;
       height: 100%;
 
       tbody {

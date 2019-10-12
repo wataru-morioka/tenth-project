@@ -62,23 +62,10 @@ import Modal from '@/components/Modal.vue';
 import ConfirmModal from '@/components/ConfirmModal.vue';
 import jQuery from 'jQuery';
 import axios from 'axios';
+import { Comment } from '../model/models';
 // tslint:disable-next-line:no-var-requires
 const DecoupledEditor = require('@ckeditor/ckeditor5-build-decoupled-document');
 // const SimpleUploadAdapter = require('@ckeditor/ckeditor5-upload/src/adapters/simpleuploadadapter');
-
-class Comment {
-  public name: string;
-  public body: string;
-  public thumbnail: Uint8Array;
-  public createdDatetime: string;
-
-  constructor(name: string, body: string, thumbnail: Uint8Array, createdDatetime: string) {
-    this.name = name;
-    this.body = body;
-    this.thumbnail = thumbnail;
-    this.createdDatetime = createdDatetime;
-  }
-}
 
 @Component({
   components: {
@@ -93,7 +80,6 @@ export default class WebrtcArticle extends Vue {
   private articleArray = [];
   private distinctArticleMap = null;
   private isEditing: boolean = false;
-  // private commentMessage: string = '';
 
   private fadein(): void {
     const offset = 60;
@@ -207,7 +193,6 @@ export default class WebrtcArticle extends Vue {
                   return;
                 }
 
-                // this.commentMessage = '';
                 $(commnetArea).val('');
                 $(form).hide(300);
 
@@ -252,17 +237,6 @@ export default class WebrtcArticle extends Vue {
       ckfinder: {
         uploadUrl: 'https://django.service/api/service/image',
       },
-      // plugins: [ SimpleUploadAdapter ],
-      // simpleUpload: {
-      //   uploadUrl: 'https://django.service/api/service/image',
-      //   headers: this.$store.state.authHeader,
-      // },
-      // simpleUpload: {
-      //   uploadUrl: {
-      //     url: 'https://django.service/api/service/image',
-      //      headers: this.$store.state.authHeader,
-      //   },
-      // },
     })
     .then( (editor: any) => {
       this.editors.set('new', editor);
@@ -284,17 +258,6 @@ export default class WebrtcArticle extends Vue {
         ckfinder: {
           uploadUrl: 'https://django.service/api/service/image',
         },
-        // plugins: [ SimpleUploadAdapter ],
-        // simpleUpload: {
-        //   uploadUrl: 'https://django.service/api/service/image',
-        //   headers: this.$store.state.authHeader,
-        // },
-        // simpleUpload: {
-        //   uploadUrl: {
-        //     url: 'https://django.service/api/service/image',
-        //     headers: this.$store.state.authHeader,
-        //   },
-        // },
       })
       .then( (editor: any) => {
         this.editors.set(articleId, editor);
@@ -318,20 +281,8 @@ export default class WebrtcArticle extends Vue {
       ckfinder: {
         uploadUrl: 'https://django.service/api/service/image',
       },
-      // plugins: [ SimpleUploadAdapter ],
-      // simpleUpload: {
-      //   uploadUrl: 'https://django.service/api/service/image',
-      //   headers: this.$store.state.authHeader,
-      // },
-      // simpleUpload: {
-      //   uploadUrl: {
-      //     url: 'https://django.service/api/service/image',
-      //      headers: this.$store.state.authHeader,
-      //   },
-      // },
     })
     .then( (editor: any) => {
-      // (window as any).editor = editor;
       this.editors.set('new', editor);
       editor.setData('<p>Write an article.</p>');
     })
@@ -355,17 +306,6 @@ export default class WebrtcArticle extends Vue {
           ckfinder: {
             uploadUrl: 'https://django.service/api/service/image',
           },
-          // plugins: [ SimpleUploadAdapter ],
-          // simpleUpload: {
-          //   uploadUrl: 'https://django.service/api/service/image',
-          //   headers: this.$store.state.authHeader,
-          // },
-          // simpleUpload: {
-          //   uploadUrl: {
-          //     url: 'https://django.service/api/service/image',
-          //     headers: this.$store.state.authHeader,
-          //   },
-          // },
         })
         .then(async (editor: any) => {
           editor.isReadOnly = true;
@@ -382,17 +322,6 @@ export default class WebrtcArticle extends Vue {
           ckfinder: {
             uploadUrl: 'https://django.service/api/service/image',
           },
-          // plugins: [ SimpleUploadAdapter ],
-          // simpleUpload: {
-          //   uploadUrl: 'https://django.service/api/service/image',
-          //   headers: this.$store.state.authHeader,
-          // },
-          // simpleUpload: {
-          //   uploadUrl: {
-          //     url: 'https://django.service/api/service/image',
-          //     headers: this.$store.state.authHeader,
-          //   },
-          // },
         })
         .then(async (editor: any) => {
           editor.isReadOnly = true;
@@ -598,7 +527,6 @@ export default class WebrtcArticle extends Vue {
   height: auto;
   display: flex;
   flex-direction: column;
-  // justify-content: center;
   align-items: center;
   margin: auto;
 }
@@ -693,7 +621,6 @@ export default class WebrtcArticle extends Vue {
     .input-comment-wrap {
       .comment-icon {
         margin: 10px;
-        // text-align: center;
         span {
           margin-left: 10px;
         }

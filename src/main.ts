@@ -15,6 +15,7 @@ const SuiVue = require('semantic-ui-vue');
 Vue.config.productionTip = false;
 Vue.use(SuiVue);
 
+// firebase google認証、匿名認証サービスを利用
 const firebaseConfig = {
   apiKey: 'AIzaSyBb1EQB5F7Q7O9n8BH1Fy929XhH7tRy6OM',
   authDomain: 'seventhproject-248123.firebaseapp.com',
@@ -23,7 +24,6 @@ const firebaseConfig = {
   storageBucket: 'seventhproject-248123.appspot.com',
   messagingSenderId: '663686156877',
 };
-
 firebase.initializeApp(firebaseConfig);
 
 // const messaging = firebase.messaging();

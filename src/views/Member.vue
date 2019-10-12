@@ -78,7 +78,6 @@ export default class Member extends Vue {}
       transform: translateY(40px);
   }
   to {
-      // opacity: .2;
       transform: translateY(0);
   }
 }

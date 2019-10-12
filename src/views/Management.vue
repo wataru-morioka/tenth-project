@@ -44,8 +44,6 @@ import jQuery from 'jQuery';
   },
 })
 export default class Management extends Vue {
-  // private mounted() {
-  // }
 }
 </script>
 
@@ -77,8 +75,6 @@ export default class Management extends Vue {
    p {
     animation-name: content-fadein;
     animation-duration: 2s;
-    // margin-left: 0px;
-    // margin-right: 0px;
     margin-bottom: 0;
   }
 }
@@ -87,7 +83,6 @@ export default class Management extends Vue {
   display: flex;
   flex-direction: column;
   width: 100%;
-  // height: 100vh;
   overflow: hidden;
   min-height: 100%;
   animation-name: content-fadein;

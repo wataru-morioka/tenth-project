@@ -18,6 +18,8 @@ import Hls from 'hls.js';
 })
 export default class Sauza extends Vue {
   private mounted() {
+
+    // hls.js（HTTP Live Streaming）を利用し、動画をダウンロードしながら再生
     const video = document.getElementById('sauza-video') as HTMLVideoElement;
     if (Hls.isSupported()) {
       const hls = new Hls();
@@ -43,7 +45,6 @@ export default class Sauza extends Vue {
   position: relative;
   overflow: hidden;
   background: rgba(0, 0, 0, .8);
-  // animation-name: body-fadein;
   animation-duration: 1s;
 }
  
@@ -56,16 +57,5 @@ export default class Sauza extends Vue {
   min-width: 100%;
   min-height: 100%;
   z-index: -1;
-}
-
-@keyframes body-fadein {
-  from {
-      opacity: 0;
-      // transform: translateX(300px);
-  }
-  to {
-      opacity: 0.8;
-      // transform: translateX(0);
-  }
 }
 </style>

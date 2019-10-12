@@ -19,6 +19,8 @@ import Hls from 'hls.js';
 export default class Jagermeister extends Vue {
   private mounted() {
     const video = document.getElementById('jager-video') as HTMLVideoElement;
+
+    // hls.js（HTTP Live Streaming）を利用し、動画をダウンロードしながら再生
     if (Hls.isSupported()) {
       const hls = new Hls();
       hls.loadSource('https://express.management/hls/jager/index.m3u8');
@@ -43,7 +45,6 @@ export default class Jagermeister extends Vue {
   position: relative;
   overflow: hidden;
   background: rgba(0, 0, 0, .8);
-  // animation-name: body-fadein;
   animation-duration: 1s;
 }
  
@@ -56,16 +57,5 @@ export default class Jagermeister extends Vue {
   min-width: 100%;
   min-height: 100%;
   z-index: -1;
-}
-
-@keyframes body-fadein {
-  from {
-      opacity: 0;
-      // transform: translateX(300px);
-  }
-  to {
-      opacity: .8;
-      // transform: translateX(0);
-  }
 }
 </style>

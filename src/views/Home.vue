@@ -22,6 +22,8 @@ import Hls from 'hls.js';
 export default class Home extends Vue {
   private mounted() {
     const video = document.getElementById('jagermeister-video') as HTMLVideoElement;
+
+    // hls.js（HTTP Live Streaming）を利用し、動画をダウンロードしながら再生
     if (Hls.isSupported()) {
       const hls = new Hls();
       hls.loadSource('https://express.management/hls/jagermeister/index.m3u8');

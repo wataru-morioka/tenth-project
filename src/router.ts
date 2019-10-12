@@ -110,6 +110,7 @@ const router = new Router({
   ],
 });
 
+// 画面遷移の度に、google analyticsへ遷移情報を送信
 router.afterEach((to, from) => {
   if ('gtag' in window) {
     gtag('config', 'UA-145135127-1', {'page_path': to.path});
@@ -117,8 +118,7 @@ router.afterEach((to, from) => {
 });
 
 router.beforeEach((to, from, next) => {
-  console.log(from);
-
+  // サイトページからメイン画面への遷移以外は、homeページへ
   if (!(from.path.match(/home/) || from.path.match(/jagermeister/) || from.path.match(/sauza/)
    || from.path.match(/about/) || from.path.match(/project/) || from.path.match(/article/)
    || from.path.match(/member/) || from.path.match(/contact/)
@@ -129,7 +129,8 @@ router.beforeEach((to, from, next) => {
     });
   }
 
-  if (to.path.match(/management/)) {
+  // managementページ、記事投稿・編集画面ページは管理者のみ閲覧できる
+  if (to.path.match(/management/) || to.path.match(/webrtc-article/)) {
     if (!store.state.isAdmin) {
       next({
         path: '/',
@@ -137,16 +138,9 @@ router.beforeEach((to, from, next) => {
     }
   }
 
+  // account登録ページはログインした（firebaseのgoogle認証通過した）者のみ閲覧できる
   if (to.path.match(/webrtc/)) {
     if (!store.state.isLogin) {
-      next({
-        path: '/',
-      });
-    }
-  }
-
-  if (to.path.match(/webrtc-article/)) {
-    if (!store.state.isVip) {
       next({
         path: '/',
       });

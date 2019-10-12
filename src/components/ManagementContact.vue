@@ -53,31 +53,7 @@ import jQuery from 'jQuery';
 import axios from 'axios';
 import firebase from 'firebase/app';
 import flatpickr from 'flatpickr';
-
-class ContactInfo {
-  public id: number;
-  public createdDatetime: string;
-  public account: string;
-  public name: string;
-  public organization: string;
-  public state: string;
-  public email: string;
-  public phone: string;
-  public message: string;
-
-  constructor(id: number, createdDatetime: string, account: string, name: string, organization: string, state: string,
-              email: string, phone: string, message: string) {
-    this.id = id;
-    this.createdDatetime = createdDatetime,
-    this.account = account;
-    this.name = name;
-    this.organization = organization;
-    this.state = state;
-    this.email = email;
-    this.phone = phone;
-    this.message = message;
-  }
-}
+import { ContactInfo } from '../model/models';
 
 class Result {
   public contactList: ContactInfo[];

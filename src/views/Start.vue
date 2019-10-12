@@ -10,12 +10,11 @@
 import { Component, Vue } from 'vue-property-decorator';
 import jQuery from 'jquery';
 
-// interface JQuery {
-//   progress(n: string): JQuery;
-// }
-
 window.onload = () => {
   const $progress = $('.ui.progress') as any;
+
+  // 初期ロードの時間かせぎにプログレスバーを表示
+  // TODO 何かしたのモーションを追加
   setInterval(() => {
     $progress.progress('increment');
     if ($progress.progress('is complete')) {

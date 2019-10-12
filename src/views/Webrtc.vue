@@ -34,8 +34,6 @@ import jQuery from 'jQuery';
   },
 })
 export default class WebRtc extends Vue {
-  // private mounted() {
-  // }
 }
 </script>
 
@@ -77,7 +75,6 @@ export default class WebRtc extends Vue {
   display: flex;
   flex-direction: column;
   width: 100%;
-  // height: 100vh;
   overflow: hidden;
   min-height: 100%;
   animation-name: content-fadein;

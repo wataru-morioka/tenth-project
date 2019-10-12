@@ -44,22 +44,9 @@ import Modal from '@/components/Modal.vue';
 import ConfirmModal from '@/components/ConfirmModal.vue';
 import jQuery from 'jQuery';
 import axios from 'axios';
+import { Comment } from '../model/models';
 // tslint:disable-next-line:no-var-requires
 const DecoupledEditor = require('@ckeditor/ckeditor5-build-decoupled-document');
-
-class Comment {
-  public name: string;
-  public body: string;
-  public thumbnail: Uint8Array;
-  public createdDatetime: string;
-
-  constructor(name: string, body: string, thumbnail: Uint8Array, createdDatetime: string) {
-    this.name = name;
-    this.body = body;
-    this.thumbnail = thumbnail;
-    this.createdDatetime = createdDatetime;
-  }
-}
 
 @Component({
   components: {
@@ -77,7 +64,6 @@ export default class ArticleContent extends Vue {
   private articleArray = [];
   private distinctArticleMap = null;
   private isEditing: boolean = false;
-  // private commentMessage: string = '';
 
   private fadein(): void {
     const offset = 60;
@@ -201,7 +187,6 @@ export default class ArticleContent extends Vue {
                   return;
                 }
 
-                // this.commentMessage = '';
                 $(commnetArea).val('');
                 $(form).hide(300);
 
@@ -238,9 +223,6 @@ export default class ArticleContent extends Vue {
       const articleId: string = $(inputElement).val() as string;
       DecoupledEditor
       .create( editorElement, {
-        ckfinder: {
-          uploadUrl: 'https://django.service/api/service/image',
-        },
       })
       .then( (editor: any) => {
         this.editors.set(articleId, editor);
@@ -316,7 +298,6 @@ export default class ArticleContent extends Vue {
   transition: 1.5s;
   -ms-filter: blur(50px);
   filter: blur(50px);
-  // transition-delay: 2.3s;
 
   .avatar {
     width: 30px !important;
