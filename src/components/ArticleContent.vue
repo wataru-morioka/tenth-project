@@ -107,7 +107,6 @@ export default class ArticleContent extends Vue {
 
   private mounted() {
     this.setEditor();
-    // this.fadein();
     setTimeout(() => {
       this.fadein();
       console.log(this.$store.state.distinctArticleMap);
@@ -125,6 +124,7 @@ export default class ArticleContent extends Vue {
             await this.$store.dispatch('getArticles', {
               additional: true,
             });
+
             await ($('.modal') as any).modal({
               closable: false,
             }).modal('hide');

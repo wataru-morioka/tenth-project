@@ -25,7 +25,7 @@
           br
           img#thumbnail(:src='setThumbnail()')
           p(v-show='!thumbnailValid') ※必須です
-        button.submit(class='ui inverted green button' type='submit') Register
+        button.submit(class='ui inverted green button', type='button', @click='test') Register
 </template>
 
 <script lang='ts'>
@@ -49,6 +49,7 @@ export default class WebrtcAccount extends Vue {
   // private thumnailData: byte[] = [];
   private selectedState: string = '';
   private stateValid: boolean = false;
+  private thumbnailBlobUrl: string = '';
   private states: string[] = new Array<string>(
     '北海道',
     '青森県',
@@ -139,6 +140,7 @@ export default class WebrtcAccount extends Vue {
   private onChangeThumbnail(event: any): void {
     this.thumbnailValid = true;
     const blobUrl = window.URL.createObjectURL(event.target.files[0]);
+    this.thumbnailBlobUrl = blobUrl;
     (document.getElementById('thumbnail')! as HTMLImageElement).src = blobUrl;
   }
 
@@ -147,13 +149,18 @@ export default class WebrtcAccount extends Vue {
     if (thumbnail === null) {
       return '';
     }
+
+    if (this.thumbnailBlobUrl.length !== 0) {
+      return this.thumbnailBlobUrl;
+    }
+
     const buffer = Buffer.from(thumbnail);
     const blob = new Blob([buffer], {type: thumbnail.mimetype});
     const blobURL = window.URL.createObjectURL(blob);
     return blobURL;
   }
 
-  private async onSubmit(): Promise<void> {
+  private async test(): Promise<void> {
     if (!this.stateValid || !this.thumbnailValid) {
       alert('無効な項目があります');
       return;
