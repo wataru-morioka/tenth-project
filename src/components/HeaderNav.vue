@@ -155,7 +155,6 @@ export default class HeaderNav extends Vue {
 }
 </script>
 
-<!-- Add 'scoped' attribute to limit CSS to this component only -->
 <style scoped lang='scss'>
 $menu-color: #ffffffbf;
 
@@ -255,10 +254,10 @@ a:hover {
 
 @keyframes rotate_anime {
     0% {
-        transform: rotateX(0deg);/* アニメーションの進みが0%の時の状態 */
+        transform: rotateX(0deg);
     }
     100% {
-        transform: rotateX(360deg);/* アニメーションの進みが100%の時の状態 */
+        transform: rotateX(360deg);
     }
 }
 </style>
