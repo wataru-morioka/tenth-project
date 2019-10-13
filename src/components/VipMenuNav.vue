@@ -72,6 +72,7 @@ export default class VipMenuNav extends Vue {
   private isDroped: boolean = false;
 
   private mounted() {
+    // メニューアイコンを押下した際、ドロップダウンメニューが下に伸びるため、コンテンツ部分のzインデックスを操作
     ($('#menu-dropdown') as any).dropdown({
       on: 'hover',
       onShow: () => {

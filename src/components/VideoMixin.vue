@@ -32,35 +32,6 @@ export default class VideoMixin extends Vue {
         });
     }
 
-    private getVideo(id: number) {
-        return new Promise<VideoInfo>(async (resolve, reject) => {
-            await axios.get('https://express.management/video', {
-                headers: this.$store.state.authHeader,
-                params: {
-                photoId: id,
-                },
-            })
-            .then((res) => {
-            if (!res.data.result) {
-                console.log('video取得に失敗しました');
-                reject();
-                return;
-            }
-            console.log('video取得');
-            const videoInfo = res.data.videoInfo;
-            const video = new VideoInfo(
-                videoInfo.mimetype,
-                videoInfo.data,
-            );
-            resolve(video);
-            })
-            .catch((err) => {
-            console.log('video取得に失敗しました');
-            reject();
-            });
-        });
-    }
-
     private async play(id: number): Promise<void> {
         const isDisplay = this.$store.getters.isVideoDisplay;
         if ( isDisplay ) {
@@ -76,13 +47,13 @@ export default class VideoMixin extends Vue {
             const video = document.getElementById('project-video') as HTMLVideoElement;
             let result = false;
 
+            // hls.js（HTTP Live Streaming）を利用し、サーバから動画データをダウンロードしながら再生
             if (Hls.isSupported()) {
                 const hls = new Hls();
                 hls.loadSource(`https://express.management/hls/video-${id}/index.m3u8`);
                 hls.attachMedia(video);
                 hls.on(Hls.Events.MANIFEST_PARSED, () => {
                     result = true;
-                    // video.load();
                     video.play();
 
                     this.$store.commit('setIsDisplay', {
@@ -110,13 +81,6 @@ export default class VideoMixin extends Vue {
                     if (data.details === 'manifestLoadError') {
                         alert('videoがアップロードされていません');
                     }
-                });
-            } else if (video.canPlayType('application/vnd.apple.mpegurl')) {
-                video.src = `https://express.management/hls/video-${id}/index.m3u8`;
-                video.addEventListener('loadedmetadata', () => {
-                    ($('.modal') as any).modal('hide');
-                    // video.load();
-                    video.play();
                 });
             }
         }, 1000);

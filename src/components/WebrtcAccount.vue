@@ -25,7 +25,7 @@
           br
           img#thumbnail(:src='setThumbnail()')
           p(v-show='!thumbnailValid') ※必須です
-        button.submit(class='ui inverted green button', type='button', @click='test') Register
+        button.submit(class='ui inverted green button', type='submit') Register
 </template>
 
 <script lang='ts'>
@@ -44,8 +44,6 @@ import { states } from '../util/utils';
 })
 export default class WebrtcAccount extends Vue {
   private confirmMessage: string = '';
-  private name: string = 'test';
-  private account: string = 'test';
   private thumbnailValid: boolean = false;
   private selectedState: string = '';
   private stateValid: boolean = false;
@@ -111,7 +109,7 @@ export default class WebrtcAccount extends Vue {
     return blobURL;
   }
 
-  private async test(): Promise<void> {
+  private async onSubmit(): Promise<void> {
     if (!this.stateValid || !this.thumbnailValid) {
       alert('無効な項目があります');
       return;
@@ -131,10 +129,12 @@ export default class WebrtcAccount extends Vue {
           closable: false,
           onVisible: async () => {
             const body = new FormData();
+
             if (file) {
               body.append('file', file);
             }
             body.append('state', this.selectedState);
+
             await axios.put('https://django.service/api/service/registerVipAccount', body, {
               headers: this.$store.state.authHeader,
             })
@@ -142,12 +142,15 @@ export default class WebrtcAccount extends Vue {
               if (res.data.result) {
                 alert('アップロードが完了しました');
                 console.log(res.data);
+
                 const thumbnailBase64 = res.data.thumbnail;
                 const bin = atob(thumbnailBase64.replace(/^.*,/, ''));
                 const buffer = new Uint8Array(bin.length);
+
                 for (let i = 0; i < bin.length; i++) {
                     buffer[i] = bin.charCodeAt(i);
                 }
+
                 this.$store.commit('setUserInfo', {
                   isLogin: true,
                   isAnonymous: false,

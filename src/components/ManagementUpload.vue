@@ -57,7 +57,6 @@ div
 <script lang='ts'>
 import Vue from 'vue';
 import { Component, Mixin, Mixins } from 'vue-mixin-decorator';
-// import { Component, Vue } from 'vue-property-decorator';
 import { mapState } from 'vuex';
 import Modal from '@/components/Modal.vue';
 import ConfirmModal from '@/components/ConfirmModal.vue';
@@ -91,6 +90,7 @@ export default class ManagementUpload extends Mixins<VideoMixin>(VideoMixin) {
     return 'margin-top: auto;';
   }
 
+  // プロジェクト動画のサムネイルセット
   private setPhoto(indexX: number, indexY: number): string {
     const buffer = Buffer.from(this.photoMultiArray[indexX][indexY].data);
     const blob = new Blob([buffer], {type: this.photoMultiArray[indexX][indexY].mimetype});
@@ -106,14 +106,14 @@ export default class ManagementUpload extends Mixins<VideoMixin>(VideoMixin) {
     });
 
     $('.project-row').each((index) => {
-      if (index === 0) {
-        console.log($(this));
-        $(this).css({
-          'padding-top': '70px !important',
-        });
-      }
+      if (index !== 0) { return; }
+
+      $(this).css({
+        'padding-top': '70px !important',
+      });
     });
 
+    // プロジェクト情報を取得
     await this.$store.dispatch('getPhotos');
     this.photoMultiArray = this.$store.getters.getPhotos;
   }
@@ -145,6 +145,7 @@ export default class ManagementUpload extends Mixins<VideoMixin>(VideoMixin) {
     });
   }
 
+  // 対象の現在の動画サムネイルを取得
   private async download(id: number): Promise<void> {
     axios.get('https://express.management/download', {
       headers: this.$store.state.authHeader,
@@ -167,6 +168,7 @@ export default class ManagementUpload extends Mixins<VideoMixin>(VideoMixin) {
     });
   }
 
+  // サムネイルを圧縮するリクエストをサーバに送信し、完了後プロジェクト情報を更新する
   private async minify(id: number): Promise<void> {
     this.confirmMessage = 'will you minify thumbnail really?';
     ($('#confirm-modal') as any).modal({
@@ -198,10 +200,13 @@ export default class ManagementUpload extends Mixins<VideoMixin>(VideoMixin) {
     }).modal('show');
   }
 
+  // サムネイル、動画のeditボタン押下時
   private editPhoto(event: any): void {
     const target = event.currentTarget;
     const parent = $(target).closest('.edit-photo-wrap');
     const uploadArea = $(parent).children('.upload-wrap');
+
+    // css変更（ボタンエリア表示、非表示）
     if ($(target).hasClass('primary')) {
       (uploadArea).slideToggle(300);
       $(target).removeClass('primary');
@@ -215,9 +220,12 @@ export default class ManagementUpload extends Mixins<VideoMixin>(VideoMixin) {
     $(target).text('edit');
   }
 
+  // 変更サムネイル洗選択完了時
   private async onChangeThumbnail(event: any, id: number): Promise<void> {
     const target = event.currentTarget;
     this.confirmMessage = 'will you change photograph really?';
+
+    // 確認モーダル表示
     ($('#confirm-modal') as any).modal({
       closable: false,
       onApprove: async (el: any) => {
@@ -227,6 +235,7 @@ export default class ManagementUpload extends Mixins<VideoMixin>(VideoMixin) {
             const body = new FormData();
             body.append('file', event.target.files[0]);
             body.append('photoId', String(id));
+
             await axios.put('https://express.management/photographs', body, {
               headers: this.$store.state.authHeader,
             })
@@ -246,6 +255,7 @@ export default class ManagementUpload extends Mixins<VideoMixin>(VideoMixin) {
             $(editButton).addClass('primary');
             $(editButton).text('edit');
 
+            // 画面更新
             await this.$store.dispatch('getPhotos');
             this.photoMultiArray = this.$store.getters.getPhotos;
 
@@ -260,9 +270,11 @@ export default class ManagementUpload extends Mixins<VideoMixin>(VideoMixin) {
     }).modal('show');
   }
 
+  // 動画選択完了時
   private async onChangeVideo(event: any, id: number): Promise<void> {
     const target = event.currentTarget;
     this.confirmMessage = 'will you change video really?';
+
     ($('#confirm-modal') as any).modal({
       closable: false,
       onApprove: async (el: any) => {
@@ -283,6 +295,7 @@ export default class ManagementUpload extends Mixins<VideoMixin>(VideoMixin) {
 
             body.append('file', event.target.files[0]);
             body.append('photoId', String(id));
+
             await axios.put('https://express.management/video', body, {
               headers: this.$store.state.authHeader,
             })
@@ -306,6 +319,7 @@ export default class ManagementUpload extends Mixins<VideoMixin>(VideoMixin) {
             $(editButton).addClass('primary');
             $(editButton).text('edit');
 
+            // 画面更新
             await this.$store.dispatch('getPhotos');
             this.photoMultiArray = this.$store.getters.getPhotos;
 
@@ -320,6 +334,7 @@ export default class ManagementUpload extends Mixins<VideoMixin>(VideoMixin) {
     }).modal('show');
   }
 
+  // サムネイル更新ボタン押下時
   private async uploadThumbnail(event: any, id: number): Promise<void> {
     const target = event.currentTarget;
     const parent = $(target).closest('.upload-wrap');
@@ -327,6 +342,7 @@ export default class ManagementUpload extends Mixins<VideoMixin>(VideoMixin) {
     $(input).click();
   }
 
+  // 動画更新ボタン押下時
   private async uploadVideo(event: any, id: number): Promise<void> {
     const target = event.currentTarget;
     const parent = $(target).closest('.upload-wrap');
@@ -334,10 +350,13 @@ export default class ManagementUpload extends Mixins<VideoMixin>(VideoMixin) {
     $(input).click();
   }
 
+  // サブタイトルedit、confirmボタン押下時
   private async editSubTitle(event: any, id: number): Promise<void> {
     const target = event.currentTarget;
     const parent = $(target).closest('.subject');
     const input = $(parent).children('.sub-title');
+
+    // 編集→確定ボタンに変更
     if ($(target).hasClass('primary')) {
       $(input).prop('readonly', false);
       $(target).removeClass('primary');
@@ -346,22 +365,30 @@ export default class ManagementUpload extends Mixins<VideoMixin>(VideoMixin) {
       return;
     }
 
+    // 確定ボタン押下時
     $(target).prop('disabled', true);
     $(target).addClass('loading');
+
     const body = {
       photoId: id,
       subTitle: $(input).val(),
     };
+
+    // サーバに変更情報送信
     await axios.put('https://express.management/photographs', body, {
       headers: this.$store.state.authHeader,
     })
     .then(async (res: any) => {
+      // プロジェクト情報更新
       await this.$store.dispatch('getPhotos');
       this.photoMultiArray = this.$store.getters.getPhotos;
+
+      // 確定→編集ボタンに変更
       $(input).prop('readonly', true);
       $(target).removeClass('orange');
       $(target).addClass('primary');
       $(target).text('edit');
+
       alert('更新に成功しました');
     })
     .catch((err) => {
@@ -372,10 +399,13 @@ export default class ManagementUpload extends Mixins<VideoMixin>(VideoMixin) {
     $(target).removeClass('loading');
   }
 
+  // タイトルedit、confirmボタン押下時
   private async editTitle(event: any, id: number): Promise<void> {
     const target = event.currentTarget;
     const parent = $(target).closest('h4');
     const input = $(parent).children('.title');
+
+    // 編集→確定ボタンに変更
     if ($(target).hasClass('primary')) {
       $(input).prop('readonly', false);
       $(target).removeClass('primary');
@@ -384,18 +414,25 @@ export default class ManagementUpload extends Mixins<VideoMixin>(VideoMixin) {
       return;
     }
 
+    // 確定ボタン押下時
     $(target).prop('disabled', true);
     $(target).addClass('loading');
+
     const body = {
       photoId: id,
       title: $(input).val(),
     };
+
+    // サーバに変更情報送信
     await axios.put('https://express.management/photographs', body, {
       headers: this.$store.state.authHeader,
     })
     .then(async (res: any) => {
+      // プロジェクト情報更新
       await this.$store.dispatch('getPhotos');
       this.photoMultiArray = this.$store.getters.getPhotos;
+
+      // 確定→編集ボタンに変更
       $(input).prop('readonly', true);
       $(target).removeClass('orange');
       $(target).addClass('primary');
@@ -425,8 +462,10 @@ export default class ManagementUpload extends Mixins<VideoMixin>(VideoMixin) {
     $('#add-video-input').click();
   }
 
+  // 新規プロジェクトサムネイル選択時
   private onChangeAddPhoto(event: any): void {
     this.confirmMessage = 'will you add photograph really?';
+
     ($('#confirm-modal') as any).modal({
       closable: false,
       onApprove: async (el: any) => {
@@ -435,6 +474,7 @@ export default class ManagementUpload extends Mixins<VideoMixin>(VideoMixin) {
           onVisible: async () => {
             const body = new FormData();
             body.append('file', event.target.files[0]);
+
             await axios.post('https://express.management/photographs', body, {
               headers: this.$store.state.authHeader,
             })
@@ -458,6 +498,7 @@ export default class ManagementUpload extends Mixins<VideoMixin>(VideoMixin) {
     }).modal('show');
   }
 
+  // deleteボタン押下時
   private deletePhoto(id: number) {
     this.confirmMessage = 'will you delete photograph really?';
     ($('#confirm-modal') as any).modal({

@@ -31,16 +31,6 @@ export default class WebRtcHeaderNav extends Vue {
   private isOpen: boolean = false;
 
   private mounted() {
-    ($('#webrtc-dropdown') as any).dropdown({
-      on: 'hover',
-      onShow: () => {
-        $('.content').css('z-index', '-3');
-      },
-      onHide: () => {
-        $('.content').css('z-index', '0');
-      },
-    });
-
     ($('#webrtc-sidebar') as any).sidebar({
       onShow: () => {
         this.isOpen = true;

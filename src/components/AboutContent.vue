@@ -152,12 +152,6 @@ export default class AboutContent extends Vue {
     });
   }
 
-  private created() {
-    setTimeout(() => {
-      $('.content').css('top', '60px');
-    }, 1000);
-  }
-
   private fadein(): void {
     const offset =  200;
     const effectPos = $(window).height()! - offset;
@@ -184,7 +178,7 @@ $menu-color: #ffffff77;
 
 .content {
   position: fixed;
-  top: 54px; right: 0; bottom: 0; left: 0;
+  top: 60px; right: 0; bottom: 0; left: 0;
   overflow-y: scroll;
   -webkit-overflow-scrolling: touch;
   height: auto;

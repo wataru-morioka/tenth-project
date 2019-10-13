@@ -19,22 +19,22 @@
             div#toolbar-container
             div#editor
               p Write an article.
-    div.article-list(class='ui comments', v-for='([key, value], index) in Array.from(this.$store.state.distinctArticleMap)', :key='key')
-      input(type='hidden', :value='setArticleId(key)')
+    div.article-list(class='ui comments', v-for='([articleId, articleInfo], index) in Array.from(this.$store.state.distinctArticleMap)', :key='articleId')
+      input(type='hidden', :value='setArticleId(articleId)')
       div.comment
         a.avatar
-          img.avatar(:src='setThumbnail(key)')
+          img.avatar(:src='setThumbnail(articleId)')
         div.content
-          a.author {{ value.contributorName }}
+          a.author {{ articleInfo.contributorName }}
           div.metadata
-            span.date {{ value.createdDatetime }}
+            span.date {{ articleInfo.createdDatetime }}
           div.article.history
             div.button-wrap
-              button(class='ui inverted primary button', @click='editAricle($event, key)') Edit
-              button(class='ui inverted secondary button', @click='saveAricle($event, key)') Save
+              button(class='ui inverted primary button', @click='editAricle($event, articleId)') Edit
+              button(class='ui inverted secondary button', @click='saveAricle($event, articleId)') Save
             div.toolbar-container
             div.editor
-              span(v-html='setBody(value.body)')
+              span(v-html='setBody(articleInfo.body)')
           hr.comment-border
           div.input-comment-wrap
             div.comment-icon(@click='showInputComment($event)')
@@ -43,9 +43,9 @@
             form(class='ui reply form')
               div.field
                 textarea.comment-text
-              button(class='ui inverted green button', type='button', @click='sendComment($event, key)') Send a Comment
+              button(class='ui inverted green button', type='button', @click='sendComment($event, articleId)') Send a Comment
             div(class='ui comments')
-              div.comment.history(v-for='(comment, index) in commentArray(key)', :key='index')
+              div.comment.history(v-for='(comment, index) in commentArray(articleId)', :articleId='index')
                 a.avatar
                   img.avatar(:src='setCommentThumbnail(comment.thumbnail)')
                 div.content
@@ -131,8 +131,10 @@ export default class WebrtcArticle extends Vue {
     });
   }
 
+  // 記事が追加、変更された時
   private updated() {
     this.fadein();
+    // CKEdirotを再セット
     this.resetEditor();
   }
 
@@ -140,6 +142,7 @@ export default class WebrtcArticle extends Vue {
     return body;
   }
 
+  // 記事に紐づくコメントリスト取得
   private commentArray(articleId: number): Comment[] {
     const targetArray = this.$store.state.articleArray.filter((article: any) => {
       return article.id === articleId && article.commentatorName != null;
@@ -155,10 +158,12 @@ export default class WebrtcArticle extends Vue {
     return commentArray;
   }
 
+  // コメント送信
   private async sendComment(event: any, id: number): Promise<void> {
     const form = $(event.currentTarget).parents('form')[0];
     const commnetArea = $(form).find('textarea')[0];
     let comment = $(commnetArea).val() as string;
+    // コメント末尾の空白削除
     comment = comment.replace(/^\s+/, '').replace(/\s+$/, '');
 
     if (comment.length === 0) {
@@ -202,6 +207,7 @@ export default class WebrtcArticle extends Vue {
                   this.articleArray = this.$store.state.articleArray;
                   this.distinctArticleMap = this.$store.state.distinctArticleMap;
                 });
+
                 alert('送信しました');
               })
               .catch((err) => {
@@ -217,6 +223,7 @@ export default class WebrtcArticle extends Vue {
     }).modal('show');
   }
 
+  // コメント入力エリア表示、非表示
   private showInputComment(event: any): void {
     const parent = $(event.currentTarget).closest('.input-comment-wrap');
     const form = $(parent).children('form')[0];
@@ -231,7 +238,9 @@ export default class WebrtcArticle extends Vue {
     return id;
   }
 
+  // CKEditorセット（最上部新規記事postエリア以外、readonlyモード）
   private setEditor(): void {
+    // 最上部新規記事postエリア
     DecoupledEditor
     .create( document.querySelector('#editor'), {
       ckfinder: {
@@ -248,11 +257,13 @@ export default class WebrtcArticle extends Vue {
       console.error( err.stack );
     });
 
+    // 過去の記事一覧エリア
     $('.article.history').each((index, element) => {
       const toolbarElement = $(element).children('.toolbar-container')[0];
       const editorElement = $(element).children('.editor')[0];
       const inputElement = $(element).parents('.article-list').children('input')[0];
       const articleId: string = $(inputElement).val() as string;
+
       DecoupledEditor
       .create( editorElement, {
         ckfinder: {
@@ -274,8 +285,12 @@ export default class WebrtcArticle extends Vue {
     });
   }
 
+  // 記事が追加、変更された場合、CKEditorを再セット
   private resetEditor(): void {
+    // 最上部新規記事postエリア
+    // 一旦インスタンス破棄
     this.editors.get('new').destroy();
+
     DecoupledEditor
     .create( document.querySelector('#editor'), {
       ckfinder: {
@@ -290,6 +305,7 @@ export default class WebrtcArticle extends Vue {
       console.error( err.stack );
     });
 
+    // 過去の記事一覧エリア
     $('.article.history').each((index, element) => {
       const toolbarElement = $(element).children('.toolbar-container')[0];
       const editorElement = $(element).children('.editor')[0];
@@ -300,42 +316,29 @@ export default class WebrtcArticle extends Vue {
       });
 
       if (this.editors.get(articleId)) {
+        // 一旦インスタンス破棄
         this.editors.get(articleId).destroy();
-        DecoupledEditor
-        .create( editorElement, {
-          ckfinder: {
-            uploadUrl: 'https://django.service/api/service/image',
-          },
-        })
-        .then(async (editor: any) => {
-          editor.isReadOnly = true;
-          this.editors.set(articleId, editor);
-          await editor.setData(target[0].body);
-        })
-        .catch( (err: any) => {
-          console.log(err);
-          console.error( err.stack );
-        });
-      } else {
-        DecoupledEditor
-        .create( editorElement, {
-          ckfinder: {
-            uploadUrl: 'https://django.service/api/service/image',
-          },
-        })
-        .then(async (editor: any) => {
-          editor.isReadOnly = true;
-          this.editors.set(articleId, editor);
-          await editor.setData(target[0].body);
-        })
-        .catch( (err: any) => {
-          console.log(err);
-          console.error( err.stack );
-        });
       }
+
+      DecoupledEditor
+        .create( editorElement, {
+          ckfinder: {
+            uploadUrl: 'https://django.service/api/service/image',
+          },
+        })
+        .then(async (editor: any) => {
+          editor.isReadOnly = true;
+          this.editors.set(articleId, editor);
+          await editor.setData(target[0].body);
+        })
+        .catch( (err: any) => {
+          console.log(err);
+          console.error( err.stack );
+        });
     });
   }
 
+  // 記事編集ボタンを押下時（readonlyモードon/off）
   private editAricle(event: any, articleId: number = 0): void {
     const target = $(event.currentTarget);
     const saveButton = $(target).next();
@@ -345,6 +348,7 @@ export default class WebrtcArticle extends Vue {
     const span = $(editorElement).children('span')[0];
     const editor = this.editors.get(String(articleId));
 
+    // 編集キャンセル時
     if ($(target).hasClass('secondary')) {
       this.isEditing = false;
 
@@ -354,8 +358,7 @@ export default class WebrtcArticle extends Vue {
       $(target).addClass('primary');
       $(target).text('Edit');
 
-      // ckeditor解除
-      $(span).css('display', 'block');
+      // $(span).css('display', 'block');
       editor.isReadOnly = true;
       $(toolbarElement).empty();
       return;
@@ -369,12 +372,12 @@ export default class WebrtcArticle extends Vue {
     this.isEditing = true;
     $(target).addClass('loading');
 
-    // ckeditorセット
+    // ckeditorを編集モードに変換
     const toolbarContainer = toolbarElement;
     toolbarContainer.appendChild( editor.ui.view.toolbar.element );
     editor.isReadOnly = false;
 
-    $(span).css('display', 'none');
+    // $(span).css('display', 'none');
     $(target).removeClass('loading');
     $(target).removeClass('primary');
     $(target).addClass('secondary');
@@ -383,6 +386,7 @@ export default class WebrtcArticle extends Vue {
     $(target).text('Cancel');
   }
 
+  // 記事saveボタン押下時
   private async saveAricle(event: any, articleId: number = 0): Promise<void> {
     const target = event.currentTarget;
     const editButton = $(target).prev();
@@ -403,6 +407,7 @@ export default class WebrtcArticle extends Vue {
     let result: boolean = false;
 
     setTimeout(async () => {
+      // 新規記事postの場合
       if (articleId === 0) {
         const body = {
           body: this.editors.get('new').getData(),
@@ -415,24 +420,28 @@ export default class WebrtcArticle extends Vue {
             alert('保存に失敗しました');
             return;
           }
+
+          // 保存に成功
           result = true;
+          // インプットエリア閉じる
           this.showPostInputArea();
         })
         .catch((err) => {
           console.log(err);
           alert('保存に失敗しました');
         });
+      // 過去記事変更の場合
       } else {
         const article: any = this.$store.state.articleArray.filter((x: any) => {
           return (x as any).id === articleId;
         });
-        console.log(article);
+
         const editor = this.editors.get(String(article[0].id));
         const body = {
           articleId: article[0].id,
           body: editor.getData(),
         };
-        console.log(body);
+
         await axios.put('https://django.service/api/service/article', body, {
           headers: this.$store.state.authHeader,
         })
@@ -442,6 +451,7 @@ export default class WebrtcArticle extends Vue {
             return;
           }
           result = true;
+          // CKEditorをreadonlyモードへ変換
           editor.isReadOnly = true;
         })
         .catch((err) => {
@@ -450,7 +460,9 @@ export default class WebrtcArticle extends Vue {
         });
       }
 
+      // 保存に成功した場合
       if (result) {
+        // 記事リストを再取得（最新3件）
         await this.$store.dispatch('getArticles', {
             additional: false,
           }).then(() => {
@@ -466,8 +478,7 @@ export default class WebrtcArticle extends Vue {
         $(editButton).addClass('primary');
         $(editButton).text('Edit');
 
-        // ckeditor解除
-        $(span).css('display', 'block');
+        // $(span).css('display', 'block');
         const editor = this.editors.get(String(articleId));
         $(toolbarElement).empty();
 
@@ -477,6 +488,7 @@ export default class WebrtcArticle extends Vue {
     }, 500);
   }
 
+  // コメント送信者のサムネイルをセット
   private setCommentThumbnail(thumbnail: Uint8Array): string {
     const buffer = Buffer.from(thumbnail);
     const blob = new Blob([buffer], {type: (thumbnail as any).mimetype});
@@ -484,7 +496,9 @@ export default class WebrtcArticle extends Vue {
     return blobURL;
   }
 
+  // 記事投稿者のサムネイルをセット
   private setThumbnail(articleId: number = 0): string {
+    // 最上部の記事postエリア
     if (articleId === 0) {
       const thumbnail = this.$store.state.thumbnail;
       if (thumbnail === null) {
@@ -496,9 +510,10 @@ export default class WebrtcArticle extends Vue {
       return blobURL;
     }
 
+    // 過去の記事一覧tエリア
     const target: any = this.$store.state.articleArray.filter((x: any) => {
-        return (x as any).id === articleId;
-      });
+      return (x as any).id === articleId;
+    });
     const thumbnail2 = target[0].thumbnail;
     const buffer2 = Buffer.from(thumbnail2);
     const blob2 = new Blob([buffer2], {type: thumbnail2.mimetype});
@@ -506,6 +521,7 @@ export default class WebrtcArticle extends Vue {
     return blobURL2;
   }
 
+  // 新規記事postエリア表示、非表示
   private showPostInputArea(): void {
     if (this.inputPostDisplay) {
       $('#input-post').hide(300);

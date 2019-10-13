@@ -121,12 +121,6 @@ export default class MemberContent extends Vue {
     });
   }
 
-  private created() {
-    setTimeout(() => {
-      $('.content').css('top', '60px');
-    }, 1000);
-  }
-
   private fadein(): void {
     const offset = - 60;
     const effectPos = $(window).height()! - offset;
@@ -163,7 +157,7 @@ export default class MemberContent extends Vue {
   margin: auto;
   height: auto;
   width: 100%;
-  top: 54px; right: 0; bottom: 0; left: 0;
+  top: 60px; right: 0; bottom: 0; left: 0;
   transition: 1s;
 }
 

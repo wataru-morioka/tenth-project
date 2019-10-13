@@ -28,16 +28,6 @@ export default class ManagementHeaderNav extends Vue {
   private isOpen: boolean = false;
 
   private mounted() {
-    ($('#management-dropdown') as any).dropdown({
-      on: 'hover',
-      onShow: () => {
-        $('.content').css('z-index', '-3');
-      },
-      onHide: () => {
-        $('.content').css('z-index', '0');
-      },
-    });
-
     ($('#management-sidebar') as any).sidebar({
       onShow: () => {
         this.isOpen = true;

@@ -103,6 +103,8 @@ export default class ArticleContent extends Vue {
       const doch = document.querySelector('#article-content')!.scrollHeight + 120;
       const winh = $(window).innerHeight()!;
       const bottom = doch - winh;
+
+      // スクロールしてページ最下部にきた際、追加でサーバから記事を取得
       if (bottom <= $('#article-content').scrollTop()!) {
         await ($('#loading-modal') as any).modal({
           closable: false,
@@ -124,9 +126,11 @@ export default class ArticleContent extends Vue {
     return body;
   }
 
+  // コメント入力エリアを表示、非表示
   private showInputComment(event: any): void {
     const parent = $(event.currentTarget).closest('.input-comment-wrap');
     const form = $(parent).children('form')[0];
+
     if ($(form).css('display') === 'none') {
       $(form).slideToggle(300);
     } else {
@@ -134,10 +138,12 @@ export default class ArticleContent extends Vue {
     }
   }
 
+  // 記事に紐づくコメントリストを取得
   private commentArray(articleId: number): Comment[] {
     const targetArray = this.$store.state.articleArray.filter((article: any) => {
       return article.id === articleId && article.commentatorName != null;
     });
+
     const commentArray = targetArray.map((article: any) => {
       return new Comment(
         article.commentatorName,
@@ -146,13 +152,16 @@ export default class ArticleContent extends Vue {
         article.commentCreatedDatetime,
       );
     });
+
     return commentArray;
   }
 
+  // コメント送信
   private async sendComment(event: any, id: number): Promise<void> {
     const form = $(event.currentTarget).parents('form')[0];
     const commnetArea = $(form).find('textarea')[0];
     let comment = $(commnetArea).val() as string;
+    // コメント末尾の空白削除
     comment = comment.replace(/^\s+/, '').replace(/\s+$/, '');
 
     if (comment.length === 0) {
@@ -196,6 +205,7 @@ export default class ArticleContent extends Vue {
                   this.articleArray = this.$store.state.articleArray;
                   this.distinctArticleMap = this.$store.state.distinctArticleMap;
                 });
+
                 alert('送信しました');
               })
               .catch((err) => {
@@ -215,12 +225,14 @@ export default class ArticleContent extends Vue {
     return id;
   }
 
+  // CKEditorセット（readonlyモード）
   private setEditor(): void {
     $('.article.history').each((index, element) => {
       const toolbarElement = $(element).children('.toolbar-container')[0];
       const editorElement = $(element).children('.editor')[0];
       const inputElement = $(element).parents('.article-list').children('input')[0];
       const articleId: string = $(inputElement).val() as string;
+
       DecoupledEditor
       .create( editorElement, {
       })
@@ -228,6 +240,7 @@ export default class ArticleContent extends Vue {
         this.editors.set(articleId, editor);
         editor.isReadOnly = true;
 
+        // 記事内容をセット
         const target: any = this.$store.state.articleArray.filter((x: any) => {
           return (x as any).id === Number(articleId);
         });
@@ -239,6 +252,7 @@ export default class ArticleContent extends Vue {
     });
   }
 
+  // コメント送信者のサムネイルをセット
   private setCommentThumbnail(thumbnail: Uint8Array): string {
     const buffer = Buffer.from(thumbnail);
     const blob = new Blob([buffer], {type: (thumbnail as any).mimetype});
@@ -246,27 +260,17 @@ export default class ArticleContent extends Vue {
     return blobURL;
   }
 
+  // 記事投稿者のサムネイルをセット
   private setThumbnail(articleId: number = 0): string {
-    if (articleId === 0) {
-      const thumbnail = this.$store.state.thumbnail;
-      if (thumbnail === null) {
-        return '';
-      }
-      const buffer = Buffer.from(thumbnail);
-      const blob = new Blob([buffer], {type: thumbnail.mimetype});
-      const blobURL = window.URL.createObjectURL(blob);
-      return blobURL;
-    }
-
     const target: any = this.$store.state.articleArray.filter((x: any) => {
       return (x as any).id === articleId;
     });
 
-    const thumbnail2 = target[0].thumbnail;
-    const buffer2 = Buffer.from(thumbnail2);
-    const blob2 = new Blob([buffer2], {type: thumbnail2.mimetype});
-    const blobURL2 = window.URL.createObjectURL(blob2);
-    return blobURL2;
+    const thumbnail = target[0].thumbnail;
+    const buffer = Buffer.from(thumbnail);
+    const blob = new Blob([buffer], {type: thumbnail.mimetype});
+    const blobURL = window.URL.createObjectURL(blob);
+    return blobURL;
   }
 }
 </script>

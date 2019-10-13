@@ -192,10 +192,10 @@ a {
 
 @keyframes rotate_anime {
     0% {
-        transform:rotateX(0deg);/* アニメーションの進みが0%の時の状態 */
+        transform:rotateX(0deg);
     }
     100% {
-        transform:rotateX(360deg);/* アニメーションの進みが100%の時の状態 */
+        transform:rotateX(360deg);
     }
 }
 </style>

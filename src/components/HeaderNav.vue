@@ -90,7 +90,6 @@
               p(style='transition-delay: 0.12s')
                 span T
         div#menu-dropdown(class="ui pointing link icon dropdown")
-          //- div.text MENU
           i(class="large bars icon")
           div.menu
             div.header MENU
@@ -115,6 +114,7 @@ export default class HeaderNav extends Vue {
   private isDroped: boolean = false;
 
   private mounted() {
+    // メニューアイコンを押下した際、ドロップダウンメニューが下に伸びるため、コンテンツ部分のzインデックスを操作
     ($('#menu-dropdown') as any).dropdown({
       on: 'hover',
       onShow: () => {

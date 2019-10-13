@@ -75,10 +75,12 @@ export default class ManagementContact extends Vue {
   private from: string = '';
   private to: string = '';
 
+  // 検索条件に一致したお問い合わせリストをサーバから取得（最大100件）
   private async getContactList(searchString: string = '', from: string = '',
                                to: string = '', orderType: boolean = true): Promise<Result> {
     return new Promise<Result>(async (resolve, reject) => {
       const result = new Result();
+
       await axios.get('https://express.management/contact', {
           headers: this.$store.state.authHeader,
           params: {
@@ -94,10 +96,11 @@ export default class ManagementContact extends Vue {
           return;
         }
         console.log('contactリスト取得');
+
         result.totalCount = res.data.totalCount;
         const list = res.data.contactList;
-        console.log(list);
         let contact: ContactInfo;
+
         list.forEach((el: any) => {
           contact = new ContactInfo(
             el.id,
@@ -132,19 +135,21 @@ export default class ManagementContact extends Vue {
   }
 
   private mounted() {
-    const config =  {
+    // date-pickerセット
+    flatpickr('.date-picker', {
       disableMobile: true,
-    };
-    flatpickr('.date-picker', config);
+    });
   }
 
   private resetFlag(): void {
     this.isDescCreated = true;
   }
 
+  // 検索ボタン押下時
   private async search(): Promise<void> {
     this.isLoading = true;
     this.resetFlag();
+
     await this.getContactList(this.searchString, this.from, this.to).then((result) => {
       this.contactList = result.contactList;
       this.totalCount = result.totalCount;
@@ -155,12 +160,14 @@ export default class ManagementContact extends Vue {
     this.isLoading = false;
   }
 
+  // 更新ボタン押下時
   private async redo(): Promise<void> {
     this.isLoading = true;
     this.resetFlag();
     this.from = '';
     this.to = '';
     this.searchString = '';
+
     await this.getContactList().then((result) => {
       this.contactList = result.contactList;
       this.totalCount = result.totalCount;
@@ -171,9 +178,11 @@ export default class ManagementContact extends Vue {
     this.isLoading = false;
   }
 
+  // ソート可能なテーブルヘッダ押下時
   private async sort(order: number): Promise<void> {
     this.isLoading = true;
     this.isDescCreated = !this.isDescCreated;
+
     await this.getContactList(this.searchString, this.from, this.to, this.isDescCreated).then((result) => {
       this.contactList = result.contactList;
       this.totalCount = result.totalCount;
@@ -184,6 +193,7 @@ export default class ManagementContact extends Vue {
     this.isLoading = false;
   }
 
+  // お問い合わせの詳細エリア表示、非表示
   private showDetail(event: any): void {
     const target = event.currentTarget;
     const parent = $(target).closest('.row-wrap');

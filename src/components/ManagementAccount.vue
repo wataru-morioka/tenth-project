@@ -94,10 +94,12 @@ export default class ManagementAccount extends Vue {
   private sortedModified: boolean = false;
   private sortedCreated: boolean = false;
 
+  // 検索条件に一致したアカウントリストをサーバから取得（最大100件）
   private getAccountList(searchString: string = '', orderBy: number = -1, orderType: boolean = true)
   : Promise<Result> {
     return new Promise<Result>(async (resolve, reject) => {
       const result = new Result();
+
       await axios.get('https://django.service:443/api/service/account', {
           headers: this.$store.state.authHeader,
           params: {
@@ -113,9 +115,11 @@ export default class ManagementAccount extends Vue {
           return;
         }
         console.log('accountリスト取得');
+
         result.totalCount = res.data.totalCount;
         const list = res.data.accountList;
         let account: AccountInfo;
+
         list.forEach((el: any) => {
           account = new AccountInfo(
             el.uid,
@@ -151,6 +155,7 @@ export default class ManagementAccount extends Vue {
     });
   }
 
+  // 検索条件を保持情報リセット
   private resetFlag(): void {
     this.isDescLoginCount = false;
     this.isDescLatestLogin = false;
@@ -161,9 +166,11 @@ export default class ManagementAccount extends Vue {
     this.sortedCreated = false;
   }
 
+  // 検索文字をフィルターにサーバから結果取得（デフォルト：フィルターなし）
   private async search(): Promise<void> {
     this.isLoading = true;
     this.resetFlag();
+
     await this.getAccountList(this.searchString).then((result) => {
       this.accountList = result.accountList;
       this.totalCount = result.totalCount;
@@ -174,10 +181,12 @@ export default class ManagementAccount extends Vue {
     this.isLoading = false;
   }
 
+  // 更新ボタン押下時
   private async redo(): Promise<void> {
     this.isLoading = true;
     this.resetFlag();
     this.searchString = '';
+
     await this.getAccountList().then((result) => {
       this.accountList = result.accountList;
       this.totalCount = result.totalCount;
@@ -188,9 +197,11 @@ export default class ManagementAccount extends Vue {
     this.isLoading = false;
   }
 
+  // 降順昇順ソート可能な列のターブルヘッダ押下時
   private async sort(order: number): Promise<void> {
     this.isLoading = true;
     let orderType = false;
+
     switch (order) {
       case OrderEnum.LoginCount:
         orderType = !this.isDescLoginCount;
@@ -204,8 +215,10 @@ export default class ManagementAccount extends Vue {
       default:
         break;
     }
+
     this.resetFlag();
     this.sortedCreated = true;
+
     switch (order) {
       case OrderEnum.LoginCount:
         this.sortedLoginCount = true;
@@ -233,11 +246,13 @@ export default class ManagementAccount extends Vue {
     this.isLoading = false;
   }
 
+  // テーブル行の編集ボタン押下時
   private async edit(event: any, index: number): Promise<void> {
     const target = event.currentTarget;
     const parent = $(target).closest('tr');
     const next = $(target).next('button');
 
+    // ボタンのcss変更
     if ($(target).hasClass('secondary')) {
       const tmp = this.accountList[index];
       this.$set(this.accountList, index, tmp);
@@ -257,6 +272,7 @@ export default class ManagementAccount extends Vue {
     }
   }
 
+  // テーブル行の編集確定ボタン押下時
   private async confirm(event: any): Promise<void> {
     const target = event.currentTarget;
     const parent = $(target).closest('tr');
@@ -277,6 +293,7 @@ export default class ManagementAccount extends Vue {
       delete: $(parent).children('.delete').find('input').prop('checked'),
     };
 
+    // サーバに変更リクエスト
     await axios.put('https://django.service:443/api/service/account', body, {
         headers: this.$store.state.authHeader,
     })
@@ -285,7 +302,15 @@ export default class ManagementAccount extends Vue {
         console.log('account更新に失敗しました');
         return;
       }
-      console.log('account更新');
+
+      $(target).removeClass('orange');
+      $(target).addClass('secondary');
+      $(prev).removeClass('secondary');
+      $(prev).addClass('primary');
+      $(prev).text('edit');
+      $(parent).find('input').prop('disabled', true);
+
+      alert('account更新しました');
     })
     .catch((err) => {
       console.log('account更新に失敗しました');
@@ -293,12 +318,6 @@ export default class ManagementAccount extends Vue {
 
     this.isLoading = false;
     $(target).removeClass('loading');
-    $(target).removeClass('orange');
-    $(target).addClass('secondary');
-    $(prev).removeClass('secondary');
-    $(prev).addClass('primary');
-    $(prev).text('edit');
-    $(parent).find('input').prop('disabled', true);
   }
 }
 </script>

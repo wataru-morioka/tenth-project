@@ -12,6 +12,7 @@ class Result {
     }
 }
 
+// プロジェクト情報リスト取得
 export const getPhotoList = () => {
     return new Promise<Result>(async (resolve, reject) => {
         const result = new Result();
@@ -24,41 +25,47 @@ export const getPhotoList = () => {
             Authorization: `Bearer ${token}`,
         };
 
+        // ヘッダに認証用トークンをセット
         await axios.get('https://express.management/photographs', {
             headers: header,
         })
         .then((res) => {
             if (!res.data.result) {
-            console.log('photoリスト取得に失敗しました');
-            reject();
-            return;
+                console.log('photoリスト取得に失敗しました');
+                reject();
+                return;
             }
             console.log('photoリスト取得');
             const resArray = res.data.photoArray;
             let photo: PhotoInfo;
             let index = 0;
+
+            // プロジェクト一覧画面にて左右に1つずつ並べるため、2つで1組みの配列に格納
             resArray.forEach((el: any) => {
-            photo = new PhotoInfo(
-                el.id,
-                el.sub_title,
-                el.title,
-                el.mimetype,
-                el.fileName,
-                el.size,
-                el.data,
-                el.created_datetime,
-                el.modified_datetime,
-            );
-            const map = new Map<number, string>();
-            projectTitleMap.set(photo.id, photo.title);
-            photoArray.push(photo);
-            if (index === 1) {
-                photoMultiArray.push(photoArray);
-                photoArray = [];
-                index = 0;
-                return;
-            }
-            index++;
+                photo = new PhotoInfo(
+                    el.id,
+                    el.sub_title,
+                    el.title,
+                    el.mimetype,
+                    el.fileName,
+                    el.size,
+                    el.data,
+                    el.created_datetime,
+                    el.modified_datetime,
+                );
+
+                const map = new Map<number, string>();
+                projectTitleMap.set(photo.id, photo.title);
+                photoArray.push(photo);
+
+                if (index === 1) {
+                    photoMultiArray.push(photoArray);
+                    photoArray = [];
+                    index = 0;
+                    return;
+                }
+
+                index++;
             });
 
             if (resArray.length % 2 === 1) {
@@ -76,6 +83,83 @@ export const getPhotoList = () => {
     });
 };
 
+// 記事リスト（コメントを外部結合した状態）取得（3件ずつ）
+export const getArticleList = (currentArticleId: number, additional: boolean) => {
+    return new Promise<ArticleInfo[]>(async (resolve, reject) => {
+        const articleArray: ArticleInfo[] = [];
+        const currentUser = firebase.auth().currentUser!;
+        const token = await currentUser.getIdToken(true);
+        const header = {
+            Authorization: `Bearer ${token}`,
+        };
+
+        // ヘッダに認証用トークンをセット
+        await axios.get('https://django.service/api/service/article', {
+            headers: header,
+            params: {
+                current_article_id: currentArticleId,
+                additional_flag: additional,
+            },
+        })
+        .then((res) => {
+            if (!res.data.result) {
+                console.log('articleリスト取得に失敗しました');
+                reject();
+                return;
+            }
+            console.log('articleリスト取得');
+
+            const resArray = res.data.articleList;
+            let article: ArticleInfo;
+
+            resArray.forEach((el: any) => {
+                // アカウントのサムネイルデータはbase64形式で取得するので、バイト配列に変換
+                let thumbnailBase64 = el.thumbnail;
+                let buffer = new Uint8Array();
+
+                if (thumbnailBase64 !== null) {
+                    const bin = atob(thumbnailBase64.replace(/^.*,/, ''));
+                    buffer = new Uint8Array(bin.length);
+                    for (let i = 0; i < bin.length; i++) {
+                    buffer[i] = bin.charCodeAt(i);
+                    }
+                }
+
+                thumbnailBase64 = el.commentator_thumbnail;
+                let commentBuffer = new Uint8Array();
+                if (thumbnailBase64 !== null) {
+                    const bin = atob(thumbnailBase64.replace(/^.*,/, ''));
+                    commentBuffer = new Uint8Array(bin.length);
+                    for (let i = 0; i < bin.length; i++) {
+                    commentBuffer[i] = bin.charCodeAt(i);
+                    }
+                }
+
+                article = new ArticleInfo(
+                    el.id,
+                    el.contributor_name,
+                    el.body,
+                    buffer,
+                    el.created_datetime,
+                    el.modified_datetime,
+                    el.commentator_name,
+                    commentBuffer,
+                    el.comment_body,
+                    el.comment_created_datetime,
+                );
+                articleArray.push(article);
+            });
+
+            resolve(articleArray);
+        })
+        .catch((err) => {
+            console.log('articleリスト取得に失敗しました');
+            reject();
+        });
+    });
+};
+
+// コメントが複数ある記事があるので、記事ごとにdistinct（key:記事ID、value:記事情報）
 export const getDistinctArticleMap = (articleList: ArticleInfo[]): Map<number, Article> => {
     return new Map<number, Article>(
       articleList.map((article) => [
@@ -91,75 +175,6 @@ export const getDistinctArticleMap = (articleList: ArticleInfo[]): Map<number, A
         ],
       ),
     );
-};
-
-export const getArticleList = (currentArticleId: number, additional: boolean) => {
-    return new Promise<ArticleInfo[]>(async (resolve, reject) => {
-        const articleArray: ArticleInfo[] = [];
-        const currentUser = firebase.auth().currentUser!;
-        const token = await currentUser.getIdToken(true);
-        const header = {
-            Authorization: `Bearer ${token}`,
-        };
-
-        await axios.get('https://django.service/api/service/article', {
-            headers: header,
-            params: {
-                current_article_id: currentArticleId,
-                additional_flag: additional,
-            },
-        })
-        .then((res) => {
-            if (!res.data.result) {
-            console.log('articleリスト取得に失敗しました');
-            reject();
-            return;
-            }
-            console.log('articleリスト取得');
-            const resArray = res.data.articleList;
-            let article: ArticleInfo;
-            resArray.forEach((el: any) => {
-            let thumbnailBase64 = el.thumbnail;
-            let buffer = new Uint8Array();
-            if (thumbnailBase64 !== null) {
-                const bin = atob(thumbnailBase64.replace(/^.*,/, ''));
-                buffer = new Uint8Array(bin.length);
-                for (let i = 0; i < bin.length; i++) {
-                buffer[i] = bin.charCodeAt(i);
-                }
-            }
-            thumbnailBase64 = el.commentator_thumbnail;
-            let commentBuffer = new Uint8Array();
-            if (thumbnailBase64 !== null) {
-                const bin = atob(thumbnailBase64.replace(/^.*,/, ''));
-                commentBuffer = new Uint8Array(bin.length);
-                for (let i = 0; i < bin.length; i++) {
-                commentBuffer[i] = bin.charCodeAt(i);
-                }
-            }
-
-            article = new ArticleInfo(
-                el.id,
-                el.contributor_name,
-                el.body,
-                buffer,
-                el.created_datetime,
-                el.modified_datetime,
-                el.commentator_name,
-                commentBuffer,
-                el.comment_body,
-                el.comment_created_datetime,
-            );
-            articleArray.push(article);
-            });
-
-            resolve(articleArray);
-        })
-        .catch((err) => {
-            console.log('articleリスト取得に失敗しました');
-            reject();
-        });
-    });
 };
 
 export const states = new Array<string>(

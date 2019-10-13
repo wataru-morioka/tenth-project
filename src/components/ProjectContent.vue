@@ -60,13 +60,6 @@ export default class ProjectContent extends Mixins<VideoMixin>(VideoMixin) {
     return blobURL;
   }
 
-  private created() {
-    setTimeout(() => {
-      $('.content').css('top', '60px');
-    }, 1000);
-    this.$store.commit('setInitVideoFlag');
-  }
-
   private mounted() {
     setTimeout(() => {
       this.fadein();

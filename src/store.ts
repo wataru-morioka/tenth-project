@@ -87,6 +87,7 @@ export default new Vuex.Store({
       if (state.currentArticleId === 0 || !payload.additionalFlag) {
         state.distinctArticleMap = payload.distinctArticleMap;
       } else {
+        // スクロールして追加記事を取得した場合、Mapに追加
         Array.from(payload.distinctArticleMap as Map<number, ArticleInfo>).map(([key, value]) => {
           state.distinctArticleMap.set(key, value);
         });
@@ -95,6 +96,7 @@ export default new Vuex.Store({
       if (!payload.additionalFlag) {
         state.articleArray = payload.articleArray;
       } else {
+        // スクロールして追加記事を取得した場合、配列に追加
         state.articleArray = state.articleArray.concat(payload.articleArray);
       }
 
@@ -103,6 +105,7 @@ export default new Vuex.Store({
   },
 
   actions: {
+    // プロジェクト情報リスト取得
     async getPhotos({ commit, state, rootState }) {
       await getPhotoList().then((result) => {
         this.commit('setPhotoMutiArray', {
@@ -114,6 +117,7 @@ export default new Vuex.Store({
       });
     },
 
+    // ブログ記事（コメントを左外部結合した状態）リスト（3件）取得
     async getArticles({ commit, state, rootState }, { additional }) {
       await getArticleList(state.currentArticleId, additional).then((articleList) => {
         if (articleList.length === 0) {
@@ -135,17 +139,21 @@ export default new Vuex.Store({
       });
     },
 
+    // home画面「Login」ボタンを押した時
     async login({ commit, state, rootState }) {
       const provider = new firebase.auth.GoogleAuthProvider();
       console.log(provider);
       await firebase.auth().signInWithPopup(provider)
       .then(async (result) => {
         console.log('google認証');
-        // DBにアカウント登録
+
+        // DBにユーザ登録
         await this.dispatch('getHeader');
         const body = {
           name: state.displayName,
         };
+
+        // ヘッダに認証用トークンをセット
         await axios.post('https://django.service:443/api/service/account', body, {
           headers: state.authHeader,
         })
@@ -164,6 +172,7 @@ export default new Vuex.Store({
       });
     },
 
+    // home画面「Logout」ボタンを押した時
     async logout({ commit, state, rootState }) {
       await firebase.auth().signOut()
       .then((result) => {
@@ -174,6 +183,7 @@ export default new Vuex.Store({
       });
     },
 
+    // このサイトに訪れる度に実行
     checkLoginStatus({ commit, state, rootState }) {
       firebase.auth().onAuthStateChanged( async (user) => {
         if (user) {
@@ -183,9 +193,12 @@ export default new Vuex.Store({
           });
           await this.dispatch('getHeader');
 
+          // 一度でもgoogle認証をしていた（ログインしていた）場合
           if (user.email != null && user.email.length > 0) {
             console.log('google認証済み');
             const body = {};
+
+            // ヘッダに認証用トークンをセット
             await axios.put('https://django.service:443/api/service/account', body, {
               headers: state.authHeader,
             })
@@ -194,10 +207,14 @@ export default new Vuex.Store({
                 console.log('サーバのログイン処理に失敗しました');
                 return;
               }
+
               console.log('ログイン');
               const thumbnailBase64 = res.data.thumbnail;
               let buffer = null;
+
+              // ユーザがログイン後アカウント登録を完了していた場合
               if (thumbnailBase64 !== null) {
+                // サムネイルはbase64形式で取得するので、バイト配列に変換
                 const bin = atob(thumbnailBase64.replace(/^.*,/, ''));
                 buffer = new Uint8Array(bin.length);
                 for (let i = 0; i < bin.length; i++) {
@@ -205,8 +222,7 @@ export default new Vuex.Store({
                 }
               }
 
-              console.log(res.data);
-
+              // ユーザ情報セット
               this.dispatch('setUserInfo', {
                 isLoginAuth: true,
                 isAnonymousAuth: false,
@@ -219,16 +235,21 @@ export default new Vuex.Store({
             .catch((err) => {
               console.log('サーバのログイン処理に失敗しました');
             });
+
             return;
           }
+        // サイトの初訪問者
         } else {
           console.log('匿名認証');
+          // firebase匿名認証
           firebase.auth().signInAnonymously().catch((error) => {
             const errorCode = error.code;
             const errorMessage = error.message;
             console.log(error.message);
           });
         }
+
+        // このサイトに一度は訪問したことがあるが、まだログインしていない場合
         console.log('匿名認証済み');
         this.dispatch('setUserInfo', {
           isLoginAuth: false,
@@ -241,6 +262,7 @@ export default new Vuex.Store({
       });
     },
 
+    // ユーザ情報をセット
     async setUserInfo({ commit, state, rootState },
                       { isLoginAuth, isAnonymousAuth, thumbnailData, region, isVipAccount, isAdminAccount } ) {
       const currentUser = firebase.auth().currentUser;
@@ -260,6 +282,7 @@ export default new Vuex.Store({
       });
     },
 
+    // サーバに送信する用の認証ヘッダをセット
     async getHeader({ commit, state, rootState }) {
       const currentUser = firebase.auth().currentUser;
       if (currentUser == null) {
