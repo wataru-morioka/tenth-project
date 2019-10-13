@@ -1,17 +1,14 @@
 <template lang='pug'>
-div#home
-  video#jagermeister-video(muted playsinline)
-    //- source(src='' type='application/x-mpegURL')
-    //- source(src='../assets/jagermeister.mp4' type='video/mp4')
-    //- source(src='' type='video/mp4')
-    //- source(src='../assets/hls/index.m3u8', type='application/x-mpegURL')
-  MainNav
+  div#jagermeister
+    video#jager-video(muted playsinline)
+      //- source(src='../assets/jager.mp4' type='video/mp4')
+      //- source(src='' type='video/mp4')
+    MainNav
 </template>
 
 <script lang='ts'>
 import { Component, Vue } from 'vue-property-decorator';
 import MainNav from '@/components/MainNav.vue';
-import BackImage from '@/components/BackImage.vue';
 import Hls from 'hls.js';
 
 @Component({
@@ -19,20 +16,20 @@ import Hls from 'hls.js';
     MainNav,
   },
 })
-export default class Home extends Vue {
+export default class Jagermeister extends Vue {
   private mounted() {
-    const video = document.getElementById('jagermeister-video') as HTMLVideoElement;
+    const video = document.getElementById('jager-video') as HTMLVideoElement;
 
     // hls.js（HTTP Live Streaming）を利用し、動画をダウンロードしながら再生
     if (Hls.isSupported()) {
       const hls = new Hls();
-      hls.loadSource('https://express.management/hls/jagermeister/index.m3u8');
+      hls.loadSource('https://express.management/hls/jager/index.m3u8');
       hls.attachMedia(video);
       hls.on(Hls.Events.MANIFEST_PARSED, () => {
         video.play();
       });
     } else if (video.canPlayType('application/vnd.apple.mpegurl')) {
-      video.src = 'https://express.management/hls/jagermeister/index.m3u8';
+      video.src = 'https://express.management/hls/jager/index.m3u8';
       video.addEventListener('loadedmetadata', () => {
           video.play();
       });
@@ -42,7 +39,7 @@ export default class Home extends Vue {
 </script>
 
 <style scoped lang='scss'>
-#home {
+#jagermeister {
   width: 100%;
   height: 100vh;
   position: relative;
@@ -51,7 +48,7 @@ export default class Home extends Vue {
   animation-duration: 1s;
 }
  
-#jagermeister-video {
+#jager-video {
   position: absolute;
   top: 0;
   left: 0;

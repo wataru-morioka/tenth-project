@@ -1,39 +1,41 @@
 <template lang='pug'>
-  div#about
+  div#member
     BackImage
     SubNav
     div.subject
       p(style='animation-delay: 1s')
-        span A
+        span M
       p(style='animation-delay: 1.1s')
-        span B
+        span E
       p(style='animation-delay: 1.2s')
-        span O
+        span M
       p(style='animation-delay: 1.3s')
-        span U
+        span B
       p(style='animation-delay: 1.4s')
-        span T
-    AboutContent
+        span E
+      p(style='animation-delay: 1.5s')
+        span R
+    MemberContent
 </template>
 
 <script lang='ts'>
 import { Component, Vue } from 'vue-property-decorator';
 import BackImage from '@/components/BackImage.vue';
 import SubNav from '@/components/SubNav.vue';
-import AboutContent from '@/components/AboutContent.vue';
+import MemberContent from '@/components/MemberContent.vue';
 
 @Component({
   components: {
     BackImage,
     SubNav,
-    AboutContent,
+    MemberContent,
   },
 })
-export default class About extends Vue {}
+export default class Member extends Vue {}
 </script>
 
 <style scoped lang='scss'>
-#about {
+#member {
   position: relative;
 }
 
@@ -55,7 +57,7 @@ export default class About extends Vue {}
   opacity: .2;
   z-index: -3;
 
-   p {
+  p {
     animation-name: content-fadein;
     animation-duration: 2s;
     margin-left: 1px;

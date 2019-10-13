@@ -1,17 +1,14 @@
 <template lang='pug'>
-div#home
-  video#jagermeister-video(muted playsinline)
-    //- source(src='' type='application/x-mpegURL')
-    //- source(src='../assets/jagermeister.mp4' type='video/mp4')
-    //- source(src='' type='video/mp4')
-    //- source(src='../assets/hls/index.m3u8', type='application/x-mpegURL')
-  MainNav
+  div#sauza
+    video#sauza-video(muted playsinline)
+      //- source(src='../assets/sauza.mp4' type='video/mp4')
+      //- source(src='' type='video/mp4')
+    MainNav
 </template>
 
 <script lang='ts'>
 import { Component, Vue } from 'vue-property-decorator';
 import MainNav from '@/components/MainNav.vue';
-import BackImage from '@/components/BackImage.vue';
 import Hls from 'hls.js';
 
 @Component({
@@ -19,20 +16,20 @@ import Hls from 'hls.js';
     MainNav,
   },
 })
-export default class Home extends Vue {
+export default class Sauza extends Vue {
   private mounted() {
-    const video = document.getElementById('jagermeister-video') as HTMLVideoElement;
 
     // hls.js（HTTP Live Streaming）を利用し、動画をダウンロードしながら再生
+    const video = document.getElementById('sauza-video') as HTMLVideoElement;
     if (Hls.isSupported()) {
       const hls = new Hls();
-      hls.loadSource('https://express.management/hls/jagermeister/index.m3u8');
+      hls.loadSource('https://express.management/hls/sauza/index.m3u8');
       hls.attachMedia(video);
       hls.on(Hls.Events.MANIFEST_PARSED, () => {
         video.play();
       });
     } else if (video.canPlayType('application/vnd.apple.mpegurl')) {
-      video.src = 'https://express.management/hls/jagermeister/index.m3u8';
+      video.src = 'https://express.management/hls/sauza/index.m3u8';
       video.addEventListener('loadedmetadata', () => {
           video.play();
       });
@@ -42,7 +39,7 @@ export default class Home extends Vue {
 </script>
 
 <style scoped lang='scss'>
-#home {
+#sauza {
   width: 100%;
   height: 100vh;
   position: relative;
@@ -51,7 +48,7 @@ export default class Home extends Vue {
   animation-duration: 1s;
 }
  
-#jagermeister-video {
+#sauza-video {
   position: absolute;
   top: 0;
   left: 0;

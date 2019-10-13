@@ -1,40 +1,87 @@
 <template lang='pug'>
-  div#about
+  div#project
     BackImage
     SubNav
     div.subject
       p(style='animation-delay: 1s')
-        span A
+        span P
       p(style='animation-delay: 1.1s')
-        span B
+        span R
       p(style='animation-delay: 1.2s')
         span O
       p(style='animation-delay: 1.3s')
-        span U
+        span J
       p(style='animation-delay: 1.4s')
+        span E
+      p(style='animation-delay: 1.5s')
+        span C
+      p(style='animation-delay: 1.6s')
         span T
-    AboutContent
+    div#sub-menu-wrap
+      SubMenu
+    video#project-video(controls playsinline)
+      source(src='../assets/jager.mp4' type='video/mp4')
+    ProjectContent
 </template>
 
 <script lang='ts'>
 import { Component, Vue } from 'vue-property-decorator';
 import BackImage from '@/components/BackImage.vue';
 import SubNav from '@/components/SubNav.vue';
-import AboutContent from '@/components/AboutContent.vue';
+import SubMenu from '@/components/SubMenu.vue';
+import ProjectContent from '@/components/ProjectContent.vue';
 
 @Component({
   components: {
     BackImage,
     SubNav,
-    AboutContent,
+    SubMenu,
+    ProjectContent,
   },
 })
-export default class About extends Vue {}
+export default class Project extends Vue {}
 </script>
 
 <style scoped lang='scss'>
-#about {
+#project {
   position: relative;
+  height: 100vw;
+}
+
+::-webkit-scrollbar {
+  display: none;
+  -webkit-appearance: none;
+}
+
+#sub-menu-wrap {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  flex-direction: column;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin: auto;
+  width: 100px;
+  height: 270px;
+  overflow-y: scroll;
+  -webkit-overflow-scrolling: touch;
+  z-index: 2;
+}
+
+video {
+  opacity: 0;
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  margin: auto;
+  width: 40%;
+  transition: 1s;
+  z-index: -10;
 }
 
 .subject {
@@ -55,7 +102,7 @@ export default class About extends Vue {}
   opacity: .2;
   z-index: -3;
 
-   p {
+  p {
     animation-name: content-fadein;
     animation-duration: 2s;
     margin-left: 1px;
@@ -67,6 +114,14 @@ export default class About extends Vue {}
 @media screen and (max-width: 768px){
   .subject {
     font-size: 30px;
+  }
+
+  video {
+    width: 100%;
+  }
+
+  #sub-menu-wrap {
+    display: none;
   }
 }
 

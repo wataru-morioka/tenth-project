@@ -6,30 +6,34 @@
       p(style='animation-delay: 1s')
         span A
       p(style='animation-delay: 1.1s')
-        span B
+        span R
       p(style='animation-delay: 1.2s')
-        span O
-      p(style='animation-delay: 1.3s')
-        span U
-      p(style='animation-delay: 1.4s')
         span T
-    AboutContent
+      p(style='animation-delay: 1.3s')
+        span I
+      p(style='animation-delay: 1.4s')
+        span C
+      p(style='animation-delay: 1.5s')
+        span L
+      p(style='animation-delay: 1.6s')
+        span E
+    ArticleContent
 </template>
 
 <script lang='ts'>
 import { Component, Vue } from 'vue-property-decorator';
 import BackImage from '@/components/BackImage.vue';
 import SubNav from '@/components/SubNav.vue';
-import AboutContent from '@/components/AboutContent.vue';
+import ArticleContent from '@/components/ArticleContent.vue';
 
 @Component({
   components: {
     BackImage,
     SubNav,
-    AboutContent,
+    ArticleContent,
   },
 })
-export default class About extends Vue {}
+export default class Article extends Vue {}
 </script>
 
 <style scoped lang='scss'>

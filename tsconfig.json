@@ -14,7 +14,8 @@
     "types": [
       "webpack-env",
       "mocha",
-      "chai"
+      "chai",
+      "node"
     ],
     "paths": {
       "@/*": [
@@ -26,14 +27,20 @@
       "dom",
       "dom.iterable",
       "scripthost"
-    ]
+    ],
+    // "extends": "tslint:recommended",
+    // "rules": {
+    //   "no-console": [
+    //       false
+    //   ]
+    // }
   },
   "include": [
     "src/**/*.ts",
     "src/**/*.tsx",
     "src/**/*.vue",
     "tests/**/*.ts",
-    "tests/**/*.tsx"
+    "tests/**/*.tsx", "src/service-worker.js"
   ],
   "exclude": [
     "node_modules"

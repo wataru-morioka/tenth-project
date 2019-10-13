@@ -1,39 +1,43 @@
 <template lang='pug'>
-  div#about
+  div#contact
     BackImage
     SubNav
     div.subject
       p(style='animation-delay: 1s')
-        span A
+        span C
       p(style='animation-delay: 1.1s')
-        span B
-      p(style='animation-delay: 1.2s')
         span O
+      p(style='animation-delay: 1.2s')
+        span N
       p(style='animation-delay: 1.3s')
-        span U
-      p(style='animation-delay: 1.4s')
         span T
-    AboutContent
+      p(style='animation-delay: 1.4s')
+        span A
+      p(style='animation-delay: 1.5s')
+        span C
+      p(style='animation-delay: 1.5s')
+        span T
+    ContactContent
 </template>
 
 <script lang='ts'>
 import { Component, Vue } from 'vue-property-decorator';
 import BackImage from '@/components/BackImage.vue';
 import SubNav from '@/components/SubNav.vue';
-import AboutContent from '@/components/AboutContent.vue';
+import ContactContent from '@/components/ContactContent.vue';
 
 @Component({
   components: {
     BackImage,
     SubNav,
-    AboutContent,
+    ContactContent,
   },
 })
-export default class About extends Vue {}
+export default class Contact extends Vue {}
 </script>
 
 <style scoped lang='scss'>
-#about {
+#contact {
   position: relative;
 }
 
@@ -55,7 +59,7 @@ export default class About extends Vue {}
   opacity: .2;
   z-index: -3;
 
-   p {
+  p {
     animation-name: content-fadein;
     animation-duration: 2s;
     margin-left: 1px;
@@ -76,6 +80,7 @@ export default class About extends Vue {}
       transform: translateY(40px);
   }
   to {
+      // opacity: .2;
       transform: translateY(0);
   }
 }
