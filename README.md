@@ -56,5 +56,3 @@ Vue.jsによるSPA
 - 開発にTypeScript、Pug、Scssを採用  
 - コンポーネント共通処理部分はMixinを利用  
 
-
-
