@@ -86,11 +86,6 @@ export default class ArticleContent extends Vue {
     });
   }
 
-  private created() {
-    this.articleArray = this.$store.state.articleArray;
-    this.distinctArticleMap = this.$store.state.distinctArticleMap;
-  }
-
   private mounted() {
     this.setEditor();
     setTimeout(() => {
@@ -201,9 +196,6 @@ export default class ArticleContent extends Vue {
 
                 await this.$store.dispatch('getArticles', {
                   additional: false,
-                }).then(() => {
-                  this.articleArray = this.$store.state.articleArray;
-                  this.distinctArticleMap = this.$store.state.distinctArticleMap;
                 });
 
                 alert('送信しました');
@@ -223,6 +215,13 @@ export default class ArticleContent extends Vue {
 
   private setArticleId(id: number): number {
     return id;
+  }
+
+  // 記事、コメントが更新された時
+  private updated() {
+    this.fadein();
+    // CKEdirotを再セット
+    this.resetEditor();
   }
 
   // CKEditorセット（readonlyモード）
@@ -249,6 +248,41 @@ export default class ArticleContent extends Vue {
       .catch( (err: any) => {
         console.error( err.stack );
       });
+    });
+  }
+
+    // 記事が追加、変更された場合、CKEditorを再セット
+  private resetEditor(): void {
+    // 過去の記事一覧エリア
+    $('.article.history').each((index, element) => {
+      const toolbarElement = $(element).children('.toolbar-container')[0];
+      const editorElement = $(element).children('.editor')[0];
+      const inputElement = $(element).parents('.article-list').children('input')[0];
+      const articleId: string = $(inputElement).val() as string;
+      const target: any = this.$store.state.articleArray.filter((x: any) => {
+        return (x as any).id === Number(articleId);
+      });
+
+      if (this.editors.get(articleId)) {
+        // 一旦インスタンス破棄
+        this.editors.get(articleId).destroy();
+      }
+
+      DecoupledEditor
+        .create( editorElement, {
+          ckfinder: {
+            uploadUrl: 'https://django.service/api/service/image',
+          },
+        })
+        .then(async (editor: any) => {
+          editor.isReadOnly = true;
+          this.editors.set(articleId, editor);
+          await editor.setData(target[0].body);
+        })
+        .catch( (err: any) => {
+          console.log(err);
+          console.error( err.stack );
+        });
     });
   }
 
