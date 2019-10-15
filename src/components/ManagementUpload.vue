@@ -300,14 +300,10 @@ export default class ManagementUpload extends Mixins<VideoMixin>(VideoMixin) {
               headers: this.$store.state.authHeader,
             })
             .then((res: any) => {
-              if (res.data.result) {
-                alert('アップロードが完了しました');
-              } else {
-                alert('photoアップロードに失敗しました');
-              }
+              alert('動画アップロードに成功しました');
             })
             .catch((err) => {
-              alert(err);
+              alert('動画アップロードが失敗しました');
             });
 
             const parent = $(target).closest('.edit-photo-wrap');

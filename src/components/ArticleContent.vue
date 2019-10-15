@@ -105,7 +105,7 @@ export default class ArticleContent extends Vue {
       const bottom = doch - winh;
 
       // スクロールしてページ最下部にきた際、追加でサーバから記事を取得
-      if (bottom <= $('#article-content').scrollTop()!) {
+      if (bottom + 1 === $('#article-content').scrollTop()!) {
         await ($('#loading-modal') as any).modal({
           closable: false,
           onVisible: async () => {
