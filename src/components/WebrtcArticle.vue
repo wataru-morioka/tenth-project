@@ -102,11 +102,6 @@ export default class WebrtcArticle extends Vue {
     });
   }
 
-  private created() {
-    this.articleArray = this.$store.state.articleArray;
-    this.distinctArticleMap = this.$store.state.distinctArticleMap;
-  }
-
   private mounted() {
     this.setEditor();
     this.fadein();
@@ -122,6 +117,7 @@ export default class WebrtcArticle extends Vue {
             await this.$store.dispatch('getArticles', {
               additional: true,
             });
+
             await ($('.modal') as any).modal({
               closable: false,
             }).modal('hide');
@@ -131,7 +127,7 @@ export default class WebrtcArticle extends Vue {
     });
   }
 
-  // 記事が追加、変更された時
+  // 記事、コメントが更新された時
   private updated() {
     this.fadein();
     // CKEdirotを再セット
@@ -203,9 +199,6 @@ export default class WebrtcArticle extends Vue {
 
                 await this.$store.dispatch('getArticles', {
                   additional: false,
-                }).then(() => {
-                  this.articleArray = this.$store.state.articleArray;
-                  this.distinctArticleMap = this.$store.state.distinctArticleMap;
                 });
 
                 alert('送信しました');
