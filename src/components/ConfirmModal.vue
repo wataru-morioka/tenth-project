@@ -3,6 +3,7 @@
     div#confirm-modal(class="ui basic modal confirm")
       div(class="content")
         p {{ confirmMessage }}
+        //- p(v-model='confirmMessage')
       div(class="actions")
         div(class="ui red basic cancel inverted button")
           i(class="remove icon") No
