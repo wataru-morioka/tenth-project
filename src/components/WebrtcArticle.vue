@@ -115,7 +115,7 @@ export default class WebrtcArticle extends Vue {
       const doch = document.querySelector('#edit-article-content')!.scrollHeight + 120;
       const winh = $(window).innerHeight()!;
       const bottom = doch - winh;
-      if (bottom <= $('#edit-article-content').scrollTop()!) {
+      if (bottom + 1 === $('#edit-article-content').scrollTop()!) {
         await ($('#loading-modal') as any).modal({
           closable: false,
           onVisible: async () => {
