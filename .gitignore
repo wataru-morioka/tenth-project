@@ -2,6 +2,7 @@
 node_modules/
 docs/
 src/assets/
+src/firebase-config.ts
 
 /tests/e2e/reports/
 selenium-debug.log
