@@ -30,7 +30,7 @@
     "https-agent": "^1.0.0",
     "imagemin": "^7.0.0",
     "jquery": "^3.4.1",
-    "node-sass": "^4.9.0",
+    "node-sass": "^7.0.0",
     "pug": "^2.0.4",
     "pug-plain-loader": "^1.0.0",
     "register-service-worker": "^1.6.2",
